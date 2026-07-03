@@ -15,6 +15,10 @@ on:
 permissions:
   contents: write
 
+# never two data-writing runs pushing at once (also shared with refresh)
+concurrency:
+  group: taps-data
+
 jobs:
   discover:
     runs-on: ubuntu-latest

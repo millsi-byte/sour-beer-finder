@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+# never two data-writing runs pushing at once (also shared with discovery)
+concurrency:
+  group: taps-data
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
