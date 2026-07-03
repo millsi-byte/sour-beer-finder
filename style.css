@@ -99,6 +99,12 @@ button.secondary {
 
 .error { color: var(--danger); font-size: 14px; margin-top: 16px; }
 
+.ig-note { margin-top: 30px; }
+.ig-link {
+  font-family: var(--serif); font-size: 15px; letter-spacing: .3px;
+  color: var(--accent-ink); text-decoration: none;
+}
+
 /* List */
 .listmeta {
   display: flex; align-items: baseline; justify-content: space-between;

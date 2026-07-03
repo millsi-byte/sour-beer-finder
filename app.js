@@ -18,7 +18,13 @@ function tapInfo(b) {
   return state.taps?.breweries?.[b.id] ?? null;
 }
 
-const SOURCE_LABELS = { untappd: 'via Untappd', manual: 'reported manually' };
+const SOURCE_LABELS = {
+  untappd: 'via Untappd',
+  beermenus: 'via BeerMenus',
+  taplist: 'via Taplist.io',
+  digitalpour: 'via DigitalPour',
+  manual: 'reported manually',
+};
 
 function fmtAgo(iso) {
   const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);

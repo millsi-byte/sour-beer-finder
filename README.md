@@ -75,28 +75,32 @@ users can judge edge cases like "Sour IPA".
    ```
 4. Run the "Refresh tap lists" workflow (or wait for the nightly cron).
 
+## v1.1 — all pipelines (shipped)
+
+Every planned source now has an adapter; coverage estimate for
+Untappd + BeerMenus + widget detection is ~70–80% of metro-area taprooms.
+
+- **BeerMenus** (`beermenus`) — #2 platform; polite scraping of public
+  place pages (identified user-agent, nightly cadence, robots.txt checked
+  before every run). Keyless — works today.
+- **Taplist.io / DigitalPour** (`taplist`, `digitalpour`) — their embeds
+  are clean JSON under the hood; adapters fetch the embed URL and extract
+  generically. Keyless.
+- **Widget detection** (`pipeline/discover.js` + the "Discover tap-list
+  sources" workflow) — fetches each area brewery's homepage once (websites
+  come free from Open Brewery DB) and looks for embed signatures
+  (`business.untappd.com/locations/…`, `beermenus.com/places/…`,
+  `taplist.io`, `digitalpour.com`), auto-writing mappings into
+  `sources.json` instead of maintaining them by hand. Run it from the
+  Actions tab with an area like `Tampa, Florida` or `27.95,-82.45`.
+- **Untappd** (`untappd`) — the anchor source, still gated on
+  `UNTAPPD_EMAIL` / `UNTAPPD_TOKEN` secrets (see "Enabling live data").
+
 ## Roadmap
 
-Source menu, roughly in order of coverage-per-effort. Untappd alone covers
-well past half of active taprooms; Untappd + BeerMenus + widget detection
-should reach ~70–80% in metro areas, with the last stretch belonging to the
-crowd layer.
-
-- **v1.1 — BeerMenus + widget detection.** The single biggest coverage jump
-  after Untappd. BeerMenus is the #2 tap-list platform (small taprooms and
-  bottle shops Untappd misses); its brewery pages are public and structured
-  but have no free API, so it's polite scraping — cache nightly, identify
-  the app in the user-agent, respect robots.txt. Widget detection is the
-  clever unlock: Open Brewery DB already gives each brewery's website, so
-  the nightly Action fetches each homepage once and looks for embed
-  signatures (`business.untappd.com/embeds`, `beermenus.com/widget`,
-  `taplist.io`, DigitalPour scripts) to auto-discover which source serves
-  each brewery — no hand-maintained mapping. A generic "beer-style keywords
-  on the /menu page" fallback flags hand-coded menus as "possible sours,
-  tap to verify".
-- **v1.2 — Taplist.io / DigitalPour adapters.** Smaller players, but their
-  embeds are clean JSON under the hood — trivially parseable when a brewery
-  uses one.
+- **v1.2 — keyword fallback.** For breweries with no widget, scan their
+  /menu or /beer page for beer-style keywords and flag "possible sours,
+  tap to verify" — lower confidence, wider net.
 - **v2 — crowd layer.** Chalkboard-only breweries will never be
   machine-readable; the crowd is the only "API" for those. Firebase Auth +
   Firestore: a "confirm what's pouring" button with a freshness timestamp

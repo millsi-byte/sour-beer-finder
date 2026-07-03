@@ -1,0 +1,34 @@
+name: Discover tap-list sources
+
+on:
+  workflow_dispatch:
+    inputs:
+      area:
+        description: 'City[, Full State Name] or lat,lng — e.g. "Tampa, Florida" or "27.95,-82.45"'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Scan brewery websites for tap-list widgets
+        run: node pipeline/discover.js "${{ inputs.area }}"
+      - name: Build tap data with the new sources
+        run: node pipeline/build.js
+        env:
+          UNTAPPD_EMAIL: ${{ secrets.UNTAPPD_EMAIL }}
+          UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
+      - name: Commit discovered sources and data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pipeline/sources.json data/taps.json
+          git diff --cached --quiet || { git commit -m "Discover tap-list sources: ${{ inputs.area }}"; git push; }
