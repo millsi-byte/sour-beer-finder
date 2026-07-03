@@ -1,0 +1,45 @@
+name: Refresh tap data (fast)
+
+# Re-reads the menus of already-discovered sources every few hours —
+# tap lists change daily, so this is the freshness workhorse. Finding
+# NEW sources (the slow site crawl) stays in the nightly refresh.
+on:
+  schedule:
+    - cron: '17 1,5,13,17,21 * * *' # every 4h except 9am UTC (nightly full run's slot)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: taps-data
+
+jobs:
+  refresh-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install headless browser
+        run: |
+          npm install -g playwright
+          npx playwright install --with-deps chromium
+      - name: Build tap data
+        run: NODE_PATH=$(npm root -g) node pipeline/build.js
+        env:
+          UNTAPPD_EMAIL: ${{ secrets.UNTAPPD_EMAIL }}
+          UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/taps.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Refresh tap data"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            sleep 5
+          done
+          exit 1
