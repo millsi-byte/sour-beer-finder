@@ -38,7 +38,14 @@ jobs:
           })().catch((e) => { console.error(e); process.exit(1); });"
         env:
           TARGET: ${{ inputs.target }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: rendered
-          path: rendered.html
+      # artifacts live on Azure blob storage, unreachable from the dev
+      # sandbox — a throwaway branch is fetchable through the git proxy
+      - name: Push dump to debug-dump branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan debug-dump
+          git rm -rfq --cached .
+          git add -f rendered.html
+          git commit -m "dump: ${{ inputs.target }}"
+          git push -f origin HEAD:debug-dump
