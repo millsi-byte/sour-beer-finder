@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.32';
+const APP_BUILD = '2026.07.03.33';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -218,16 +218,54 @@ async function fetchByCity(city, stateName) {
   return res.json();
 }
 
+/* Same normalization/matching on both sides of the wire — the pipeline's
+   copy is pipeline/brewery-lib.js's normalizeName/namesLikelyMatch, kept
+   in sync by convention (no bundler to share a module between the
+   browser and Node). Tight AND-gate — distance AND name — so two real,
+   near-identically-named locations (Tree House Charlton vs. Tewksbury,
+   ~40mi apart) are never conflated. Used both by the missing-brewery
+   "did you mean X?" nudge and by relevantExtras' OBDB-collision check
+   below. */
+const FILLER_WORDS = /\b(brewing|brewery|breweries|company|co|llc|inc|taproom)\b/g;
+
+function normalizeBreweryName(s) {
+  return String(s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(FILLER_WORDS, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function namesLikelyMatch(a, b) {
+  const na = normalizeBreweryName(a);
+  const nb = normalizeBreweryName(b);
+  if (!na || !nb) return false;
+  if (na === nb || na.includes(nb) || nb.includes(na)) return true;
+  const ta = new Set(na.split(' '));
+  const tb = new Set(nb.split(' '));
+  const shared = [...ta].filter((t) => tb.has(t)).length;
+  return shared / Math.min(ta.size, tb.size) >= 0.6;
+}
+
 /* Hand-added breweries (pipeline/extra-breweries.json, published inside
    taps.json) that Open Brewery DB is missing — Tree House! Injected when
    they're near the search origin, or in the searched city. Skipped if
-   OBDB starts returning them (matched by name+city). */
+   OBDB starts covering the same physical brewery (fuzzy name + tight
+   distance, not just an exact string match — a crowd-submitted name is
+   free text, so an exact match would miss real collisions too easily). */
 function relevantExtras(list, origin, cityName) {
   const extras = state.taps?.extra_breweries ?? [];
   if (!extras.length) return [];
-  const names = new Set(list.map((b) => `${b.name}|${b.city}`.toLowerCase()));
+  const isSameBrewery = (e, b) => {
+    const blat = parseFloat(b.latitude);
+    const blng = parseFloat(b.longitude);
+    if (!Number.isFinite(blat) || !Number.isFinite(blng)) return false;
+    return haversineMiles({ lat: e.lat, lng: e.lng }, { lat: blat, lng: blng }) <= 1
+      && namesLikelyMatch(e.name, b.name);
+  };
   return extras
-    .filter((e) => !names.has(`${e.name}|${e.city}`.toLowerCase()))
+    .filter((e) => !list.some((b) => isSameBrewery(e, b)))
     .filter((e) =>
       origin
         ? haversineMiles(origin, { lat: e.lat, lng: e.lng }) <= 150
@@ -1108,37 +1146,6 @@ $('btnMissing').addEventListener('click', async () => {
   if (!$('missingForm').hidden) $('mbName').focus();
 });
 
-/* ---- "did you mean X?" duplicate nudge ----
-   Same normalization as pipeline/brewery-lib.js's normalizeName/
-   namesLikelyMatch, kept in sync by convention (no bundler to share a
-   module between the browser and Node). Tight AND-gate — distance AND
-   name — so two real, near-identically-named locations (Tree House
-   Charlton vs. Tewksbury, ~40mi apart) are never blocked; this is a UX
-   nudge that catches honest mistakes, not the actual duplicate backstop
-   (that's server-side, in sync-brewery-requests.js, and runs regardless
-   of whether this check ran or was skipped). */
-const MB_FILLER_WORDS = /\b(brewing|brewery|breweries|company|co|llc|inc|taproom)\b/g;
-
-function normalizeBreweryName(s) {
-  return String(s || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .replace(MB_FILLER_WORDS, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function mbNamesLikelyMatch(a, b) {
-  const na = normalizeBreweryName(a);
-  const nb = normalizeBreweryName(b);
-  if (!na || !nb) return false;
-  if (na === nb || na.includes(nb) || nb.includes(na)) return true;
-  const ta = new Set(na.split(' '));
-  const tb = new Set(nb.split(' '));
-  const shared = [...ta].filter((t) => tb.has(t)).length;
-  return shared / Math.min(ta.size, tb.size) >= 0.6;
-}
-
 async function findPossibleDuplicate(name, cityRaw) {
   try {
     const geo = (await geocodeCities(cityRaw))[0];
@@ -1153,7 +1160,7 @@ async function findPossibleDuplicate(name, cityRaw) {
     for (const b of pool) {
       if (!b.hasCoords) continue;
       const miles = haversineMiles(geo, { lat: b.lat, lng: b.lng });
-      if (miles <= 1 && mbNamesLikelyMatch(name, b.name)) return { brewery: b, miles };
+      if (miles <= 1 && namesLikelyMatch(name, b.name)) return { brewery: b, miles };
     }
     return null;
   } catch {

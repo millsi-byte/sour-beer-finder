@@ -218,6 +218,19 @@ Three ways an entry gets in:
    file, so it survives the next sync).
 3. Edit `pipeline/extra-breweries.seed.json` by hand.
 
+**What happens if a submission duplicates a brewery Open Brewery DB
+already lists** (as opposed to another hand-added entry, covered above):
+`sync-brewery-requests.js` only compares against the hand-added list, not
+live OBDB, so a redundant `x-`-entry *can* still get published in that
+specific case. The app's display layer catches it anyway — `relevantExtras()`
+(`app.js`) suppresses any hand-added entry once OBDB has a real listing
+within ~1 mile with a matching (fuzzy-normalized) name, so users never see
+a brewery twice, even if the underlying data briefly has both. The
+redundant `extra-breweries.json` row just sits there unused until the
+next sync run, when its distance+name match against the (still-present)
+Firestore doc means it keeps getting silently regenerated — harmless,
+easy to spot in the sync log if it ever matters.
+
 ## v1.1 — all pipelines (shipped)
 
 Every planned source now has an adapter; coverage estimate for
