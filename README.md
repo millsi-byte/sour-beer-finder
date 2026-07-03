@@ -121,6 +121,29 @@ Untappd + BeerMenus + widget detection is ~70–80% of metro-area taprooms.
 
 ## Roadmap
 
+The proven loop for adding any source: run the **Diagnose area coverage**
+workflow to tally platform signatures, use **Debug - dump rendered page**
+to capture a real page's markup on the `debug-dump` branch (fetch it,
+inspect), write the parser against that reality with a fixture test,
+then add the detection signature to `pipeline/discover.js` and the
+adapter to `pipeline/adapters/`.
+
+- **Craftpeak adapter — probably the biggest single unlock left.**
+  Craftpeak builds the websites of exactly the breweries sour hunters
+  care about (Wicked Weed/Funkatorium, Oxbow, Bissell Brothers, Rising
+  Tide all confirmed), with structured /beer pages. Their footers carry
+  a "powered by Arryved web solutions" marketing link that is NOT a menu
+  embed — diagnostics count it, discovery correctly rejects it. Detect
+  via Craftpeak's own markup/footer instead, parse the rendered beer
+  pages.
+- **Toast extractor.** The #1 platform everywhere measured (27 in
+  Portland ME, 17 in Greenville, 16 in Orlando). Food-menu oriented, so
+  beverage parsing is lower-fidelity, but the volume is unmatched.
+- **Known extraction gaps to debug** (dump the page, adjust gate/wait):
+  Foulmouthed Brewing + Swamp Head + Sailfish (arryved, 0 beers —
+  likely age-gate wording variants beyond GATE_CLICKS), Barreled Souls
+  (untappd, 0 beers), Taplist.io venue pages (403 to plain fetch,
+  0 beers rendered), DigitalPour (4 sources, 0 beers).
 - **v1.2 — keyword fallback.** For breweries with no widget, scan their
   /menu or /beer page for beer-style keywords and flag "possible sours,
   tap to verify" — lower confidence, wider net.
