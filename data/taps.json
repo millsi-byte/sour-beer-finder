@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T10:36:19.936Z",
+  "generated_at": "2026-07-03T12:34:45.055Z",
   "areas": [
     {
       "label": "Orlando, FL",
@@ -61,13 +61,13 @@
   "breweries": {
     "dc3e008a-2387-4aea-addd-c05a1049ee89": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:36:21.767Z",
+      "fetched_at": "2026-07-03T12:34:46.878Z",
       "beer_count": 0,
       "sours": []
     },
     "8aa90b99-32fa-4727-b14a-324db6f758f6": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:36:23.419Z",
+      "fetched_at": "2026-07-03T12:34:48.471Z",
       "beer_count": 40,
       "sours": [
         {
@@ -86,7 +86,7 @@
     },
     "ee71a877-46d6-45a9-9e2d-6291f4609de6": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:36:27.375Z",
+      "fetched_at": "2026-07-03T12:34:52.602Z",
       "beer_count": 18,
       "sours": [
         {
@@ -109,7 +109,7 @@
     },
     "2d3c288c-ecb1-47fc-bca3-c277c7728944": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:36:29.063Z",
+      "fetched_at": "2026-07-03T12:34:54.277Z",
       "beer_count": 42,
       "sours": [
         {
@@ -120,13 +120,13 @@
     },
     "8a7ac609-cceb-47f1-8221-8ac257e3caa1": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:36:42.356Z",
+      "fetched_at": "2026-07-03T12:35:07.983Z",
       "beer_count": 0,
       "sours": []
     },
     "823d7543-75ef-4ce6-b3f3-6108eea702f8": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:36:43.795Z",
+      "fetched_at": "2026-07-03T12:35:10.019Z",
       "beer_count": 16,
       "sours": [
         {
@@ -141,13 +141,13 @@
     },
     "c6d5739a-7f19-404c-a561-009c384535d5": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:36:56.743Z",
+      "fetched_at": "2026-07-03T12:35:23.652Z",
       "beer_count": 0,
       "sours": []
     },
     "efdc475f-8e3c-42f7-8e69-7d5fda684097": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:36:59.763Z",
+      "fetched_at": "2026-07-03T12:35:26.688Z",
       "beer_count": 31,
       "sours": [
         {
@@ -166,7 +166,7 @@
     },
     "597c06aa-6c9f-4652-a0b0-7db11364374f": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:01.487Z",
+      "fetched_at": "2026-07-03T12:35:29.099Z",
       "beer_count": 20,
       "sours": [
         {
@@ -177,13 +177,9 @@
     },
     "c20499a8-0cd9-4fc4-878d-78067362cafb": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:04.614Z",
+      "fetched_at": "2026-07-03T12:35:32.480Z",
       "beer_count": 31,
       "sours": [
-        {
-          "name": "Brocean Water",
-          "style": "Sour - Fruited"
-        },
         {
           "name": "Busta Vynes",
           "style": "Sour - Fruited"
@@ -197,15 +193,15 @@
           "style": "Sour - Fruited"
         },
         {
+          "name": "Green Hawaiian",
+          "style": "Sour - Fruited"
+        },
+        {
           "name": "Italian Ice: Cherry",
           "style": "Sour - Fruited"
         },
         {
           "name": "Keeping It Teal",
-          "style": "Sour - Fruited"
-        },
-        {
-          "name": "Lavender Blueberry",
           "style": "Sour - Fruited"
         },
         {
@@ -217,6 +213,10 @@
           "style": "Sour - Fruited"
         },
         {
+          "name": "Nordic Trout",
+          "style": "Sour - Smoothie"
+        },
+        {
           "name": "Orange Droolius",
           "style": "Sour - Smoothie"
         },
@@ -225,8 +225,8 @@
           "style": "Sour - Smoothie"
         },
         {
-          "name": "Pineapple Hole In My Soul Whip",
-          "style": "Sour - Smoothie"
+          "name": "The Arnie",
+          "style": "Sour - Fruited"
         },
         {
           "name": "Watermelon Cotton Candy",
@@ -236,13 +236,13 @@
     },
     "ed040add-786c-4758-b42a-1ab876837de7": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:17.772Z",
+      "fetched_at": "2026-07-03T12:35:45.917Z",
       "beer_count": 0,
       "sours": []
     },
     "7499d5f1-3dee-4207-a073-aea0d069ea6b": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:19.408Z",
+      "fetched_at": "2026-07-03T12:35:48.083Z",
       "beer_count": 44,
       "sours": [
         {
@@ -257,7 +257,7 @@
     },
     "62e08b27-ce3d-49a3-b579-70819bb13baf": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:21.439Z",
+      "fetched_at": "2026-07-03T12:35:50.340Z",
       "beer_count": 24,
       "sours": [
         {
@@ -268,7 +268,7 @@
     },
     "fecd5791-19fe-43ae-b618-3ddf1e3d9761": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:22.807Z",
+      "fetched_at": "2026-07-03T12:35:52.532Z",
       "beer_count": 25,
       "sours": [
         {
@@ -283,19 +283,19 @@
     },
     "f6a4ecaa-2045-43ed-8563-9d4bf0af345f": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:37:24.466Z",
+      "fetched_at": "2026-07-03T12:35:54.225Z",
       "beer_count": 0,
       "sours": []
     },
     "c6211a84-875e-491b-8ba3-051fd0f6e0ea": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:25.780Z",
+      "fetched_at": "2026-07-03T12:35:55.778Z",
       "beer_count": 13,
       "sours": []
     },
     "7818c5b5-3446-4c29-80ac-e0e51cc5bccc": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:27.383Z",
+      "fetched_at": "2026-07-03T12:35:57.883Z",
       "beer_count": 47,
       "sours": [
         {
@@ -306,25 +306,25 @@
     },
     "9fb357eb-965e-4920-81d0-256910248fc0": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:40.656Z",
+      "fetched_at": "2026-07-03T12:36:11.178Z",
       "beer_count": 0,
       "sours": []
     },
     "094745e6-3b1e-4549-a2db-76bf222e4561": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:37:53.749Z",
+      "fetched_at": "2026-07-03T12:36:24.299Z",
       "beer_count": 0,
       "sours": []
     },
     "6ea2ecc3-d933-4c8d-852c-f20db3b19976": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:07.082Z",
+      "fetched_at": "2026-07-03T12:36:37.755Z",
       "beer_count": 0,
       "sours": []
     },
     "40e3e16f-ba2e-4403-8cbd-b7fe50863cb5": {
       "source": "beermenus",
-      "fetched_at": "2026-07-03T10:38:07.509Z",
+      "fetched_at": "2026-07-03T12:36:38.321Z",
       "beer_count": 28,
       "sours": [
         {
@@ -359,7 +359,7 @@
     },
     "c51a1926-490d-4558-a569-7664be014334": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:09.251Z",
+      "fetched_at": "2026-07-03T12:36:40.592Z",
       "beer_count": 22,
       "sours": [
         {
@@ -370,25 +370,25 @@
     },
     "e69d7c0d-f29a-4668-9419-f74ffc9e19cf": {
       "source": "beermenus",
-      "fetched_at": "2026-07-03T10:38:09.532Z",
+      "fetched_at": "2026-07-03T12:36:41.049Z",
       "beer_count": 6,
       "sours": []
     },
     "1337fe4b-0f7d-411f-9d19-05eba5370567": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:22.566Z",
+      "fetched_at": "2026-07-03T12:36:53.955Z",
       "beer_count": 0,
       "sours": []
     },
     "ecd253a8-292a-4233-908f-4141491d0d32": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:38:24.209Z",
+      "fetched_at": "2026-07-03T12:36:55.585Z",
       "beer_count": 0,
       "sours": []
     },
     "2c946155-4263-420c-8b11-eca20cdf51ff": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:37.548Z",
+      "fetched_at": "2026-07-03T12:37:09.122Z",
       "beer_count": 22,
       "sours": [
         {
@@ -399,7 +399,7 @@
     },
     "0c45746b-fe2f-4171-b1e7-181027857e22": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:40.123Z",
+      "fetched_at": "2026-07-03T12:37:10.995Z",
       "beer_count": 23,
       "sours": [
         {
@@ -414,7 +414,7 @@
     },
     "525c36b6-823a-4a5a-b25c-054748e6e6a4": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:41.563Z",
+      "fetched_at": "2026-07-03T12:37:14.493Z",
       "beer_count": 19,
       "sours": [
         {
@@ -425,13 +425,13 @@
     },
     "d45b5005-7682-44a6-b852-a5be43daa838": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:48.593Z",
+      "fetched_at": "2026-07-03T12:37:24.167Z",
       "beer_count": 16,
       "sours": []
     },
     "a96df2d5-fc8d-4043-8a30-5c3f29ac3903": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:50.039Z",
+      "fetched_at": "2026-07-03T12:37:26.262Z",
       "beer_count": 15,
       "sours": [
         {
@@ -442,7 +442,7 @@
     },
     "f520b880-2360-4cb9-88fb-a15f03c01fc0": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:38:51.664Z",
+      "fetched_at": "2026-07-03T12:37:28.079Z",
       "beer_count": 27,
       "sours": [
         {
@@ -457,7 +457,7 @@
     },
     "c8e69ab9-60b6-44b9-8188-cf3d719b8d82": {
       "source": "beermenus",
-      "fetched_at": "2026-07-03T10:38:51.976Z",
+      "fetched_at": "2026-07-03T12:37:28.475Z",
       "beer_count": 39,
       "sours": [
         {
@@ -504,13 +504,13 @@
     },
     "524c21c1-3dc5-4e41-9e97-5ff34578e071": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:06.016Z",
+      "fetched_at": "2026-07-03T12:37:42.875Z",
       "beer_count": 0,
       "sours": []
     },
     "2cb07047-36be-45c7-aae3-97c10afa36c4": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:08.041Z",
+      "fetched_at": "2026-07-03T12:37:45.981Z",
       "beer_count": 165,
       "sours": [
         {
@@ -533,7 +533,7 @@
     },
     "5e7a1229-c739-4d88-8b72-b4b9fcb98ba0": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:10.346Z",
+      "fetched_at": "2026-07-03T12:37:48.460Z",
       "beer_count": 32,
       "sours": [
         {
@@ -548,13 +548,13 @@
     },
     "60010f13-de44-4ff3-8f16-9b1feac5a9b8": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:12.413Z",
+      "fetched_at": "2026-07-03T12:37:50.194Z",
       "beer_count": 23,
       "sours": []
     },
     "c0c4af99-eb53-4114-b976-de76d111596f": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:14.012Z",
+      "fetched_at": "2026-07-03T12:37:51.976Z",
       "beer_count": 33,
       "sours": [
         {
@@ -569,7 +569,7 @@
     },
     "5c8d8884-ab03-4de2-9370-2cd781eb7b07": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:15.877Z",
+      "fetched_at": "2026-07-03T12:37:54.595Z",
       "beer_count": 19,
       "sours": [
         {
@@ -584,19 +584,19 @@
     },
     "5f82df6e-52a9-4143-8ea5-93294d43d645": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:39:17.517Z",
+      "fetched_at": "2026-07-03T12:37:56.186Z",
       "beer_count": 0,
       "sours": []
     },
     "1f0405ff-3d96-47e7-90ee-a1bc5764149b": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:39:19.111Z",
+      "fetched_at": "2026-07-03T12:37:57.791Z",
       "beer_count": 0,
       "sours": []
     },
     "c7fb56c0-daf1-42d7-a6dd-5b75953838c9": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:20.854Z",
+      "fetched_at": "2026-07-03T12:38:00.125Z",
       "beer_count": 62,
       "sours": [
         {
@@ -619,7 +619,7 @@
     },
     "3881ce7f-1556-4ef0-aef7-ed55283678d8": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:22.517Z",
+      "fetched_at": "2026-07-03T12:38:02.472Z",
       "beer_count": 62,
       "sours": [
         {
@@ -642,332 +642,277 @@
     },
     "e8cf3258-6464-4de0-8769-40027573fc5f": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:35.361Z",
+      "fetched_at": "2026-07-03T12:38:15.199Z",
       "beer_count": 0,
       "sours": []
     },
     "6225d756-4684-46ba-8ef4-de19e6fb0d8c": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:37.381Z",
-      "beer_count": 17,
-      "sours": [
-        {
-          "name": "🍉 Watermelon Sour",
-          "style": "Sour - Fruited Berliner Weisse"
-        }
-      ]
+      "fetched_at": "2026-07-03T12:38:28.306Z",
+      "beer_count": 0,
+      "sours": []
     },
     "eb3bca03-12e0-49b2-ae4f-42616521289c": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:39:39.240Z",
-      "beer_count": 33,
-      "sours": [
-        {
-          "name": "Afternoon Delight",
-          "style": "Bomb Pop Sour"
-        },
-        {
-          "name": "Desert Juice",
-          "style": "Prickly Pear Sour"
-        }
-      ]
+      "fetched_at": "2026-07-03T12:38:41.593Z",
+      "beer_count": 0,
+      "sours": []
     },
     "82a77cad-f8b2-42ed-9427-ba12789ff73f": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:14.246Z",
+      "fetched_at": "2026-07-03T12:38:55.774Z",
       "beer_count": 0,
       "sours": []
     },
     "91673432-855c-469a-a703-18f8451b6365": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:16.564Z",
-      "beer_count": 35,
-      "sours": [
-        {
-          "name": "Fruit Vehicle - Peachy Keen",
-          "style": "Sour - Fruited"
-        },
-        {
-          "name": "Sour Double Peach",
-          "style": "Sour - Other"
-        }
-      ]
+      "fetched_at": "2026-07-03T12:39:09.048Z",
+      "beer_count": 0,
+      "sours": []
     },
     "4ffda196-dd59-44a5-9eeb-5f7fd4b58f5a": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:40:18.183Z",
+      "fetched_at": "2026-07-03T12:39:10.660Z",
       "beer_count": 0,
       "sours": []
     },
     "ecde2a37-e88b-4637-933e-ebd02cbff2b8": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:31.570Z",
+      "fetched_at": "2026-07-03T12:39:24.217Z",
       "beer_count": 0,
       "sours": []
     },
     "9e3d79b0-5411-425d-9ead-e86abeb58c98": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:33.068Z",
-      "beer_count": 49,
-      "sours": [
-        {
-          "name": "Lime Bomb",
-          "style": "Sour - Fruited Gose"
-        }
-      ]
+      "fetched_at": "2026-07-03T12:39:37.360Z",
+      "beer_count": 0,
+      "sours": []
     },
     "7fa5779e-88df-42ab-895b-412b635498ae": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:34.642Z",
-      "beer_count": 11,
+      "fetched_at": "2026-07-03T12:39:50.454Z",
+      "beer_count": 0,
       "sours": []
     },
     "25dd3b18-3204-4539-b58b-95478fbcb531": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:47.914Z",
+      "fetched_at": "2026-07-03T12:40:03.681Z",
       "beer_count": 0,
       "sours": []
     },
     "fb5582cb-ab8e-4a54-b59e-ad6d5092a60b": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:51.558Z",
-      "beer_count": 13,
+      "fetched_at": "2026-07-03T12:40:19.220Z",
+      "beer_count": 0,
       "sours": []
     },
     "8d5259ff-4a8e-486f-8d9a-371b4f2ce224": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:53.093Z",
-      "beer_count": 26,
+      "fetched_at": "2026-07-03T12:40:32.304Z",
+      "beer_count": 0,
       "sours": []
     },
     "d9e12659-831c-433a-9229-23f71e25c592": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:40:55.360Z",
-      "beer_count": 57,
-      "sours": [
-        {
-          "name": "Vick’s View - Gose",
-          "style": "Sour - Traditional Gose"
-        },
-        {
-          "name": "Flanders Red Ale",
-          "style": "Sour - Flanders Red Ale"
-        },
-        {
-          "name": "Soured Lager",
-          "style": "Sour - Other"
-        }
-      ]
+      "fetched_at": "2026-07-03T12:40:45.808Z",
+      "beer_count": 0,
+      "sours": []
     },
     "97ae87b9-74f3-40c8-8773-967c92450fa5": {
       "source": "digitalpour",
-      "fetched_at": "2026-07-03T10:40:55.559Z",
+      "fetched_at": "2026-07-03T12:40:46.125Z",
       "beer_count": 0,
       "sours": []
     },
     "4c18e0e2-d6c6-430f-a3aa-3ffecd52e29d": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:08.532Z",
+      "fetched_at": "2026-07-03T12:40:59.078Z",
       "beer_count": 0,
       "sours": []
     },
     "6dfe19cd-23eb-43f3-a062-5e68bab19f50": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:09.950Z",
-      "beer_count": 17,
+      "fetched_at": "2026-07-03T12:41:12.303Z",
+      "beer_count": 0,
       "sours": []
     },
     "03411879-9d3e-4e2b-82a5-d5d01935074f": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:11.816Z",
-      "beer_count": 24,
+      "fetched_at": "2026-07-03T12:41:25.639Z",
+      "beer_count": 0,
       "sours": []
     },
     "3055793c-9330-4fe1-958b-fef6d2a0e057": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:14.223Z",
-      "beer_count": 37,
-      "sours": [
-        {
-          "name": "MVP Sour",
-          "style": "Sour Berliner Weisse"
-        },
-        {
-          "name": "TART SIDE OF THE MOON",
-          "style": "Sour - Fruited Berliner Weisse"
-        }
-      ]
+      "fetched_at": "2026-07-03T12:41:38.682Z",
+      "beer_count": 0,
+      "sours": []
     },
     "4f9d7195-bc11-44ce-bf57-e95f243a7675": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:15.626Z",
-      "beer_count": 14,
-      "sours": [
-        {
-          "name": "Berry Happy To See You",
-          "style": "Fruited Sour"
-        }
-      ]
+      "fetched_at": "2026-07-03T12:41:51.914Z",
+      "beer_count": 0,
+      "sours": []
     },
     "c75293cb-e18c-4c7f-ac21-a08418766428": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:29.468Z",
+      "fetched_at": "2026-07-03T12:42:05.051Z",
       "beer_count": 0,
       "sours": []
     },
     "b342f329-7cd5-494f-9c46-7298cdb63b0e": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:42.852Z",
+      "fetched_at": "2026-07-03T12:42:18.516Z",
       "beer_count": 0,
       "sours": []
     },
     "96ac0045-d677-4fe5-8dba-ba3fca9f2fe1": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:41:55.711Z",
+      "fetched_at": "2026-07-03T12:42:31.648Z",
       "beer_count": 0,
       "sours": []
     },
     "55c1eb54-704c-4d7b-a4d7-7fa9804cc3bc": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:42:08.883Z",
+      "fetched_at": "2026-07-03T12:42:45.271Z",
       "beer_count": 0,
       "sours": []
     },
     "05d9957f-92a7-4616-baeb-9f85fa170f22": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:42:22.415Z",
+      "fetched_at": "2026-07-03T12:42:58.249Z",
       "beer_count": 0,
       "sours": []
     },
     "be80fa99-6add-4bbd-87f8-650047882214": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:42:36.097Z",
+      "fetched_at": "2026-07-03T12:43:11.456Z",
       "beer_count": 0,
       "sours": []
     },
     "174e828f-10aa-43b9-ba31-3c3f45001288": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:42:49.511Z",
+      "fetched_at": "2026-07-03T12:43:25.402Z",
       "beer_count": 0,
       "sours": []
     },
     "97ca045f-aa1a-429e-bd93-7461954b20fc": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:43:02.936Z",
+      "fetched_at": "2026-07-03T12:43:38.994Z",
       "beer_count": 0,
       "sours": []
     },
     "d57fb73d-3582-4f8d-8b86-8daea30c36f2": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:43:17.809Z",
+      "fetched_at": "2026-07-03T12:43:52.797Z",
       "beer_count": 0,
       "sours": []
     },
     "79a8cdd5-d995-4575-ba5f-6253077bb4ba": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:43:31.213Z",
+      "fetched_at": "2026-07-03T12:44:06.478Z",
       "beer_count": 0,
       "sours": []
     },
     "82b4a5a5-31a0-4e82-8f9d-1b8e6e4d39de": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:43:44.474Z",
+      "fetched_at": "2026-07-03T12:44:19.720Z",
       "beer_count": 0,
       "sours": []
     },
     "e1253c80-0543-4024-bb35-3092589244d7": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:43:46.139Z",
+      "fetched_at": "2026-07-03T12:44:21.350Z",
       "beer_count": 0,
       "sours": []
     },
     "0712721c-20c3-4ac4-88d5-8a5b4b56e527": {
       "source": "digitalpour",
-      "fetched_at": "2026-07-03T10:43:46.246Z",
+      "fetched_at": "2026-07-03T12:44:21.648Z",
       "beer_count": 0,
       "sours": []
     },
     "62418a35-3a11-48f5-8b17-69f7cf65de0e": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:43:47.869Z",
+      "fetched_at": "2026-07-03T12:44:23.244Z",
       "beer_count": 0,
       "sours": []
     },
     "8c2b58e7-e1fc-495d-adda-5be4c18fb4e1": {
       "source": "digitalpour",
-      "fetched_at": "2026-07-03T10:43:47.879Z",
+      "fetched_at": "2026-07-03T12:44:23.318Z",
       "beer_count": 0,
       "sours": []
     },
     "ccae7ca3-7457-44cf-8138-f6f5d8959b8c": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:44:01.072Z",
+      "fetched_at": "2026-07-03T12:44:36.667Z",
       "beer_count": 0,
       "sours": []
     },
     "b5295ee6-9e4c-406b-a84e-6aaf544ad1c8": {
       "source": "digitalpour",
-      "fetched_at": "2026-07-03T10:44:01.188Z",
+      "fetched_at": "2026-07-03T12:44:36.931Z",
       "beer_count": 0,
       "sours": []
     },
     "a743ab27-0175-4ef3-b65f-1d5e67af200a": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:44:02.831Z",
+      "fetched_at": "2026-07-03T12:44:38.547Z",
       "beer_count": 0,
       "sours": []
     },
     "8a5a869c-247b-4c5a-bb78-c092abed8440": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:44:15.969Z",
+      "fetched_at": "2026-07-03T12:44:51.882Z",
       "beer_count": 0,
       "sours": []
     },
     "ab360d6f-246e-455f-b706-de39ec5ac9ec": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:44:29.196Z",
+      "fetched_at": "2026-07-03T12:45:05.010Z",
       "beer_count": 0,
       "sours": []
     },
     "86b5a710-4d68-4937-8350-3af75ca30e15": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:44:41.936Z",
+      "fetched_at": "2026-07-03T12:45:19.473Z",
       "beer_count": 0,
       "sours": []
     },
     "c8149934-3bc5-4c76-9f21-8b3cbbf31c40": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:44:54.867Z",
+      "fetched_at": "2026-07-03T12:45:32.596Z",
       "beer_count": 0,
       "sours": []
     },
     "6e193741-61b7-4cc8-9731-45770307547a": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:45:07.969Z",
+      "fetched_at": "2026-07-03T12:45:46.662Z",
       "beer_count": 0,
       "sours": []
     },
     "017c8df5-27bd-4812-b42a-6d5e3e555ecf": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:45:09.612Z",
+      "fetched_at": "2026-07-03T12:45:48.279Z",
       "beer_count": 0,
       "sours": []
     },
     "ab04508d-14bc-41cb-bf1d-b09d86838fb3": {
       "source": "untappd",
-      "fetched_at": "2026-07-03T10:45:22.661Z",
+      "fetched_at": "2026-07-03T12:46:01.304Z",
       "beer_count": 0,
       "sours": []
     },
     "be72c629-781c-4103-a6bb-afce18774c4e": {
       "source": "taplist",
-      "fetched_at": "2026-07-03T10:45:24.604Z",
+      "fetched_at": "2026-07-03T12:46:02.944Z",
       "beer_count": 0,
       "sours": []
     },
     "457de2b4-b8fd-4821-8f97-38dd0e27bc37": {
       "source": "arryved",
-      "fetched_at": "2026-07-03T10:45:31.457Z",
+      "fetched_at": "2026-07-03T12:46:10.619Z",
       "beer_count": 20,
       "sours": [
         {
@@ -1002,25 +947,25 @@
     },
     "e031e745-1aab-47a5-8f44-728abdf4bc76": {
       "source": "arryved",
-      "fetched_at": "2026-07-03T10:45:38.938Z",
+      "fetched_at": "2026-07-03T12:46:18.098Z",
       "beer_count": 75,
       "sours": []
     },
     "3f8790cd-03b9-4172-99c9-f88940c731a0": {
       "source": "arryved",
-      "fetched_at": "2026-07-03T10:45:59.216Z",
+      "fetched_at": "2026-07-03T12:46:39.083Z",
       "beer_count": 0,
       "sours": []
     },
     "34011fb5-ccda-4f99-b21a-62953b9b6128": {
       "source": "arryved",
-      "fetched_at": "2026-07-03T10:46:18.570Z",
+      "fetched_at": "2026-07-03T12:46:58.563Z",
       "beer_count": 0,
       "sours": []
     },
     "98c74480-648c-4e48-9740-bfef75a0310e": {
       "source": "arryved",
-      "fetched_at": "2026-07-03T10:46:25.438Z",
+      "fetched_at": "2026-07-03T12:47:06.099Z",
       "beer_count": 47,
       "sours": [
         {
@@ -1035,8 +980,193 @@
     },
     "24e29ba9-71d6-4125-9921-96512e6944d5": {
       "source": "arryved",
-      "fetched_at": "2026-07-03T10:46:32.839Z",
+      "fetched_at": "2026-07-03T12:47:13.961Z",
       "beer_count": 73,
+      "sours": []
+    },
+    "5654c809-0b29-49f0-855f-7ea45be8d8c0": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:47:21.467Z",
+      "beer_count": 57,
+      "sours": [
+        {
+          "name": "Let's Get Stoned Stone Fruit Sour w/ Apricots, Peaches + Dates",
+          "style": "Kettle soured ale brewed with apricots, peaches, and date syrup. Tart, stone fruity, and refreshing."
+        }
+      ]
+    },
+    "38973645-52f6-4b59-9f8b-8b88730e3ff9": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:47:29.548Z",
+      "beer_count": 42,
+      "sours": []
+    },
+    "339caa7a-481f-4315-bba1-bca6b74d8b89": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:47:37.081Z",
+      "beer_count": 51,
+      "sours": [
+        {
+          "name": "TO-GO | \"You Miss 100% of the Shots You Don't Take - Wayne Gretzky\" - Michael Scott",
+          "style": "One part Lavender Saison naturally soured by aging in red wine barrels for two years, plus three parts Blonde Ale naturally soured by aging in Chardonnay barrels for two years, blended and bottled, then naturally carbonated and aged for a further two years."
+        },
+        {
+          "name": "TO-GO | I Love Lamp [ Pineapple Hefeweizen ]",
+          "style": "I Love Lamp is our classic German-style hefeweizen with an Evil Genius twist. We brew this beer with 2-Row, Wheat, and Munich malts, and hop it gently in the kettle with German hops. Once fermentation has completed we add just the right amount of pineapple, making it a truly unique beer that is at once intriguing and drinkable. The banana and clove notes naturally produced by our hefeweizen yeast are balanced out by refreshing pineapple, resulting in a delicious, easy-drinking treat."
+        },
+        {
+          "name": "04. Take My Strong Hand [ Kiwi Dragon Fruit Sour ]",
+          "style": "Our in-house not-too-sour beer closed with natural Kiwi and Dragonfruit flavor."
+        },
+        {
+          "name": "12. History Began On July 4, 1776. Everything Before That Was A Mistake [ Rocket Pop Blonde Ale ]",
+          "style": "Blonde ale dosed with lime juice and cherry- and blue raspberry slushy syrup. It tastes like a melted rocket pop (And it's purple)!\n\nREFERENCE SOURCE: PARKS & RECS; Quote from Ron Swanson\n\n'Everything before 1776 is simply \"a mistake.\" At least, that's according to the strict historical philosophy of Ron Swanson from Parks and Recreation. \n\nIn the Swanson timeline, humanity's \"real\" history started the moment the 13 colonies declared independence from Great Britain and began the quest to become the greatest country on the planet.\""
+        }
+      ]
+    },
+    "b28c0edf-d271-4d60-997a-aa52aab7170f": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:47:58.058Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "05549159-6724-478d-a976-4925533a40f2": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:48:05.644Z",
+      "beer_count": 22,
+      "sours": [
+        {
+          "name": "Saloniste",
+          "style": "Blackberry Sour Ale"
+        }
+      ]
+    },
+    "e31a1d5a-42e7-4d84-a9a0-12b7849c8c8a": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:48:13.113Z",
+      "beer_count": 28,
+      "sours": []
+    },
+    "8a058b3f-9a57-469d-9f1f-c31c3ae064a5": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:48:34.135Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "5b5235aa-79f1-41e4-97a1-8f9fdfee1657": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:48:41.498Z",
+      "beer_count": 82,
+      "sours": [
+        {
+          "name": "24 Karat - Golden Kiwi Sour",
+          "style": "Golden Kiwi Sour"
+        }
+      ]
+    },
+    "5c8f16b0-45fb-42ce-bb6b-ffcc4582eb42": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:48:48.979Z",
+      "beer_count": 45,
+      "sours": []
+    },
+    "31c082a9-357c-47d6-b65c-56e28b9423a0": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:48:56.838Z",
+      "beer_count": 30,
+      "sours": [
+        {
+          "name": "Cherry Limeade Berliner",
+          "style": "A modern Berliner Weisse with tart cherries and key lime.  Think summer pool parties."
+        }
+      ]
+    },
+    "20b38dd1-4c83-4b4f-83c5-299fd1258ffe": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:49:04.388Z",
+      "beer_count": 1,
+      "sours": []
+    },
+    "b257714f-ad0b-4898-a9bc-3c6e29dc70a1": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:49:11.888Z",
+      "beer_count": 1,
+      "sours": []
+    },
+    "817d2caa-c087-4b68-abea-6b7b797d17f8": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:49:19.271Z",
+      "beer_count": 1,
+      "sours": []
+    },
+    "d07100f1-ab4b-413e-bc07-045ee4d61fe6": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:49:27.044Z",
+      "beer_count": 40,
+      "sours": []
+    },
+    "cc7d935c-c318-4a60-9da6-e683a3ce7fb9": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:49:34.588Z",
+      "beer_count": 16,
+      "sours": []
+    },
+    "579678d2-7826-419b-9fe0-b3d8cfdcf574": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:49:55.563Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "a4e94650-bbd6-45f5-ba67-b59f9ac661d8": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:50:16.538Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "84b769ca-926a-4fc5-a1dc-f7cdce4eea06": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:50:35.944Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "84278f35-1caf-4c58-8446-4f6af8a17661": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:50:43.406Z",
+      "beer_count": 22,
+      "sours": [
+        {
+          "name": "Drew Berrymore",
+          "style": "An easy drinkin' little sour ale with mounds of prickly pear, blackberry, plum, lime and ginger! 6% ABV"
+        }
+      ]
+    },
+    "0338af09-60df-4e16-9fd6-89d3033c9cc2": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:50:50.816Z",
+      "beer_count": 16,
+      "sours": []
+    },
+    "901800b6-36f4-4f84-850b-d8c72c7b60f1": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:50:58.417Z",
+      "beer_count": 17,
+      "sours": [
+        {
+          "name": "CHIPS",
+          "style": "KETTLE CHIPS TOSSED IN OUR BBQ RUB"
+        }
+      ]
+    },
+    "3486d742-3bd5-449a-b66e-d3a881c3c103": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:51:19.345Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "e2eef525-02a8-47d0-951c-05fead8bcb7d": {
+      "source": "arryved",
+      "fetched_at": "2026-07-03T12:51:26.773Z",
+      "beer_count": 10,
       "sours": []
     }
   }
