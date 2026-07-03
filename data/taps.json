@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T04:55:33.930Z",
+  "generated_at": "2026-07-03T06:42:26.607Z",
   "areas": [
     {
       "label": "Orlando, FL",
@@ -58,5 +58,172 @@
       "center": "47.61,-122.33"
     }
   ],
-  "breweries": {}
+  "breweries": {
+    "dc3e008a-2387-4aea-addd-c05a1049ee89": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:28.411Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "f6a4ecaa-2045-43ed-8563-9d4bf0af345f": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:30.046Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "40e3e16f-ba2e-4403-8cbd-b7fe50863cb5": {
+      "source": "beermenus",
+      "fetched_at": "2026-07-03T06:42:30.595Z",
+      "beer_count": 28,
+      "sours": [
+        {
+          "name": "Grimm Heliogram",
+          "style": "Sour Ale &middot 5.5% &middot Brooklyn, NY"
+        },
+        {
+          "name": "Grimm A Pattern Language",
+          "style": "Sour Stout &middot 7.0% &middot Brooklyn, NY"
+        },
+        {
+          "name": "Grimm Dithyramb",
+          "style": "Barrel Aged Sour &middot 7.0% &middot Brooklyn, NY"
+        },
+        {
+          "name": "Grimm Open Work Three Two One",
+          "style": "Lambic - Gueuze &middot 6.0% &middot Brooklyn, NY"
+        },
+        {
+          "name": "Grimm The Open Work 2022",
+          "style": "Lambic - Gueuze &middot 6.0% &middot Brooklyn, NY"
+        },
+        {
+          "name": "Grimm The Open Work Cab Franc",
+          "style": "Lambic - Fruit &middot 7.0% &middot Brooklyn, NY"
+        },
+        {
+          "name": "Grimm The Open Work: Gewurztraminer",
+          "style": "Lambic - Fruit &middot 7.0% &middot Brooklyn, NY"
+        }
+      ]
+    },
+    "e69d7c0d-f29a-4668-9419-f74ffc9e19cf": {
+      "source": "beermenus",
+      "fetched_at": "2026-07-03T06:42:31.054Z",
+      "beer_count": 6,
+      "sours": []
+    },
+    "ecd253a8-292a-4233-908f-4141491d0d32": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:32.676Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "c8e69ab9-60b6-44b9-8188-cf3d719b8d82": {
+      "source": "beermenus",
+      "fetched_at": "2026-07-03T06:42:33.082Z",
+      "beer_count": 39,
+      "sours": [
+        {
+          "name": "Off Color Blueberry Yuzu Fierce",
+          "style": "Berliner Weisse &middot 4.2% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Mango Beer For Tacos",
+          "style": "Gose &middot 4.8% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Peach Miscellanea",
+          "style": "American Wild Ale &middot 8.2% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Beer for Tacos",
+          "style": "Gose &middot 4.5% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color All Whiskers Turn Grey",
+          "style": "American Wild Ale &middot 7.2% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Hydriad",
+          "style": "American Wild Ale &middot 6.0% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Orange Ghost",
+          "style": "American Wild Ale &middot 6.8% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Paw Paw",
+          "style": "American Wild Ale &middot 5.5% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Space Tiger",
+          "style": "American Wild Ale &middot 7.8% &middot Chicago, IL"
+        },
+        {
+          "name": "Off Color Sunrise In Osaka",
+          "style": "American Wild Ale &middot Chicago, IL"
+        }
+      ]
+    },
+    "5f82df6e-52a9-4143-8ea5-93294d43d645": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:34.671Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "1f0405ff-3d96-47e7-90ee-a1bc5764149b": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:36.258Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "4ffda196-dd59-44a5-9eeb-5f7fd4b58f5a": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:37.844Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "97ae87b9-74f3-40c8-8773-967c92450fa5": {
+      "source": "digitalpour",
+      "fetched_at": "2026-07-03T06:42:37.971Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "e1253c80-0543-4024-bb35-3092589244d7": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:39.590Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "0712721c-20c3-4ac4-88d5-8a5b4b56e527": {
+      "source": "digitalpour",
+      "fetched_at": "2026-07-03T06:42:39.595Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "62418a35-3a11-48f5-8b17-69f7cf65de0e": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:41.177Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "8c2b58e7-e1fc-495d-adda-5be4c18fb4e1": {
+      "source": "digitalpour",
+      "fetched_at": "2026-07-03T06:42:41.182Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "b5295ee6-9e4c-406b-a84e-6aaf544ad1c8": {
+      "source": "digitalpour",
+      "fetched_at": "2026-07-03T06:42:41.210Z",
+      "beer_count": 0,
+      "sours": []
+    },
+    "017c8df5-27bd-4812-b42a-6d5e3e555ecf": {
+      "source": "taplist",
+      "fetched_at": "2026-07-03T06:42:42.826Z",
+      "beer_count": 0,
+      "sours": []
+    }
+  }
 }
