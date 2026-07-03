@@ -105,6 +105,9 @@ button.primary:active { filter: brightness(.9); }
 }
 .suggest li:first-child { border-radius: 12px 12px 0 0; }
 .suggest li:last-child { border-radius: 0 0 12px 12px; }
+.suggest { scrollbar-width: thin; scrollbar-color: var(--hairline) transparent; }
+.suggest::-webkit-scrollbar { width: 6px; }
+.suggest::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 3px; }
 .suggest li { padding: 13px 14px; font-size: 17px; cursor: pointer; }
 .suggest li + li { border-top: 0.5px solid var(--hairline); }
 .suggest li:active { background: var(--card-press); }

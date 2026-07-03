@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.14';
+const APP_BUILD = '2026.07.03.15';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -82,6 +82,27 @@ async function geocodeCities(raw) {
   }
 }
 
+/* Registers a tap (not drag/scroll) handler on el. Plain pointerdown+
+   preventDefault treats every touch as a selection, which cancels the
+   browser's native scroll gesture — so a finger-drag to scroll a long
+   list instead immediately "selects" whatever was under the start
+   point. Tracking movement between pointerdown/pointerup lets a real
+   drag scroll normally while a stationary tap still fires instantly. */
+function onTap(el, handler) {
+  let sx = 0, sy = 0, dragging = false;
+  el.addEventListener('pointerdown', (e) => {
+    sx = e.clientX;
+    sy = e.clientY;
+    dragging = false;
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (Math.hypot(e.clientX - sx, e.clientY - sy) > 10) dragging = true;
+  });
+  el.addEventListener('pointerup', (e) => {
+    if (!dragging) handler(e);
+  });
+}
+
 /* Dropdown of matching cities under `input`; onPick gets {label, lat, lng}.
    Returns {first} so submit handlers can take the top suggestion. */
 function attachCityAutocomplete(input, onPick) {
@@ -107,9 +128,7 @@ function attachCityAutocomplete(input, onPick) {
       current.forEach((c) => {
         const li = document.createElement('li');
         li.textContent = c.label;
-        // pointerdown (not click) so the input's blur doesn't kill the tap
-        li.addEventListener('pointerdown', (e) => {
-          e.preventDefault();
+        onTap(li, () => {
           input.value = '';
           close();
           onPick(c);
@@ -444,9 +463,7 @@ function toggleCityDrop() {
   cities.forEach((c) => {
     const li = document.createElement('li');
     li.textContent = (c.home ? '★ ' : '') + c.q;
-    // pointerdown (not click) so the button's blur doesn't kill the tap
-    li.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
+    onTap(li, () => {
       list.hidden = true;
       openCity(c);
     });
@@ -455,8 +472,7 @@ function toggleCityDrop() {
   const manage = document.createElement('li');
   manage.className = 'drop-manage';
   manage.textContent = '⚙︎ Manage cities…';
-  manage.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
+  onTap(manage, () => {
     list.hidden = true;
     citiesFlow();
   });
