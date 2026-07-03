@@ -859,5 +859,19 @@
     "source": "untappd",
     "untappd_location_id": 2966,
     "found_on": "http://seminarbrewing.com/beer"
+  },
+  {
+    "obdb_id": "1ce06580-ed70-4d32-bc01-5bd23e5aa388",
+    "name": "Foulmouthed Brewing",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BA91QPiR",
+    "found_on": "http://www.foulmouthedbrewing.com"
+  },
+  {
+    "obdb_id": "568fcb4a-f5cd-4554-84b1-8ce90052e21d",
+    "name": "Tuckerman Brewing Co",
+    "source": "untappd",
+    "untappd_location_id": 13249,
+    "found_on": "http://www.tuckermanbrewing.com/our-brewery/tasting-room-taps.php"
   }
 ]
