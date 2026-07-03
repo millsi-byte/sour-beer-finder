@@ -3,9 +3,13 @@ name: Discover tap-list sources
 on:
   workflow_dispatch:
     inputs:
-      area:
-        description: 'City[, Full State Name] or lat,lng — e.g. "Tampa, Florida" or "27.95,-82.45"'
+      center:
+        description: 'Area center: "lat,lng" (best) or "City, Full State Name"'
         required: true
+        type: string
+      label:
+        description: 'Display label for the area, e.g. "Tampa, FL"'
+        required: false
         type: string
 
 permissions:
@@ -20,7 +24,7 @@ jobs:
         with:
           node-version: 22
       - name: Scan brewery websites for tap-list widgets
-        run: node pipeline/discover.js "${{ inputs.area }}"
+        run: node pipeline/discover.js "${{ inputs.center }}" "${{ inputs.label }}"
       - name: Build tap data with the new sources
         run: node pipeline/build.js
         env:
@@ -30,5 +34,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pipeline/sources.json data/taps.json
-          git diff --cached --quiet || { git commit -m "Discover tap-list sources: ${{ inputs.area }}"; git push; }
+          git add pipeline/sources.json pipeline/areas.json data/taps.json
+          git diff --cached --quiet || { git commit -m "Discover tap-list sources: ${{ inputs.label || inputs.center }}"; git push; }

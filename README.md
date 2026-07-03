@@ -87,12 +87,18 @@ Untappd + BeerMenus + widget detection is ~70–80% of metro-area taprooms.
   are clean JSON under the hood; adapters fetch the embed URL and extract
   generically. Keyless.
 - **Widget detection** (`pipeline/discover.js` + the "Discover tap-list
-  sources" workflow) — fetches each area brewery's homepage once (websites
-  come free from Open Brewery DB) and looks for embed signatures
-  (`business.untappd.com/locations/…`, `beermenus.com/places/…`,
-  `taplist.io`, `digitalpour.com`), auto-writing mappings into
-  `sources.json` instead of maintaining them by hand. Run it from the
-  Actions tab with an area like `Tampa, Florida` or `27.95,-82.45`.
+  sources" workflow) — fetches each area brewery's homepage and its
+  menu/tap-list subpages (websites come free from Open Brewery DB) and
+  looks for embed signatures (`business.untappd.com/locations/…`,
+  `beermenus.com/places/…`, `taplist.io`, `digitalpour.com`), auto-writing
+  mappings into `sources.json` instead of maintaining them by hand.
+- **Covered areas** (`pipeline/areas.json`) — the managed list of places
+  the nightly job re-scans and refreshes. Add an area by running the
+  "Discover tap-list sources" workflow (center `lat,lng` + label) — it
+  scans immediately and persists the area for every night after — or by
+  editing `areas.json` directly. The app's **Your cities** page (⚙) lets
+  each user keep their own city list with a starred home city (stored on
+  device) and shows which areas have live data.
 - **Untappd** (`untappd`) — the anchor source, still gated on
   `UNTAPPD_EMAIL` / `UNTAPPD_TOKEN` secrets (see "Enabling live data").
 

@@ -11,7 +11,14 @@ async function main() {
   const sources = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'sources.json'), 'utf8')
   );
-  const out = { generated_at: new Date().toISOString(), breweries: {} };
+  const areas = JSON.parse(
+    fs.readFileSync(path.join(__dirname, 'areas.json'), 'utf8')
+  );
+  const out = {
+    generated_at: new Date().toISOString(),
+    areas: areas.map((a) => a.label),
+    breweries: {},
+  };
 
   for (const src of sources) {
     const adapter = adapters[src.source];

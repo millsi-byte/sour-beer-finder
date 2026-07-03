@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Re-scan covered areas for new tap-list widgets
+        run: node pipeline/discover.js --all
       - name: Build tap data
         run: node pipeline/build.js
         env:
@@ -25,5 +27,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/taps.json
+          git add data/taps.json pipeline/sources.json
           git diff --cached --quiet || { git commit -m "Refresh tap data"; git push; }

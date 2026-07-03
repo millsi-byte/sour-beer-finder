@@ -34,6 +34,28 @@ function fmtAgo(iso) {
   return `${Math.round(mins / 1440)}d ago`;
 }
 
+// ---------- saved cities (this device only) ----------
+const CITIES_KEY = 's4s.cities';
+
+function loadSavedCities() {
+  try {
+    return JSON.parse(localStorage.getItem(CITIES_KEY)) ?? [];
+  } catch {
+    return [];
+  }
+}
+
+function saveSavedCities(cities) {
+  localStorage.setItem(CITIES_KEY, JSON.stringify(cities));
+}
+
+function isCovered(cityQ) {
+  const city = cityQ.split(',')[0].trim().toLowerCase();
+  return (state.taps?.areas ?? []).some(
+    (a) => a.split(',')[0].trim().toLowerCase() === city
+  );
+}
+
 // ---------- geo helpers ----------
 function haversineMiles(a, b) {
   const R = 3958.8;
@@ -84,6 +106,7 @@ function prepare(list, origin) {
 function show(view) {
   $('viewLocate').hidden = view !== 'locate';
   $('viewList').hidden = view !== 'list';
+  $('viewCities').hidden = view !== 'cities';
   $('spinner').hidden = view !== 'loading';
 }
 
@@ -119,6 +142,49 @@ function renderList(title) {
     ul.appendChild(li);
   });
   show('list');
+}
+
+// ---------- your cities ----------
+function renderCities() {
+  const cities = loadSavedCities();
+  const ul = $('cityList');
+  ul.innerHTML = '';
+  if (!cities.length) {
+    ul.innerHTML = '<li class="explain">No cities yet — add the ones you drink in.</li>';
+  }
+  cities.forEach((c, i) => {
+    const li = document.createElement('li');
+    li.className = 'city-row';
+    li.innerHTML = `
+      <span class="city-name"></span>
+      <span class="city-covered" hidden>&#x1F34B; live data</span>
+      <button class="city-star" aria-label="Set as home city"></button>
+      <button class="city-remove" aria-label="Remove">&#x2715;</button>`;
+    li.querySelector('.city-name').textContent = c.q;
+    li.querySelector('.city-covered').hidden = !isCovered(c.q);
+    const star = li.querySelector('.city-star');
+    star.textContent = c.home ? '★' : '☆';
+    star.title = c.home ? 'Home city' : 'Set as home city';
+    li.querySelector('.city-name').addEventListener('click', () => cityFlow(c.q));
+    star.addEventListener('click', () => {
+      cities.forEach((x, j) => (x.home = j === i && !x.home));
+      saveSavedCities(cities);
+      renderCities();
+    });
+    li.querySelector('.city-remove').addEventListener('click', () => {
+      cities.splice(i, 1);
+      saveSavedCities(cities);
+      renderCities();
+    });
+    ul.appendChild(li);
+  });
+  $('coveredAreas').textContent = (state.taps?.areas ?? []).join(' · ') || 'Loading…';
+}
+
+async function citiesFlow() {
+  await tapsReady;
+  renderCities();
+  show('cities');
 }
 
 // ---------- detail sheet ----------
@@ -221,6 +287,7 @@ async function cityFlow(q) {
     const [city, st] = q.split(',').map((s) => s.trim()).filter(Boolean);
     if (!city) return fail('Enter a city name.');
     state.origin = null;
+    state.lastCity = q;
     const raw = await fetchByCity(city, st);
     await tapsReady;
     state.breweries = prepare(raw, null);
@@ -239,10 +306,28 @@ $('cityForm').addEventListener('submit', (e) => {
 $('btnNewSearch').addEventListener('click', () => show('locate'));
 $('btnRefresh').addEventListener('click', () => {
   if (state.origin) locateFlow();
+  else if (state.lastCity) cityFlow(state.lastCity);
   else show('locate');
+});
+$('btnCities').addEventListener('click', citiesFlow);
+$('cityAddForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const q = $('cityAddInput').value.trim();
+  if (!q) return;
+  const cities = loadSavedCities();
+  if (!cities.some((c) => c.q.toLowerCase() === q.toLowerCase())) {
+    cities.push({ q, home: cities.length === 0 }); // first city becomes home
+    saveSavedCities(cities);
+  }
+  $('cityAddInput').value = '';
+  renderCities();
 });
 $('sheetBackdrop').addEventListener('click', closeSheet);
 $('sheet').querySelector('.grabber').addEventListener('click', closeSheet);
+
+// open straight to the home city when one is set
+const home = loadSavedCities().find((c) => c.home);
+if (home) cityFlow(home.q);
 
 // ---------- service worker ----------
 if ('serviceWorker' in navigator) {
