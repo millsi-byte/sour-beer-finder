@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.1';
+const APP_BUILD = '2026.07.03.2';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -179,13 +179,13 @@ function fmtMiles(mi) {
 
 // ---------- data ----------
 async function fetchByDist(lat, lng) {
-  const res = await fetch(`${API}?by_dist=${lat},${lng}&per_page=50`);
+  const res = await fetch(`${API}?by_dist=${lat},${lng}&per_page=200`);
   if (!res.ok) throw new Error(`Open Brewery DB error ${res.status}`);
   return res.json();
 }
 
 async function fetchByCity(city, stateName) {
-  const params = new URLSearchParams({ by_city: city, per_page: '50' });
+  const params = new URLSearchParams({ by_city: city, per_page: '200' });
   if (stateName) params.set('by_state', stateName);
   const res = await fetch(`${API}?${params}`);
   if (!res.ok) throw new Error(`Open Brewery DB error ${res.status}`);
@@ -214,32 +214,79 @@ function show(view) {
   $('spinner').hidden = view !== 'loading';
 }
 
-// ---------- search radius ----------
-const RADII = [5, 10, 25, 50, 'All'];
+// ---------- list controls: radius, sort, sours-only ----------
+const RADII = [10, 25, 50, 100, 'All'];
 const RADIUS_KEY = 's4s.radius';
+const SORT_KEY = 's4s.sort'; // 'sours' (default) | 'dist'
+const ONLY_KEY = 's4s.soursOnly';
 let radius = Number(localStorage.getItem(RADIUS_KEY)) || 'All';
+let sortMode = localStorage.getItem(SORT_KEY) || 'sours';
+let soursOnly = localStorage.getItem(ONLY_KEY) === '1';
 
-function renderRadiusBar() {
+function chip(label, active, onTap) {
+  const btn = document.createElement('button');
+  btn.className = 'radius-chip' + (active ? ' active' : '');
+  btn.textContent = label;
+  btn.addEventListener('click', onTap);
+  return btn;
+}
+
+function renderControls() {
   const bar = $('radiusBar');
   bar.hidden = !state.origin; // no distances → nothing to filter
-  if (bar.hidden) return;
-  bar.innerHTML = '';
-  RADII.forEach((r) => {
-    const btn = document.createElement('button');
-    btn.className = 'radius-chip' + (r === radius ? ' active' : '');
-    btn.textContent = r === 'All' ? 'All' : `${r} mi`;
-    btn.addEventListener('click', () => {
-      radius = r;
-      localStorage.setItem(RADIUS_KEY, r === 'All' ? '' : r);
-      renderList();
+  if (!bar.hidden) {
+    bar.innerHTML = '';
+    RADII.forEach((r) => {
+      bar.appendChild(
+        chip(r === 'All' ? 'All' : `${r} mi`, r === radius, () => {
+          radius = r;
+          localStorage.setItem(RADIUS_KEY, r === 'All' ? '' : r);
+          renderList();
+        })
+      );
     });
-    bar.appendChild(btn);
-  });
+  }
+  const sort = $('sortBar');
+  sort.hidden = false;
+  sort.innerHTML = '';
+  sort.appendChild(
+    chip('\u{1F34B} first', sortMode === 'sours', () => {
+      sortMode = 'sours';
+      localStorage.setItem(SORT_KEY, sortMode);
+      renderList();
+    })
+  );
+  sort.appendChild(
+    chip('Nearest', sortMode === 'dist', () => {
+      sortMode = 'dist';
+      localStorage.setItem(SORT_KEY, sortMode);
+      renderList();
+    })
+  );
+  sort.appendChild(
+    chip('\u{1F34B} only', soursOnly, () => {
+      soursOnly = !soursOnly;
+      localStorage.setItem(ONLY_KEY, soursOnly ? '1' : '');
+      renderList();
+    })
+  );
 }
 
 function visibleBreweries() {
-  if (radius === 'All' || !state.origin) return state.breweries;
-  return state.breweries.filter((b) => b.miles != null && b.miles <= radius);
+  let list = state.breweries;
+  if (radius !== 'All' && state.origin) {
+    list = list.filter((b) => b.miles != null && b.miles <= radius);
+  }
+  if (soursOnly) {
+    list = list.filter((b) => tapInfo(b)?.sours.length);
+  }
+  if (sortMode === 'sours') {
+    // stable sort: sours float to the top, distance order kept within groups
+    list = [...list].sort(
+      (a, c) => (tapInfo(c)?.sours.length ? 1 : 0) - (tapInfo(a)?.sours.length ? 1 : 0)
+    );
+  }
+  return list;
 }
 
 function renderList(label) {
@@ -247,14 +294,17 @@ function renderList(label) {
   const shown = visibleBreweries();
   $('listTitle').textContent =
     `${shown.length} ${shown.length === 1 ? 'brewery' : 'breweries'} ${state.listLabel}`;
-  renderRadiusBar();
+  renderControls();
   const ul = $('breweryList');
   ul.innerHTML = '';
   if (!shown.length) {
-    ul.innerHTML =
-      radius !== 'All' && state.breweries.length
-        ? `<li class="footnote">Nothing within ${radius} mi — widen the radius.</li>`
-        : '<li class="footnote">No breweries found here. Try a nearby city.</li>';
+    ul.innerHTML = state.breweries.length
+      ? `<li class="footnote">${
+          soursOnly
+            ? 'No live sour data here yet — widen the radius or turn off \u{1F34B} only.'
+            : `Nothing within ${radius} mi — widen the radius.`
+        }</li>`
+      : '<li class="footnote">No breweries found here. Try a nearby city.</li>';
   }
   shown.forEach((b, i) => {
     const li = document.createElement('li');
