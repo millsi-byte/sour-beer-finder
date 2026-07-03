@@ -2,15 +2,22 @@
    user-agent, timeout), a minimal robots.txt check, and a generic
    beer extractor for JSON embeds. Zero dependencies. */
 
+/* Crawler-standard UA: transparent about being a bot but in the
+   Mozilla-compatible format WAFs expect — the bare "S4S-taplist-bot" UA
+   was 403'd by most Squarespace/Wix/Cloudflare-fronted brewery sites. */
 const USER_AGENT =
-  'S4S-taplist-bot/1.0 (+https://github.com/millsi-byte/sour-beer-finder)';
+  'Mozilla/5.0 (compatible; S4S-bot/1.0; +https://github.com/millsi-byte/sour-beer-finder)';
 
 async function fetchText(url, { timeoutMs = 10000 } = {}) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const res = await fetch(url, {
-      headers: { 'User-Agent': USER_AGENT, Accept: 'text/html,application/json;q=0.9,*/*;q=0.8' },
+      headers: {
+        'User-Agent': USER_AGENT,
+        Accept: 'text/html,application/json;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
       redirect: 'follow',
       signal: ctrl.signal,
     });
