@@ -1,5 +1,5 @@
 /* Network-first service worker: cache is offline fallback only. */
-const CACHE = 's4s-v1';
+const CACHE = 's4s-v2';
 const SHELL = ['./', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {

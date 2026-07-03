@@ -152,6 +152,7 @@ button.secondary {
 }
 .city-star { color: var(--accent-ink); }
 .city-remove { color: var(--text-dim); font-size: 17px; }
+button.block { display: block; width: 100%; margin-top: 8px; }
 
 /* Spinner */
 .spinner { display: flex; justify-content: center; padding: 60px 0; }

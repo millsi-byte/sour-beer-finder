@@ -179,6 +179,9 @@ function renderCities() {
     ul.appendChild(li);
   });
   $('coveredAreas').textContent = (state.taps?.areas ?? []).join(' · ') || 'Loading…';
+  $('dataAge').textContent = state.taps?.generated_at
+    ? `Tap data last gathered ${fmtAgo(state.taps.generated_at)}.`
+    : '';
 }
 
 async function citiesFlow() {
@@ -325,6 +328,22 @@ $('cityAddForm').addEventListener('submit', (e) => {
 $('sheetBackdrop').addEventListener('click', closeSheet);
 $('sheet').querySelector('.grabber').addEventListener('click', closeSheet);
 
+// hard update: refresh the service worker, drop caches, reload everything
+$('btnUpdate').addEventListener('click', async () => {
+  const btn = $('btnUpdate');
+  btn.disabled = true;
+  btn.textContent = 'Updating…';
+  try {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((k) => caches.delete(k)));
+    const reg = await navigator.serviceWorker?.getRegistration();
+    await reg?.update();
+  } catch {
+    /* still reload */
+  }
+  location.reload();
+});
+
 // open straight to the home city when one is set
 const home = loadSavedCities().find((c) => c.home);
 if (home) cityFlow(home.q);
@@ -332,4 +351,11 @@ if (home) cityFlow(home.q);
 // ---------- service worker ----------
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' });
+  // when a new version of the app takes over, load it immediately
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloaded) return;
+    reloaded = true;
+    location.reload();
+  });
 }
