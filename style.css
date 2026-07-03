@@ -370,5 +370,5 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
 .mark-del { font-size: 18px; padding: 4px 8px; color: var(--text-dim); }
 .mark-del-inline { font-size: 13px; margin-top: 4px; color: var(--danger); }
 
-.fav-row-label { text-align: left; font-size: 13px; font-weight: 700; color: var(--text-dim); margin: 24px 0 6px 2px; letter-spacing: .2px; }
+.fav-row-label { text-align: left; font-size: 13px; font-weight: 700; color: var(--text-dim); margin: 32px 0 6px 2px; letter-spacing: .2px; }
 .fav-row-label + .cities-quick { margin-top: 0; }
