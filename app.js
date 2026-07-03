@@ -208,14 +208,49 @@ function show(view) {
   $('spinner').hidden = view !== 'loading';
 }
 
-function renderList(title) {
-  $('listTitle').textContent = title;
+// ---------- search radius ----------
+const RADII = [5, 10, 25, 50, 'All'];
+const RADIUS_KEY = 's4s.radius';
+let radius = Number(localStorage.getItem(RADIUS_KEY)) || 'All';
+
+function renderRadiusBar() {
+  const bar = $('radiusBar');
+  bar.hidden = !state.origin; // no distances → nothing to filter
+  if (bar.hidden) return;
+  bar.innerHTML = '';
+  RADII.forEach((r) => {
+    const btn = document.createElement('button');
+    btn.className = 'radius-chip' + (r === radius ? ' active' : '');
+    btn.textContent = r === 'All' ? 'All' : `${r} mi`;
+    btn.addEventListener('click', () => {
+      radius = r;
+      localStorage.setItem(RADIUS_KEY, r === 'All' ? '' : r);
+      renderList();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+function visibleBreweries() {
+  if (radius === 'All' || !state.origin) return state.breweries;
+  return state.breweries.filter((b) => b.miles != null && b.miles <= radius);
+}
+
+function renderList(label) {
+  if (label !== undefined) state.listLabel = label;
+  const shown = visibleBreweries();
+  $('listTitle').textContent =
+    `${shown.length} ${shown.length === 1 ? 'brewery' : 'breweries'} ${state.listLabel}`;
+  renderRadiusBar();
   const ul = $('breweryList');
   ul.innerHTML = '';
-  if (!state.breweries.length) {
-    ul.innerHTML = '<li class="footnote">No breweries found here. Try a nearby city.</li>';
+  if (!shown.length) {
+    ul.innerHTML =
+      radius !== 'All' && state.breweries.length
+        ? `<li class="footnote">Nothing within ${radius} mi — widen the radius.</li>`
+        : '<li class="footnote">No breweries found here. Try a nearby city.</li>';
   }
-  state.breweries.forEach((b, i) => {
+  shown.forEach((b, i) => {
     const li = document.createElement('li');
     li.className = 'card';
     li.innerHTML = `
@@ -236,7 +271,7 @@ function renderList(title) {
     li.querySelector('.type-badge').textContent = b.brewery_type || 'brewery';
     li.querySelector('.loc').textContent = [b.city, b.state_province].filter(Boolean).join(', ');
     li.querySelector('.dist').textContent = fmtMiles(b.miles);
-    li.addEventListener('click', () => openSheet(i));
+    li.addEventListener('click', () => openSheet(b));
     ul.appendChild(li);
   });
   show('list');
@@ -290,8 +325,7 @@ async function citiesFlow() {
 }
 
 // ---------- detail sheet ----------
-function openSheet(i) {
-  const b = state.breweries[i];
+function openSheet(b) {
   $('sheetName').textContent = b.name;
   const addr = [b.address_1, b.city, b.state_province].filter(Boolean).join(' · ');
   $('sheetSub').textContent = [addr, fmtMiles(b.miles)].filter(Boolean).join(' — ');
@@ -367,7 +401,7 @@ async function locateFlow() {
         const raw = await fetchByDist(state.origin.lat, state.origin.lng);
         await tapsReady;
         state.breweries = prepare(raw, state.origin);
-        renderList(`${state.breweries.length} breweries near you`);
+        renderList('near you');
       } catch (e) {
         fail(`Couldn't load breweries: ${e.message}`);
       }
@@ -393,7 +427,7 @@ async function coordsFlow(label, lat, lng) {
     const raw = await fetchByDist(lat, lng);
     await tapsReady;
     state.breweries = prepare(raw, state.origin);
-    renderList(`${state.breweries.length} breweries near ${label}`);
+    renderList(`near ${label}`);
   } catch (e) {
     fail(`Couldn't load breweries: ${e.message}`);
   }
@@ -417,7 +451,7 @@ async function cityFlow(q) {
     const raw = await fetchByCity(city, st);
     await tapsReady;
     state.breweries = prepare(raw, null);
-    renderList(`${state.breweries.length} breweries in ${city}`);
+    renderList(`in ${city}`);
   } catch (e) {
     fail(`Couldn't load breweries: ${e.message}`);
   }

@@ -124,6 +124,14 @@ button.secondary {
 }
 .linkbtn { background: none; border: none; color: var(--accent-ink); font-size: 14px; font-weight: 600; cursor: pointer; }
 
+.radius-bar { display: flex; gap: 6px; padding: 0 2px 12px; }
+.radius-chip {
+  flex: 1; padding: 7px 0; font-size: 13px; font-weight: 600;
+  background: var(--card); color: var(--text-dim);
+  border: 0.5px solid var(--hairline); border-radius: 999px; cursor: pointer;
+}
+.radius-chip.active { background: var(--accent); color: #ffffff; border-color: transparent; }
+
 .cards { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .card {
   display: flex; align-items: center; gap: 12px;
