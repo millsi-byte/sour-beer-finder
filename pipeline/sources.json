@@ -810,5 +810,54 @@
     "source": "arryved",
     "arryved_url": "https://commerce.arryved.com/location/BCFfhSOY",
     "found_on": "http://www.wattsbrewingcompany.com"
+  },
+  {
+    "obdb_id": "78ab1ee9-b1b7-437a-8175-4cd608de8451",
+    "name": "Eluvium Brewing Co.",
+    "source": "beermenus",
+    "beermenus_slug": "79200-eluvium-brewing-company",
+    "found_on": "http://www.eluviumbrewing.com"
+  },
+  {
+    "obdb_id": "828ee507-7142-4c7c-9f0b-82964d4195d0",
+    "name": "Akademia Brewing Company",
+    "source": "untappd",
+    "untappd_location_id": 21985,
+    "found_on": "http://www.akademiabc.com/athens-akademia-brewing-company-drink-menu"
+  },
+  {
+    "obdb_id": "2f8dee5a-fc6e-49f3-84de-20ca5580acd4",
+    "name": "Birdsong Brewing Co.",
+    "source": "untappd",
+    "untappd_location_id": 1455,
+    "found_on": "http://www.birdsongbrewing.com/whats-on-tap"
+  },
+  {
+    "obdb_id": "528481d4-f3c8-479a-aad9-fce4b9cfe36a",
+    "name": "Heist Brewery",
+    "source": "untappd",
+    "untappd_location_id": 1203,
+    "found_on": "http://www.heistbrewery.com/menus/heist-brewery-noda/"
+  },
+  {
+    "obdb_id": "52cf27d7-5cce-4438-b0fe-f4bc1fc79b29",
+    "name": "King Canary Brewing Company",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BFuPjVJm",
+    "found_on": "http://www.kingcanarybrewing.com"
+  },
+  {
+    "obdb_id": "9cb116be-fc14-4540-9c17-4507cb5595e4",
+    "name": "Creek Bottom Brewing",
+    "source": "untappd",
+    "untappd_location_id": 4876,
+    "found_on": "http://www.creekbottombrewing.com"
+  },
+  {
+    "obdb_id": "ce82c6cb-f7ab-416a-882f-2ef0b20fb779",
+    "name": "Seminar Brewing",
+    "source": "untappd",
+    "untappd_location_id": 2966,
+    "found_on": "http://seminarbrewing.com/beer"
   }
 ]
