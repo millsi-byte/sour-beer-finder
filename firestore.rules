@@ -1,0 +1,98 @@
+rules_version = '2';
+// S4S Firestore rules — paste this whole file into Firebase console →
+// Firestore → Rules → Publish. Design notes:
+//  - Everything is create-only. No client can ever update or delete a
+//    document; moderation = deleting docs in this console. Latest-event-
+//    wins is computed by the app/pipeline at read time.
+//  - Anonymous participation (reports/comments/votes) stays open; a
+//    `uid` field, when present, must be the caller's real Firebase Auth
+//    uid — so profile attribution is unforgeable.
+//  - user_marks (favorites / check-ins / I've-had-this) are private:
+//    only their owner can read or create them.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function d() { return request.resource.data; }
+    // a uid field, when present, must belong to the caller; anonymous docs omit it
+    function uidOk() {
+      return !('uid' in d()) || (signedIn() && d().uid == request.auth.uid);
+    }
+    function ownUid() { return signedIn() && d().uid == request.auth.uid; }
+    function str(v, max) { return v is string && v.size() > 0 && v.size() <= max; }
+    function optStr(k, max) { return !(k in d()) || (d()[k] is string && d()[k].size() <= max); }
+    function isoDate() { return d().created_at is string && d().created_at.size() >= 20 && d().created_at.size() <= 35; }
+    function ratingOk() { return !('rating' in d()) || (d().rating is int && d().rating >= 1 && d().rating <= 5); }
+
+    match /reports/{doc} {
+      allow read: if true;
+      allow update, delete: if false;
+      allow create: if uidOk() && isoDate() && (
+        (
+          d().kind == 'report'
+          && d().keys().hasOnly(['kind','brewery_id','brewery_name','beer_name',
+               'beer_key','style','rating','author','review','uid','created_at'])
+          && str(d().brewery_id, 100) && str(d().beer_name, 120)
+          && optStr('beer_key', 250) && optStr('author', 60)
+          && optStr('review', 600) && optStr('style', 80) && ratingOk()
+        ) || (
+          d().kind == 'comment'
+          && d().keys().hasOnly(['kind','report_id','beer_key','brewery_id',
+               'author','text','rating','uid','created_at'])
+          && str(d().brewery_id, 100) && str(d().text, 600)
+          && optStr('beer_key', 250) && optStr('report_id', 60)
+          && optStr('author', 60) && ratingOk()
+        ) || (
+          d().kind == 'vote'
+          && d().keys().hasOnly(['kind','report_id','beer_key','brewery_id',
+               'vote','author','uid','created_at'])
+          && str(d().brewery_id, 100) && d().vote in ['still','gone']
+          && optStr('beer_key', 250) && optStr('report_id', 60) && optStr('author', 60)
+        ) || (
+          d().kind == 'beer'
+          && ownUid()
+          && d().keys().hasOnly(['kind','brewery_id','brewery_name','beer_name',
+               'beer_key','style','author','uid','created_at'])
+          && str(d().brewery_id, 100) && str(d().beer_name, 120)
+          && str(d().beer_key, 250) && optStr('style', 80) && optStr('author', 60)
+        )
+      );
+    }
+
+    match /brewery_requests/{doc} {
+      allow read: if true;
+      allow update, delete: if false;
+      allow create: if ownUid() && isoDate()
+        && d().keys().hasOnly(['name','city','website_url','author','uid','created_at'])
+        && str(d().name, 120) && str(d().city, 120)
+        && optStr('website_url', 300) && optStr('author', 60);
+    }
+
+    match /brewery_edits/{doc} {
+      allow read: if true;
+      allow update, delete: if false;
+      allow create: if ownUid() && isoDate()
+        && d().keys().hasOnly(['uid','author','brewery_id','field','value','created_at'])
+        && d().field == 'website_url'
+        && str(d().brewery_id, 100)
+        && d().value is string && d().value.size() <= 300
+        && optStr('author', 60);
+    }
+
+    match /user_marks/{doc} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+      allow create: if ownUid() && isoDate()
+        && d().keys().hasOnly(['uid','kind','target_type','target_key','label',
+             'lat','lng','brewery_id','brewery_name','beer_name','beer_key',
+             'style','city','state','created_at'])
+        && d().kind in ['fav','unfav','had','unhad','checkin']
+        && d().target_type in ['location','brewery','beer']
+        && str(d().target_key, 250)
+        && optStr('label', 120) && optStr('lat', 12) && optStr('lng', 12)
+        && optStr('brewery_id', 100) && optStr('brewery_name', 120)
+        && optStr('beer_name', 120) && optStr('beer_key', 250)
+        && optStr('style', 80) && optStr('city', 120) && optStr('state', 60);
+    }
+  }
+}

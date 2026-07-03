@@ -25,6 +25,7 @@
   <h1 id="brandHome" role="button" title="Home">S<span class="brand-4">4</span>S</h1>
   <div class="topbar-actions">
     <button id="btnRefresh" class="iconbtn" aria-label="Refresh" title="Refresh">&#x21bb;</button>
+    <button id="profilePill" class="pillbtn profile-pill" hidden>&#x1F464; Sign in</button>
   </div>
 </header>
 
@@ -170,6 +171,34 @@
   <!-- Settings (tab root) -->
   <section id="viewSettings" class="view" hidden>
     <h2 class="section-title">Settings</h2>
+    <h3 class="section-sub" id="profileHead">Profile</h3>
+    <div id="profileSignedIn" hidden>
+      <p class="explain" id="profileWho"></p>
+      <button type="button" id="btnSignOut" class="secondary block">Sign out</button>
+    </div>
+    <div id="profileAuthUI" hidden>
+      <p class="explain">
+        A free profile keeps your favorites and check-ins saved in the
+        cloud and signs your posts with your name. No profile needed to
+        browse or post anonymously.
+      </p>
+      <div id="authModeBar" class="radius-bar"></div>
+      <form id="authForm" class="missingform" autocomplete="off">
+        <input id="auName" type="text" placeholder="Display name" maxlength="40" hidden>
+        <input id="auEmail" type="email" placeholder="Email" autocomplete="email">
+        <input id="auPin" type="password" inputmode="numeric" placeholder="PIN (6+ digits)" minlength="6" maxlength="12">
+        <button type="submit" class="secondary block" id="authSubmit">Sign in</button>
+      </form>
+      <div id="authConfirm" hidden>
+        <p class="explain" id="authConfirmText"></p>
+        <button type="button" id="authConfirmYes" class="secondary block">Yes &mdash; create my profile</button>
+        <button type="button" id="authConfirmNo" class="linkbtn mb-alt">Go back and fix it</button>
+      </div>
+      <button type="button" id="btnForgotPin" class="linkbtn mb-alt">Forgot your PIN?</button>
+      <p id="authNote" class="explain" hidden></p>
+      <p id="authError" class="error" hidden></p>
+    </div>
+    <p id="profileGate" class="explain" hidden>Profiles aren&rsquo;t turned on yet.</p>
     <h3 class="section-sub">Open directions in</h3>
     <div id="mapsBar" class="radius-bar"></div>
     <p class="explain">Used by the Directions button on every brewery. Saved on this device.</p>

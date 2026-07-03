@@ -132,34 +132,13 @@ paste its config. One-time setup, ~5 minutes, no credit card:
    `s4s`, disable Analytics).
 2. In the project: **Build → Firestore Database → Create database** →
    Start in **production mode** → pick a US location.
-3. **Rules** tab → replace everything with the rules below → Publish
-   (two collections: `reports` for drinker reports, `brewery_requests`
-   for the "Missing a brewery?" form below):
-   ```
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /reports/{doc} {
-         allow read: if true;
-         allow create: if request.resource.data.keys().hasOnly(
-             ['kind','brewery_id','brewery_name','beer_name','style',
-              'rating','author','review','report_id','text','vote',
-              'created_at'])
-           && request.resource.data.kind in ['report','comment','vote'];
-         allow update, delete: if false;
-       }
-       match /brewery_requests/{doc} {
-         allow read: if true;
-         allow create: if request.resource.data.keys().hasOnly(
-             ['name','city','website_url','author','created_at'])
-           && request.resource.data.name is string && request.resource.data.name.size() > 0
-           && request.resource.data.city is string && request.resource.data.city.size() > 0
-           && request.resource.data.website_url is string && request.resource.data.website_url.size() > 0;
-         allow update, delete: if false;
-       }
-     }
-   }
-   ```
+3. **Rules** tab → replace everything with the contents of
+   [`firestore.rules`](firestore.rules) (kept in this repo, one paste)
+   → Publish. Collections: `reports` (drinker reports/comments/votes +
+   user-added beers), `brewery_requests` (Missing a brewery form),
+   `brewery_edits` (website corrections), `user_marks` (private
+   favorites / check-ins / I've-had-this, readable only by their
+   owner).
 4. Project settings (gear icon) → **General** → "Your apps" → the
    `</>` (web) icon → register app (nickname `s4s`, no hosting). Copy
    the `projectId` and `apiKey` values it shows.
@@ -172,9 +151,40 @@ paste its config. One-time setup, ~5 minutes, no credit card:
    to be public; the rules above are what limit writes.)
 
 **Moderation / admin delete:** open the Firebase console → Firestore
-→ pick the collection (`reports` or `brewery_requests`) → click the
-offending document → delete. Your Google login is the admin login;
-there is nothing else to run.
+→ pick the collection → click the offending document → delete. Your
+Google login is the admin login; there is nothing else to run.
+
+## Turning on PIN profiles (favorites, check-ins, signed posts)
+
+Users can create a free profile — display name + email + a 6-digit
+PIN — that stores their favorites and check-ins in the cloud and signs
+their posts. Anonymous browsing/posting still works without one; a
+profile is required only for favorites, check-ins, "I've had this,"
+adding breweries/beers, and editing brewery websites. The PIN is a
+Firebase email/password account under the hood (no SDK, no popups —
+plain REST, which is why it works reliably in the iOS home-screen
+app). **Forgot PIN is fully self-serve**: Firebase emails a reset link;
+the user sets a new PIN on Firebase's own hosted page and signs back
+in. You never touch it.
+
+One-time console setup (after the Firestore steps above):
+
+1. Firebase console → **Build → Authentication → Get started** →
+   Sign-in method → **Email/Password → Enable** (leave "Email link"
+   OFF) → Save.
+2. Authentication → Settings → User actions: confirm **Email
+   enumeration protection** is ON (default — leave it).
+3. Authentication → Settings → **Authorized domains**: confirm your
+   GitHub Pages domain (e.g. `millsi-byte.github.io`) is listed; add
+   it if not.
+4. Optional: Authentication → **Templates → Password reset** — reword
+   "password" to "PIN" so the email matches the app's language. Send
+   yourself a test reset.
+
+Accepted, documented risk: a user who typos their email at signup
+can't reset a forgotten PIN (the app makes them confirm the address
+at signup, and sends a verification email whose non-arrival is the
+early warning). Worst case they create a fresh profile.
 
 ## Manually adding breweries (Open Brewery DB gaps)
 

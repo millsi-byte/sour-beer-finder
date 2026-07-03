@@ -9,13 +9,19 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.34';
+const APP_BUILD = '2026.07.03.35';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
 crowd.crowdCounts().then((c) => {
   state.crowdCounts = c;
   if (state.view === 'list') renderList();
+});
+
+// profile pill appears once crowd features are configured
+crowd.crowdEnabled().then((enabled) => {
+  $('profilePill').hidden = !enabled;
+  renderProfilePill();
 });
 
 // ---------- tap data ----------
@@ -377,7 +383,167 @@ function renderChoiceBar(barId, key, options, fallback) {
 function renderSettings() {
   renderChoiceBar('mapsBar', MAPS_KEY, MAP_PROVIDERS, 'apple');
   renderChoiceBar('untappdBar', UNTAPPD_KEY, [['web', 'Web page'], ['app', 'Untappd app']], 'web');
+  renderProfile();
 }
+
+// ---------- toast (bottom, above the nav bar, auto-hides) ----------
+let toastTimer = 0;
+function showToast(msg) {
+  let el = $('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ---------- profile (PIN accounts — see crowd.js auth module) ----------
+let authMode = 'signin'; // 'signin' | 'signup'
+let pendingSignup = null; // {name, email, pin} awaiting the email-confirm step
+
+function renderProfilePill() {
+  const a = crowd.authState();
+  const pill = $('profilePill');
+  pill.textContent = a ? `👤 ${a.display_name}` : '👤 Sign in';
+}
+
+async function renderProfile() {
+  const enabled = await crowd.crowdEnabled();
+  const a = crowd.authState();
+  $('profileGate').hidden = enabled;
+  $('profileSignedIn').hidden = !enabled || !a;
+  $('profileAuthUI').hidden = !enabled || !!a;
+  if (a) {
+    $('profileWho').textContent = `Signed in as ${a.display_name} (${a.email}). Your posts are signed with your name.`;
+    return;
+  }
+  // mode chips (reuses the radius-chip look)
+  const bar = $('authModeBar');
+  bar.innerHTML = '';
+  for (const [id, label] of [['signin', 'Sign in'], ['signup', 'New profile']]) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'radius-chip' + (id === authMode ? ' active' : '');
+    btn.textContent = label;
+    btn.addEventListener('click', () => {
+      authMode = id;
+      renderProfile();
+    });
+    bar.appendChild(btn);
+  }
+  $('auName').hidden = authMode !== 'signup';
+  $('authSubmit').textContent = authMode === 'signup' ? 'Create profile' : 'Sign in';
+  $('authConfirm').hidden = true;
+  $('authForm').hidden = false;
+  $('authError').hidden = true;
+  $('authNote').hidden = true;
+}
+
+$('authForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('auEmail').value.trim();
+  const pin = $('auPin').value.trim();
+  const name = $('auName').value.trim();
+  $('authError').hidden = true;
+  $('authNote').hidden = true;
+  if (!email || pin.length < 6 || (authMode === 'signup' && !name)) {
+    $('authError').hidden = false;
+    $('authError').textContent =
+      authMode === 'signup'
+        ? 'Need a display name, an email, and a PIN of at least 6 digits.'
+        : 'Need your email and your PIN (6+ digits).';
+    return;
+  }
+  if (authMode === 'signup') {
+    // the email is the ONLY way back into a profile — make them look at it
+    pendingSignup = { name, email, pin };
+    $('authForm').hidden = true;
+    $('authConfirm').hidden = false;
+    $('authConfirmText').textContent =
+      `Your email is your only way back into this profile if you forget your PIN — is ${email} right?`;
+    return;
+  }
+  const btn = $('authSubmit');
+  btn.disabled = true;
+  try {
+    await crowd.signIn(email, pin);
+    $('authForm').reset();
+    showToast('Signed in — welcome back!');
+  } catch (err) {
+    $('authError').hidden = false;
+    $('authError').textContent = err.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+$('authConfirmYes').addEventListener('click', async () => {
+  if (!pendingSignup) return;
+  const { name, email, pin } = pendingSignup;
+  $('authConfirmYes').disabled = true;
+  try {
+    await crowd.signUp(email, pin, name);
+    pendingSignup = null;
+    $('authForm').reset();
+    showToast(`Profile created — welcome, ${name}!`);
+  } catch (err) {
+    $('authConfirm').hidden = true;
+    $('authForm').hidden = false;
+    $('authError').hidden = false;
+    $('authError').textContent = err.message;
+  } finally {
+    $('authConfirmYes').disabled = false;
+  }
+});
+
+$('authConfirmNo').addEventListener('click', () => {
+  pendingSignup = null;
+  $('authConfirm').hidden = true;
+  $('authForm').hidden = false;
+});
+
+$('btnForgotPin').addEventListener('click', async () => {
+  const email = $('auEmail').value.trim();
+  $('authError').hidden = true;
+  if (!email) {
+    $('authError').hidden = false;
+    $('authError').textContent = 'Type your email above first, then tap "Forgot your PIN?".';
+    return;
+  }
+  try {
+    await crowd.sendPinReset(email);
+  } catch {
+    /* enumeration-safe: same message either way */
+  }
+  $('authNote').hidden = false;
+  $('authNote').textContent =
+    'If that address has a profile, a reset email is on the way. Open it, set a new PIN, then come back here and sign in.';
+});
+
+$('btnSignOut').addEventListener('click', () => {
+  crowd.signOut();
+  showToast('Signed out.');
+});
+
+$('profilePill').addEventListener('click', () => {
+  renderSettings();
+  show('settings');
+  $('profileHead').scrollIntoView({ block: 'start' });
+});
+
+window.addEventListener('s4s:authchange', () => {
+  renderProfilePill();
+  if (state.view === 'settings') renderProfile();
+  if (state.view === 'cities') renderMissingBreweryGate();
+});
+window.addEventListener('s4s:signedout', () =>
+  showToast('Signed out — sign back in with your PIN.')
+);
 
 // ---------- list controls: radius, sort, sours-only ----------
 const RADII = [10, 25, 50, 100, 'All'];
@@ -1162,8 +1328,15 @@ $('cityAddForm').addEventListener('submit', async (e) => {
 
 async function renderMissingBreweryGate() {
   const enabled = await crowd.crowdEnabled();
-  $('missingForm').hidden = !enabled;
-  $('mbGate').hidden = enabled;
+  const signedIn = !!crowd.authState();
+  // adding a brewery shapes the shared catalog — sign-in required
+  // (rule-enforced server-side too)
+  $('missingForm').hidden = !enabled || !signedIn;
+  $('mbGate').hidden = enabled && signedIn;
+  $('mbGate').textContent = !enabled
+    ? 'Brewery submissions aren’t turned on yet.'
+    : 'Sign in (Settings tab → Profile) to add a brewery — takes a minute, just a name, email, and PIN.';
+  $('mbAuthor').hidden = signedIn; // posts are auto-signed with the profile name
 }
 
 $('btnMissing').addEventListener('click', async () => {
