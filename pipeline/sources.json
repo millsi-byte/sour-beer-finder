@@ -607,5 +607,47 @@
     "source": "taplist",
     "embed_url": "http://www.taplist.io/spadafarm",
     "found_on": "http://www.spadafarmhousebrewery.com/beer"
+  },
+  {
+    "obdb_id": "457de2b4-b8fd-4821-8f97-38dd0e27bc37",
+    "name": "Hidden Springs Ale Works",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/Bafc0_Kn",
+    "found_on": "http://www.Hiddenspringsaleworks.com"
+  },
+  {
+    "obdb_id": "e031e745-1aab-47a5-8f44-728abdf4bc76",
+    "name": "Cueni Brewing Co.",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BCNq7Snr",
+    "found_on": "http://www.cuenibrewing.com"
+  },
+  {
+    "obdb_id": "3f8790cd-03b9-4172-99c9-f88940c731a0",
+    "name": "Swamp Head Brewery",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BXL8uqrC",
+    "found_on": "http://www.swamphead.com"
+  },
+  {
+    "obdb_id": "34011fb5-ccda-4f99-b21a-62953b9b6128",
+    "name": "Sailfish Brewing Company, llc",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BRgKVdTL",
+    "found_on": "http://www.sailfishbrewingco.com"
+  },
+  {
+    "obdb_id": "98c74480-648c-4e48-9740-bfef75a0310e",
+    "name": "Charles Towne Fermentory",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BUA9YX93",
+    "found_on": "http://www.chsfermentory.com"
+  },
+  {
+    "obdb_id": "24e29ba9-71d6-4125-9921-96512e6944d5",
+    "name": "Indigo Reef Brewing Company",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BEQNZqjX",
+    "found_on": "https://www.indigoreefbrewing.com/"
   }
 ]
