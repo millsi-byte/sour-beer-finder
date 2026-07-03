@@ -58,22 +58,39 @@ on lowercase substrings (`sour`, `gose`, `berliner`, `lambic`, `gueuze`,
 `wild`, `brett`, `flanders`, `kettle`) and the raw style string is kept so
 users can judge edge cases like "Sour IPA".
 
-### Enabling live data
+### Adding an Untappd API key (everything else is pre-wired)
 
-1. Get [Untappd for Business](https://business.untappd.com) API credentials
-   (read-only token).
-2. Add repo secrets `UNTAPPD_EMAIL` and `UNTAPPD_TOKEN`.
-3. Map breweries in `pipeline/sources.json`:
-   ```json
-   [
-     { "obdb_id": "<open-brewery-db-id>", "name": "Green Bench",
-       "source": "untappd", "untappd_location_id": 12345 },
-     { "obdb_id": "<open-brewery-db-id>", "name": "Chalkboard Taproom",
-       "source": "manual",
-       "beers": [{ "name": "Peach Gose", "style": "Gose" }] }
-   ]
-   ```
-4. Run the "Refresh tap lists" workflow (or wait for the nightly cron).
+The Untappd adapter tries three modes best-first, and turning a key on
+is **just adding repo secrets** — no code changes, no mapping edits:
+
+**Consumer API key** (from [untappd.com/api](https://untappd.com/api/docs)
+— a `client_id` + `client_secret` pair):
+1. GitHub → this repo → **Settings → Secrets and variables → Actions →
+   New repository secret**.
+2. Add `UNTAPPD_CLIENT_ID` with the client id, and `UNTAPPD_CLIENT_SECRET`
+   with the client secret.
+3. Actions tab → **"Refresh tap data (fast)"** → Run workflow. Done —
+   breweries whose sites link an untappd.com venue page (discovery
+   already records their `untappd_venue_id`) start resolving through
+   the API. Rate limit is 100 calls/hr; the 4-hourly refresh stays
+   under it and falls back to keyless embed-scraping when throttled.
+
+**Untappd for Business token** (from a business.untappd.com account —
+covers locations that account can read):
+1. Same place, add secrets `UNTAPPD_EMAIL` (account email) and
+   `UNTAPPD_TOKEN` (read-only API token).
+2. Run **"Refresh tap data (fast)"**.
+
+Without any key, the keyless mode keeps working: discovery finds
+Untappd embeds on brewery sites and parses the rendered menus.
+
+Manual entries for chalkboard-only taprooms still work via
+`pipeline/sources.json`:
+```json
+{ "obdb_id": "<open-brewery-db-id>", "name": "Chalkboard Taproom",
+  "source": "manual",
+  "beers": [{ "name": "Peach Gose", "style": "Gose" }] }
+```
 
 ## v1.1 — all pipelines (shipped)
 

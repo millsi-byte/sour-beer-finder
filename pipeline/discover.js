@@ -28,10 +28,17 @@ const SIGNATURES = [
   {
     source: 'untappd',
     detect: (html) => {
-      const m =
+      const loc =
         html.match(/business\.untappd\.com\/(?:embeds\/)?locations\/(\d+)/) ??
         html.match(/business\.untappd\.com\/(?:api\/)?v\d\/locations\/(\d+)/);
-      return m && { untappd_location_id: Number(m[1]) };
+      // venue link without a widget: useless keyless, but the consumer
+      // API (v4) can read the venue once UNTAPPD_CLIENT_ID/SECRET exist
+      const venue = html.match(/untappd\.com\/v(?:enue)?\/[\w-]+\/(\d+)/i);
+      if (!loc && !venue) return null;
+      return {
+        ...(loc && { untappd_location_id: Number(loc[1]) }),
+        ...(venue && { untappd_venue_id: Number(venue[1]) }),
+      };
     },
   },
   {

@@ -37,6 +37,8 @@ jobs:
         env:
           UNTAPPD_EMAIL: ${{ secrets.UNTAPPD_EMAIL }}
           UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
+          UNTAPPD_CLIENT_ID: ${{ secrets.UNTAPPD_CLIENT_ID }}
+          UNTAPPD_CLIENT_SECRET: ${{ secrets.UNTAPPD_CLIENT_SECRET }}
       - name: Commit updated data
         run: python3 pipeline/safe-push.py "Refresh tap data"
       - name: Publish idle status
