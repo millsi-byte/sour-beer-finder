@@ -97,6 +97,15 @@
       "lat": 42.7654,
       "lng": -71.4676,
       "website_url": "https://spyglassbrewing.com"
+    },
+    {
+      "id": "x-tactical-brewing-orlando",
+      "name": "Tactical Brewing",
+      "city": "Orlando",
+      "state": "Florida",
+      "lat": 28.5383,
+      "lng": -81.3792,
+      "website_url": "https://(Filed from the S4S app \u2014 keep the three lines above intact.)"
     }
   ],
   "breweries": {
