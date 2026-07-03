@@ -24,12 +24,17 @@ const { browserAvailable, fetchRendered } = require('../browser');
 
 const BASE = 'https://business.untappd.com/api/v1';
 
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'", '#038': '&' };
+function decodeEntities(s) {
+  return s.replace(/&(#?\w+);/g, (m, e) => ENTITIES[e.toLowerCase()] ?? m);
+}
+
 function parseEmbed(html) {
   const beers = [];
   for (const [, block] of html.matchAll(/<h4 class="item-name">([\s\S]*?)<\/h4>/g)) {
     const name = block.match(/<span id="[^"]*">([^<]+)<\/span>/)?.[1]?.trim();
     const style = block.match(/<span class="item-category">([^<]+)<\/span>/)?.[1]?.trim() ?? '';
-    if (name) beers.push({ name, style });
+    if (name) beers.push({ name: decodeEntities(name), style: decodeEntities(style) });
   }
   const seen = new Set();
   return beers.filter((b) => !seen.has(b.name) && seen.add(b.name));
