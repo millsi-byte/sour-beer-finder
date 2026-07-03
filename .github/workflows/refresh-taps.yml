@@ -30,9 +30,40 @@ jobs:
         run: |
           npm install -g playwright
           npx playwright install --with-deps chromium
-      - name: Re-scan covered areas for new tap-list widgets
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      # One area at a time, each committed as soon as it finishes — a
+      # failed or hung area is skipped (and retried by the next nightly
+      # run), never taking the whole crawl down with it.
+      - name: Re-scan covered areas, one by one
         if: ${{ inputs.discover != 'false' }}
-        run: NODE_PATH=$(npm root -g) node pipeline/discover.js --all
+        run: |
+          python3 -c "
+          import json
+          for a in json.load(open('pipeline/areas.json')):
+              print(f\"{a['center']}\t{a['label']}\")" > /tmp/areas.tsv
+          FAILED=""
+          while IFS=$'\t' read -r CENTER LABEL; do
+            echo "===== $LABEL ====="
+            if timeout 1500 env NODE_PATH=$(npm root -g) node pipeline/discover.js "$CENTER" "$LABEL"; then
+              git add pipeline/sources.json pipeline/areas.json
+              if ! git diff --cached --quiet; then
+                git commit -m "Discover tap-list sources: $LABEL"
+                for i in 1 2 3; do
+                  git pull --rebase origin main && git push && break
+                  sleep 5
+                done
+              fi
+            else
+              echo "::warning::$LABEL scan failed or timed out — skipping, next nightly run retries it"
+              git checkout -- pipeline/sources.json pipeline/areas.json 2>/dev/null || true
+              FAILED="$FAILED $LABEL"
+            fi
+          done < /tmp/areas.tsv
+          [ -n "$FAILED" ] && echo "::warning::Areas to retry next run:$FAILED"
+          true
       - name: Build tap data
         run: NODE_PATH=$(npm root -g) node pipeline/build.js
         env:
@@ -40,8 +71,6 @@ jobs:
           UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
       - name: Commit updated data
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/taps.json pipeline/sources.json
           git diff --cached --quiet && exit 0
           git commit -m "Refresh tap data"
