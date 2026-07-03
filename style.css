@@ -101,7 +101,7 @@ button.primary:active { filter: brightness(.9); }
   border-radius: 12px; overflow: hidden;
   box-shadow: 0 10px 28px rgba(0, 0, 0, .22);
 }
-.suggest li { padding: 12px 14px; font-size: 15px; cursor: pointer; }
+.suggest li { padding: 13px 14px; font-size: 17px; cursor: pointer; }
 .suggest li + li { border-top: 0.5px solid var(--hairline); }
 .suggest li:active { background: var(--card-press); }
 button.secondary {
@@ -126,13 +126,13 @@ button.secondary {
 /* List */
 .listmeta {
   display: flex; align-items: baseline; justify-content: space-between;
-  padding: 14px 2px 10px; color: var(--text-dim); font-size: 14px;
+  padding: 14px 2px 10px; color: var(--text-dim); font-size: 16px;
 }
 .linkbtn { background: none; border: none; color: var(--accent-ink); font-size: 14px; font-weight: 600; cursor: pointer; }
 
 .radius-bar { display: flex; gap: 6px; padding: 0 2px 12px; }
 .radius-chip {
-  flex: 1; padding: 7px 0; font-size: 13px; font-weight: 600;
+  flex: 1; padding: 8px 0; font-size: 15px; font-weight: 600;
   background: var(--card); color: var(--text-dim);
   border: 0.5px solid var(--hairline); border-radius: 999px; cursor: pointer;
 }
@@ -146,22 +146,22 @@ button.secondary {
 }
 .card:active { background: var(--card-press); }
 .card .info { flex: 1; min-width: 0; }
-.card .name { font-size: 16px; font-weight: 650; margin-bottom: 3px; }
-.card .sub { font-size: 13px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card .dist { font-size: 14px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
-.card .chev { color: var(--text-dim); font-size: 14px; }
+.card .name { font-size: 19px; font-weight: 650; margin-bottom: 3px; }
+.card .sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .dist { font-size: 17px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
+.card .chev { color: var(--text-dim); font-size: 16px; }
 .type-badge {
-  display: inline-block; font-size: 11px; font-weight: 600; text-transform: capitalize;
+  display: inline-block; font-size: 13px; font-weight: 600; text-transform: capitalize;
   color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 14%, transparent);
   border-radius: 6px; padding: 2px 6px; margin-right: 6px;
 }
 
-.footnote { text-align: center; color: var(--text-dim); font-size: 12px; padding: 22px 0 8px; }
+.footnote { text-align: center; color: var(--text-dim); font-size: 14px; padding: 22px 0 8px; }
 
 /* Your cities */
 .section-title { font-family: var(--serif); font-size: 24px; font-weight: 600; padding: 18px 0 8px; }
 .section-sub { font-family: var(--serif); font-size: 17px; font-weight: 600; margin: 26px 0 6px; }
-.explain { color: var(--text-dim); font-size: 14px; line-height: 1.45; margin-bottom: 14px; }
+.explain { color: var(--text-dim); font-size: 16px; line-height: 1.45; margin-bottom: 14px; }
 .explain strong { color: var(--text); font-weight: 650; }
 .citylist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
 .city-row {
@@ -169,8 +169,8 @@ button.secondary {
   background: var(--card); border: 0.5px solid var(--hairline);
   border-radius: 12px; padding: 6px 8px 6px 14px;
 }
-.city-name { flex: 1; font-size: 16px; font-weight: 600; cursor: pointer; padding: 8px 0; }
-.city-covered { font-size: 11px; font-weight: 600; color: var(--accent-ink); white-space: nowrap; }
+.city-name { flex: 1; font-size: 18px; font-weight: 600; cursor: pointer; padding: 8px 0; }
+.city-covered { font-size: 13px; font-weight: 600; color: var(--accent-ink); white-space: nowrap; }
 .city-star, .city-remove {
   background: none; border: none; cursor: pointer;
   font-size: 20px; padding: 8px 10px;
@@ -203,24 +203,24 @@ button.block { display: block; width: 100%; margin-top: 8px; }
 }
 @keyframes sheetup { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .grabber { width: 38px; height: 5px; border-radius: 3px; background: var(--hairline); margin: 2px auto 14px; }
-.sheet h3 { font-family: var(--serif); font-size: 21px; font-weight: 600; letter-spacing: -0.2px; }
-.sheet-sub { color: var(--text-dim); font-size: 14px; margin: 4px 0 14px; }
+.sheet h3 { font-family: var(--serif); font-size: 24px; font-weight: 600; letter-spacing: -0.2px; }
+.sheet-sub { color: var(--text-dim); font-size: 16px; margin: 4px 0 14px; }
 .sour-placeholder {
   background: color-mix(in srgb, var(--accent) 9%, transparent);
   border: 0.5px solid color-mix(in srgb, var(--accent) 25%, transparent);
   border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;
 }
-.sour-badge { font-size: 13px; font-weight: 700; color: var(--accent-ink); }
-.sour-placeholder p { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+.sour-badge { font-size: 16px; font-weight: 700; color: var(--accent-ink); }
+.sour-placeholder p { font-size: 15px; color: var(--text-dim); margin-top: 6px; }
 .sour-list { list-style: none; margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
-.sour-list li { font-size: 14px; }
-.sour-list .style { color: var(--text-dim); font-size: 12px; }
-.sour-chip { font-size: 12px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
+.sour-list li { font-size: 17px; }
+.sour-list .style { color: var(--text-dim); font-size: 14px; }
+.sour-chip { font-size: 15px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
 .sheet-actions { display: flex; gap: 8px; }
 .action {
   flex: 1; text-align: center; padding: 12px 4px;
   background: var(--card-press); color: var(--text);
   border-radius: 12px; text-decoration: none;
-  font-size: 14px; font-weight: 600;
+  font-size: 15px; font-weight: 600;
 }
 .action[hidden] { display: none; }
