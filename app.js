@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.10';
+const APP_BUILD = '2026.07.03.11';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -240,20 +240,27 @@ function directionsUrl(b) {
     : `https://maps.apple.com/?q=${encodeURIComponent(`${b.name} ${b.city || ''}`)}`;
 }
 
-function renderMapsBar() {
-  const bar = $('mapsBar');
+const UNTAPPD_KEY = 's4s.untappd'; // 'web' (default) | 'app'
+
+function renderChoiceBar(barId, key, options, fallback) {
+  const bar = $(barId);
   bar.innerHTML = '';
-  const cur = localStorage.getItem(MAPS_KEY) || 'apple';
-  for (const [id, label] of MAP_PROVIDERS) {
+  const cur = localStorage.getItem(key) || fallback;
+  for (const [id, label] of options) {
     const btn = document.createElement('button');
     btn.className = 'radius-chip' + (id === cur ? ' active' : '');
     btn.textContent = label;
     btn.addEventListener('click', () => {
-      localStorage.setItem(MAPS_KEY, id);
-      renderMapsBar();
+      localStorage.setItem(key, id);
+      renderChoiceBar(barId, key, options, fallback);
     });
     bar.appendChild(btn);
   }
+}
+
+function renderSettings() {
+  renderChoiceBar('mapsBar', MAPS_KEY, MAP_PROVIDERS, 'apple');
+  renderChoiceBar('untappdBar', UNTAPPD_KEY, [['web', 'Web page'], ['app', 'Untappd app']], 'web');
 }
 
 // ---------- list controls: radius, sort, sours-only ----------
@@ -663,10 +670,27 @@ $('btnCities').addEventListener('click', citiesFlow);
 $('btnCitiesBack').addEventListener('click', () => show('locate'));
 $('brandHome').addEventListener('click', () => show('locate'));
 $('btnSettings').addEventListener('click', () => {
-  renderMapsBar();
+  renderSettings();
   show('settings');
 });
 $('btnSettingsBack').addEventListener('click', () => show('locate'));
+
+// app-first Untappd: try the app scheme, fall back to the web page if
+// nothing grabbed the navigation (i.e. the app isn't installed)
+$('actUntappd').addEventListener('click', (e) => {
+  if ((localStorage.getItem(UNTAPPD_KEY) || 'web') !== 'app') return; // normal link
+  if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return; // schemes only work on mobile
+  const web = e.currentTarget.href;
+  e.preventDefault();
+  let left = false;
+  const onLeave = () => { left = true; };
+  window.addEventListener('pagehide', onLeave, { once: true });
+  document.addEventListener('visibilitychange', onLeave, { once: true });
+  window.location.href = 'untappd://';
+  setTimeout(() => {
+    if (!left && document.visibilityState === 'visible') window.open(web, '_blank');
+  }, 1200);
+});
 $('btnCityGo').addEventListener('click', cityGoAction);
 $('btnCityDrop').addEventListener('click', toggleCityDrop);
 for (const id of ['btnCityGo', 'btnCityDrop']) {
