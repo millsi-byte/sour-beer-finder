@@ -410,6 +410,144 @@ async function createDoc(collection, data) {
   return saved;
 }
 
+/* ---- beer identity ----
+   beer_key = brewery_id + '::' + slug(beer name) — same slug scheme as
+   pipeline/brewery-lib.js (kept in sync by convention). Unifies scanned,
+   drinker-reported, and user-added beers under one stable id, so reviews
+   and marks attach to THE beer, not to one report of it. */
+function slugName(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function beerKey(breweryId, beerName) {
+  return `${breweryId}::${slugName(beerName)}`;
+}
+
+/* Derive the key for any doc, including legacy docs written before
+   beer_key existed (reports: from their own fields; comments/votes:
+   resolved via their report_id by the callers below). */
+function docBeerKey(d) {
+  if (d.beer_key) return d.beer_key;
+  if (d.beer_name && d.brewery_id) return beerKey(d.brewery_id, d.beer_name);
+  return null;
+}
+
+/* Everything known about one beer across ALL its reports:
+   reports (kind report/beer), comments, status trail, rating summary. */
+function assembleBeer(docs, key) {
+  const reportsById = new Map();
+  const reports = [];
+  for (const d of docs) {
+    if ((d.kind === 'report' || d.kind === 'beer') && docBeerKey(d) === key) {
+      reportsById.set(d._id, d);
+      reports.push(d);
+    }
+  }
+  const attached = (d) =>
+    docBeerKey(d) === key || (d.report_id && reportsById.has(d.report_id));
+  const comments = docs
+    .filter((d) => d.kind === 'comment' && attached(d))
+    .sort((a, b) => (a.created_at ?? '').localeCompare(b.created_at ?? ''));
+  const trail = docs
+    .filter((d) => d.kind === 'vote' && attached(d))
+    .sort((a, b) => (a.created_at ?? '').localeCompare(b.created_at ?? ''));
+  const ratings = [...reports, ...comments].map((d) => d.rating).filter(Boolean);
+  const first = reports[0] ?? {};
+  return {
+    beer_key: key,
+    beer_name: first.beer_name,
+    style: reports.map((r) => r.style).find(Boolean),
+    brewery_id: first.brewery_id,
+    brewery_name: reports.map((r) => r.brewery_name).find(Boolean),
+    reports: reports.sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? '')),
+    comments,
+    trail,
+    currentlyGone: trail.at(-1)?.vote === 'gone',
+    avgRating: ratings.length
+      ? Math.round((ratings.reduce((s, r) => s + r, 0) / ratings.length) * 10) / 10
+      : null,
+    ratingCount: ratings.length,
+  };
+}
+
+/* Beer-grouped view of one brewery's drinker data (the brewery sheet's
+   "Reported by drinkers" section is beer-centric: one row per beer). */
+async function crowdBeersFor(breweryId) {
+  if (!(await crowdEnabled())) return [];
+  try {
+    const docs = await fetchRecent();
+    const keys = new Set(
+      docs
+        .filter((d) => (d.kind === 'report' || d.kind === 'beer') && d.brewery_id === breweryId)
+        .map(docBeerKey)
+        .filter(Boolean)
+    );
+    return [...keys]
+      .map((k) => assembleBeer(docs, k))
+      .sort((a, b) =>
+        (b.reports[0]?.created_at ?? '').localeCompare(a.reports[0]?.created_at ?? '')
+      );
+  } catch {
+    return [];
+  }
+}
+
+async function crowdBeer(key) {
+  if (!(await crowdEnabled())) return null;
+  try {
+    return assembleBeer(await fetchRecent(), key);
+  } catch {
+    return null;
+  }
+}
+
+/* All drinker-known beers (reported + user-added), one entry per key. */
+async function crowdBeerCatalog() {
+  if (!(await crowdEnabled())) return [];
+  try {
+    const docs = await fetchRecent();
+    const keys = new Set(
+      docs.filter((d) => d.kind === 'report' || d.kind === 'beer').map(docBeerKey).filter(Boolean)
+    );
+    return [...keys].map((k) => assembleBeer(docs, k));
+  } catch {
+    return [];
+  }
+}
+
+/* "Add a beer" — the deliberate catalog action (signed-in only; rules
+   enforce it too). Distinct from a tap report: no on-tap claim implied. */
+function submitBeer({ brewery, beer_name, style }) {
+  const a = authState();
+  if (!a) throw Object.assign(new Error('sign in first'), { code: 'NOT_SIGNED_IN' });
+  return createDoc('reports', {
+    kind: 'beer',
+    brewery_id: brewery.id,
+    brewery_name: brewery.name,
+    beer_name,
+    beer_key: beerKey(brewery.id, beer_name),
+    style,
+    uid: a.uid,
+    author: a.display_name,
+    created_at: new Date().toISOString(),
+  });
+}
+
+/* Website corrections: append-only brewery_edits docs; the 4-hourly
+   pipeline applies the latest per brewery. Signed-in only. */
+function submitBreweryEdit(breweryId, websiteUrl) {
+  const a = authState();
+  if (!a) throw Object.assign(new Error('sign in first'), { code: 'NOT_SIGNED_IN' });
+  return createDoc('brewery_edits', {
+    uid: a.uid,
+    author: a.display_name,
+    brewery_id: breweryId,
+    field: 'website_url',
+    value: websiteUrl,
+    created_at: new Date().toISOString(),
+  });
+}
+
 /* ---- domain helpers ---- */
 function assemble(docs, breweryId) {
   const mine = docs.filter((d) => d.brewery_id === breweryId);
@@ -441,14 +579,20 @@ async function crowdReportsFor(breweryId) {
   }
 }
 
-/* breweryId -> count of active (not likely-gone) reports, for list badges */
+/* breweryId -> count of drinker-known beers not currently marked gone */
 async function crowdCounts() {
   if (!(await crowdEnabled())) return {};
   try {
     const docs = await fetchRecent();
     const out = {};
-    for (const id of new Set(docs.map((d) => d.brewery_id))) {
-      const n = assemble(docs, id).filter((r) => !r.currentlyGone).length;
+    for (const id of new Set(docs.map((d) => d.brewery_id).filter(Boolean))) {
+      const keys = new Set(
+        docs
+          .filter((d) => (d.kind === 'report' || d.kind === 'beer') && d.brewery_id === id)
+          .map(docBeerKey)
+          .filter(Boolean)
+      );
+      const n = [...keys].filter((k) => !assembleBeer(docs, k).currentlyGone).length;
       if (n) out[id] = n;
     }
     return out;
@@ -470,6 +614,7 @@ function submitReport({ brewery, beer_name, style, rating, author, review }) {
     brewery_id: brewery.id,
     brewery_name: brewery.name,
     beer_name,
+    beer_key: beerKey(brewery.id, beer_name),
     style,
     rating,
     review,
@@ -482,6 +627,7 @@ function submitComment(report, { author, text, rating }) {
   return createDoc('reports', {
     kind: 'comment',
     report_id: report._id,
+    beer_key: docBeerKey(report) ?? undefined,
     brewery_id: report.brewery_id,
     text,
     rating,
@@ -494,6 +640,7 @@ function submitVote(report, vote, author) {
   return createDoc('reports', {
     kind: 'vote',
     report_id: report._id,
+    beer_key: docBeerKey(report) ?? undefined,
     brewery_id: report.brewery_id,
     vote, // 'gone' | 'still'
     ...identity(author),
@@ -534,6 +681,13 @@ window.crowd = {
   sendPinReset,
   authedFetch,
   requireOnline,
+  // beers
+  beerKey,
+  crowdBeer,
+  crowdBeersFor,
+  crowdBeerCatalog,
+  submitBeer,
+  submitBreweryEdit,
   // user marks (favorites / had-it / check-ins)
   myMarks,
   toggleFav,

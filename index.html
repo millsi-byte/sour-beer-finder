@@ -110,6 +110,21 @@
       area joins the overnight scan. Want yours added? Message
       <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>.
     </p>
+  </section>
+
+  <!-- Breweries (tab root) -->
+  <section id="viewBreweries" class="view" hidden>
+    <h2 class="section-title">Breweries</h2>
+    <div class="suggest-wrap block-wrap">
+      <input id="brewSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any brewery&hellip;" autocomplete="off">
+      <ul id="brewSuggest" class="suggest" hidden></ul>
+    </div>
+    <h3 class="section-sub">&#x2B50; Favorites</h3>
+    <ul id="brewFavs" class="cards"></ul>
+    <p id="brewFavsNote" class="explain"></p>
+    <h3 class="section-sub">&#x1F37B; Checked in</h3>
+    <ul id="brewCheckins" class="citylist"></ul>
+    <p id="brewCheckinsNote" class="explain"></p>
     <h3 class="section-sub" id="missingHead">Missing a brewery?</h3>
     <p class="explain">
       The brewery list comes from a public database that misses some spots
@@ -117,9 +132,11 @@
     </p>
     <form id="missingForm" class="missingform" autocomplete="off" hidden>
       <input id="mbName" type="text" placeholder="Brewery name" required>
-      <input id="mbCity" type="text" placeholder="Closest city, state" required>
-      <input id="mbSite" type="text" placeholder="Website (needed for the tap-list scan)" inputmode="url" required>
-      <input id="mbAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
+      <div class="suggest-wrap">
+        <input id="mbCity" type="text" placeholder="Closest city, state" required autocomplete="off">
+      </div>
+      <input id="mbSite" type="text" placeholder="Website (optional &mdash; lets S4S auto-scan its tap list)" inputmode="url">
+      <input id="mbAuthor" type="text" placeholder="Your name (optional)" maxlength="40" hidden>
       <button type="submit" class="secondary block">Send it in</button>
     </form>
     <p id="mbGate" class="explain" hidden>Brewery submissions aren&rsquo;t turned on yet.</p>
@@ -132,25 +149,35 @@
     <p id="mbError" class="error" hidden></p>
   </section>
 
-  <!-- Breweries (tab root — fills out in a coming update) -->
-  <section id="viewBreweries" class="view" hidden>
-    <h2 class="section-title">Breweries</h2>
-    <p class="explain">
-      Search any brewery, favorite the ones you love, and see your
-      check-in history &mdash; coming in the next update. For now, find
-      breweries by searching a location from the
-      <strong>Search</strong> tab.
-    </p>
-  </section>
-
-  <!-- Beers (tab root — fills out in a coming update) -->
+  <!-- Beers (tab root) -->
   <section id="viewBeers" class="view" hidden>
     <h2 class="section-title">Beers</h2>
+    <div class="suggest-wrap block-wrap">
+      <input id="beerSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any beer S4S knows&hellip;" autocomplete="off">
+      <ul id="beerSuggest" class="suggest" hidden></ul>
+    </div>
+    <h3 class="section-sub">&#x2B50; Favorites</h3>
+    <ul id="beerFavs" class="cards"></ul>
+    <p id="beerFavsNote" class="explain"></p>
+    <h3 class="section-sub">&#x2714; I&rsquo;ve had these</h3>
+    <ul id="beerHad" class="cards"></ul>
+    <p id="beerHadNote" class="explain"></p>
+    <h3 class="section-sub">Add a beer</h3>
     <p class="explain">
-      Search every beer S4S knows about, favorite them, mark the ones
-      you&rsquo;ve had, and read drinker reviews &mdash; coming in the
-      next update. For now, beers live on each brewery&rsquo;s page.
+      Know a sour S4S hasn&rsquo;t heard of? Add it under its brewery so
+      others can find and review it.
     </p>
+    <form id="beerAddForm" class="missingform" autocomplete="off" hidden>
+      <input id="baName" type="text" placeholder="Beer name" required>
+      <input id="baStyle" type="text" placeholder="Style (e.g. Fruited Gose &mdash; optional)" maxlength="80">
+      <div class="suggest-wrap">
+        <input id="baBrewery" type="text" placeholder="Brewery (start typing to pick&hellip;)" required autocomplete="off">
+        <ul id="baSuggest" class="suggest" hidden></ul>
+      </div>
+      <button type="submit" class="secondary block">Add it</button>
+    </form>
+    <p id="beerAddGate" class="explain" hidden></p>
+    <p id="baError" class="error" hidden></p>
   </section>
 
   <!-- Data status -->
@@ -265,6 +292,45 @@
     <a id="actUntappd" class="action" target="_blank" rel="noopener">&#x1F37A; Untappd</a>
     <a id="actWebsite" class="action" target="_blank" rel="noopener">&#x1F310; Website</a>
     <a id="actMaps" class="action" target="_blank" rel="noopener">&#x1F5FA; Directions</a>
+  </div>
+  <p class="mb-alt-row"><button type="button" id="btnEditSite" class="linkbtn mb-alt">&#x270F;&#xFE0F; Fix this brewery&rsquo;s website</button></p>
+  <form id="editSiteForm" class="missingform" autocomplete="off" hidden>
+    <input id="esUrl" type="text" placeholder="Correct website (blank to clear)" inputmode="url">
+    <button type="submit" class="secondary block">Save website</button>
+  </form>
+</div>
+
+<!-- Beer detail sheet -->
+<div id="beerSheet" class="sheet" hidden>
+  <div class="grabber"></div>
+  <button type="button" id="beerBack" class="linkbtn back-btn bs-back" hidden>&#x2039; Back to brewery</button>
+  <h3 id="bsName"></h3>
+  <p id="bsSub" class="sheet-sub"></p>
+  <div class="sheet-pills">
+    <button type="button" id="btnFavBeer" class="pillbtn">&#x2B50; Favorite</button>
+    <button type="button" id="btnHadBeer" class="pillbtn">&#x2714; I&rsquo;ve had this</button>
+  </div>
+  <div class="sour-placeholder">
+    <div id="bsStatus" class="crowd-status"></div>
+    <p id="bsStatusNote" class="crowd-meta"></p>
+    <div class="crowd-actions">
+      <button type="button" id="bsMarkOn" class="pillbtn crowd-pill">&#x1F44D; Mark On Tap</button>
+      <button type="button" id="bsMarkGone" class="pillbtn crowd-pill">&#x1F44E; Mark as Gone</button>
+    </div>
+    <div id="bsVForm"></div>
+  </div>
+  <div class="sour-placeholder crowd-wrap">
+    <div class="tl-sec-head">Reviews &amp; comments</div>
+    <p id="bsRating" class="crowd-meta"></p>
+    <ul id="bsReviews" class="crowd-list"></ul>
+    <button type="button" id="bsAddReview" class="secondary block">&#x270D;&#xFE0F; Review this sour</button>
+    <form id="bsReviewForm" class="missingform crowd-form" autocomplete="off" hidden>
+      <div id="bsStars" class="stars" role="radiogroup" aria-label="Your rating"></div>
+      <textarea id="bsText" placeholder="Your review or comment" rows="2" maxlength="400" required></textarea>
+      <input id="bsAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
+      <button type="submit" class="secondary block">Post it</button>
+    </form>
+    <p id="bsError" class="error" hidden></p>
   </div>
 </div>
 

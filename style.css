@@ -357,3 +357,9 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
   text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px;
 }
 .crowd-status { font-size: 15px; font-weight: 650; margin-top: 6px; }
+
+/* Breweries/Beers tabs + beer sheet */
+.block-wrap { display: block; margin-bottom: 12px; }
+.block-wrap .list-filter { margin-bottom: 0; }
+.mb-alt-row { text-align: center; margin-top: 10px; }
+.bs-back { padding: 0 0 8px; }

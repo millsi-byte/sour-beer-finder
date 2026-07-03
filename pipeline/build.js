@@ -73,6 +73,7 @@ async function main() {
       if (!beers.length && keepPrev(src, 'empty read')) continue;
       const sours = beers.filter((b) => isSourStyle(b.style));
       out.breweries[src.obdb_id] = {
+        name: src.name, // display name for the app's Beers catalog
         source: src.source,
         fetched_at: new Date().toISOString(),
         beer_count: beers.length,
