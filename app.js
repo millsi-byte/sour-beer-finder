@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.13';
+const APP_BUILD = '2026.07.03.14';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
