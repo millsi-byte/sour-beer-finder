@@ -1,5 +1,5 @@
 /* Network-first service worker: cache is offline fallback only. */
-const CACHE = 'sourseeker-v1';
+const CACHE = 's4s-v1';
 const SHELL = ['./', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {

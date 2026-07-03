@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>SourSeeker</title>
-<meta name="description" content="Find sour beers on tap near you">
+<title>Search 4 Sour Beer</title>
+<meta name="description" content="S4S — find sour beers on tap near you">
 
 <!-- PWA / iOS standalone -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SourSeeker">
-<meta name="theme-color" content="#101014">
+<meta name="apple-mobile-web-app-title" content="S4S">
+<meta name="theme-color" content="#111412" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f7f7f4">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" type="image/png" href="icons/icon-180.png">
 
@@ -21,7 +22,7 @@
 <body>
 
 <header class="topbar">
-  <h1>SourSeeker</h1>
+  <h1>S<span class="brand-4">4</span>S</h1>
   <button id="btnRefresh" class="iconbtn" aria-label="Refresh" title="Refresh">&#x21bb;</button>
 </header>
 
@@ -30,7 +31,11 @@
   <!-- Landing / locate -->
   <section id="viewLocate" class="view">
     <div class="hero">
-      <div class="hero-emoji">&#x1F37A;&#x1F34B;</div>
+      <div class="logo">
+        <div class="logo-mark">S<span class="brand-4">4</span>S</div>
+        <div class="logo-rule"></div>
+        <div class="logo-sub">Search 4 Sour Beer</div>
+      </div>
       <h2>Sour beers on tap, near you</h2>
       <p>Find every brewery around you, then check what&rsquo;s pouring.</p>
       <button id="btnLocate" class="primary">Use my location</button>

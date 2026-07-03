@@ -1,35 +1,43 @@
-"""Generate app icons: dark rounded tile, chartreuse tulip glass with foam."""
-from PIL import Image, ImageDraw
+"""Generate app icons: the S4S lockup (Search 4 Sour Beer) — sage-green
+serif "S4S" over a rule and wordmark on white, matching @search4sourbeer.
+Requires Pillow and Liberation Serif (Times-like, close to the logo face)."""
+from PIL import Image, ImageDraw, ImageFont
+
+GREEN = (86, 122, 94, 255)  # #567a5e
+SERIF = "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf"
 
 
 def make_icon(size):
-    img = Image.new("RGBA", (size, size), (16, 16, 20, 255))
+    # Draw at 512 and downscale for crisp small sizes.
+    S = 512
+    img = Image.new("RGBA", (S, S), (255, 255, 255, 255))
     d = ImageDraw.Draw(img)
-    s = size / 512.0
-    accent = (200, 230, 74, 255)
-    foam = (245, 248, 230, 255)
 
-    # tulip glass bowl
-    d.polygon(
-        [
-            (150 * s, 150 * s),
-            (362 * s, 150 * s),
-            (340 * s, 260 * s),
-            (296 * s, 310 * s),
-            (216 * s, 310 * s),
-            (172 * s, 260 * s),
-        ],
-        fill=accent,
-    )
-    # stem + base
-    d.rectangle([244 * s, 310 * s, 268 * s, 390 * s], fill=accent)
-    d.rounded_rectangle([196 * s, 386 * s, 316 * s, 412 * s], radius=12 * s, fill=accent)
-    # foam bubbles
-    for cx, cy, r in [(190, 138, 34), (256, 124, 42), (322, 138, 34)]:
-        d.ellipse(
-            [(cx - r) * s, (cy - r) * s, (cx + r) * s, (cy + r) * s], fill=foam
-        )
-    return img
+    f_big = ImageFont.truetype(SERIF, 220)
+    f_mid = ImageFont.truetype(SERIF, 140)
+    f_sub = ImageFont.truetype(SERIF, 46)
+
+    # "S4S" — the 4 smaller, dipping slightly below the S baseline
+    baseline = 270
+    parts = [("S", f_big, 0), ("4", f_mid, 14), ("S", f_big, 0)]
+    widths = [d.textbbox((0, 0), t, font=f)[2] for t, f, _ in parts]
+    gap = 6
+    total = sum(widths) + gap * 2
+    x = (S - total) / 2
+    for (t, f, dip), w in zip(parts, widths):
+        asc, _ = f.getmetrics()
+        d.text((x, baseline + dip - asc), t, font=f, fill=GREEN)
+        x += w + gap
+
+    # rule + wordmark
+    rule_w = total + 24
+    rx = (S - rule_w) / 2
+    d.rectangle([rx, 316, rx + rule_w, 330], fill=GREEN)
+    sub = "Search 4 Sour Beer"
+    sw = d.textbbox((0, 0), sub, font=f_sub)[2]
+    d.text(((S - sw) / 2, 356), sub, font=f_sub, fill=GREEN)
+
+    return img.resize((size, size), Image.LANCZOS) if size != S else img
 
 
 for size in (180, 512):

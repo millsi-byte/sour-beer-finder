@@ -1,8 +1,12 @@
-# SourSeeker 🍺🍋
+# Search 4 Sour Beer (S4S) 🍋
 
 Mobile-first web app for sour beer hunters: launch it, see every brewery near
 you, tap one, and jump straight to its tap list. Built to replace the
 Google-Maps-then-click-every-website ritual.
+
+The companion app to [@search4sourbeer](https://instagram.com/search4sourbeer)
+on Instagram — branding (serif S4S lockup, sage green `#567a5e`) matches the
+account's logo. Icons regenerate via `python3 make_icons.py` (Pillow).
 
 Designed to look native on iOS when added to the home screen (Safari
 standalone web-app mode). 100% free stack: static hosting + free public APIs.

@@ -1,4 +1,4 @@
-/* SourSeeker v1 — nearby breweries via Open Brewery DB, plus live
+/* Search 4 Sour Beer (S4S) — nearby breweries via Open Brewery DB, plus live
    sour-on-tap data from data/taps.json (built nightly by pipeline/build.js,
    one adapter per tap-list source — see README roadmap). */
 

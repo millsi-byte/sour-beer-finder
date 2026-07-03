@@ -1,23 +1,23 @@
 :root {
-  --bg: #101014;
-  --card: #1c1c22;
-  --card-press: #26262e;
-  --text: #f2f2f7;
-  --text-dim: #98989f;
-  --accent: #c8e64a;      /* sour chartreuse — fills only */
-  --accent-ink: #c8e64a;  /* accent used as text/icon color */
-  --accent-dark: #4a5d10;
+  --bg: #111412;
+  --card: #1c211d;
+  --card-press: #272d28;
+  --text: #f2f4f2;
+  --text-dim: #9aa39c;
+  --accent: #567a5e;      /* S4S sage green — fills only */
+  --accent-ink: #a9c6ae;  /* accent used as text/icon color */
   --hairline: rgba(255,255,255,.08);
   --danger: #ff6b6b;
+  --serif: Georgia, "Times New Roman", "New York", serif; /* brand face */
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f2f2f7;
+    --bg: #f7f7f4;
     --card: #ffffff;
-    --card-press: #ececf1;
-    --text: #1c1c1e;
-    --text-dim: #6e6e73;
-    --accent-ink: #4a5d10; /* chartreuse is unreadable on white */
+    --card-press: #edefec;
+    --text: #1d211e;
+    --text-dim: #6d746e;
+    --accent-ink: #46644d; /* darker sage for text on white */
     --hairline: rgba(0,0,0,.08);
   }
 }
@@ -42,7 +42,11 @@ html, body {
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 0.5px solid var(--hairline);
 }
-.topbar h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
+.topbar h1 {
+  font-family: var(--serif); font-size: 24px; font-weight: 600;
+  letter-spacing: 1px; color: var(--accent-ink);
+}
+.brand-4 { font-size: .68em; }
 .iconbtn {
   background: none; border: none; color: var(--accent-ink);
   font-size: 22px; padding: 4px 6px; cursor: pointer;
@@ -51,14 +55,24 @@ html, body {
 main { padding: 0 16px calc(env(safe-area-inset-bottom) + 24px); max-width: 640px; margin: 0 auto; }
 
 /* Landing */
-.hero { text-align: center; padding: 12vh 8px 0; }
-.hero-emoji { font-size: 56px; margin-bottom: 16px; }
-.hero h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+.hero { text-align: center; padding: 9vh 8px 0; }
+.logo {
+  display: inline-block; margin-bottom: 26px;
+  color: var(--accent-ink); font-family: var(--serif);
+}
+.logo-mark { font-size: 88px; line-height: 1; letter-spacing: 4px; }
+.logo-mark .brand-4 { font-size: .62em; vertical-align: .02em; }
+.logo-rule { height: 5px; background: currentColor; margin: 12px 2px 10px; }
+.logo-sub { font-size: 18px; letter-spacing: .4px; }
+.hero h2 {
+  font-family: var(--serif); font-size: 24px; font-weight: 600;
+  letter-spacing: -0.2px; margin-bottom: 8px;
+}
 .hero p { color: var(--text-dim); font-size: 15px; margin-bottom: 28px; }
 
 button.primary {
   display: block; width: 100%; padding: 15px;
-  background: var(--accent); color: #14140a;
+  background: var(--accent); color: #ffffff;
   border: none; border-radius: 14px;
   font-size: 17px; font-weight: 700; cursor: pointer;
 }
@@ -135,7 +149,7 @@ button.secondary {
 }
 @keyframes sheetup { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .grabber { width: 38px; height: 5px; border-radius: 3px; background: var(--hairline); margin: 2px auto 14px; }
-.sheet h3 { font-size: 20px; font-weight: 750; letter-spacing: -0.3px; }
+.sheet h3 { font-family: var(--serif); font-size: 21px; font-weight: 600; letter-spacing: -0.2px; }
 .sheet-sub { color: var(--text-dim); font-size: 14px; margin: 4px 0 14px; }
 .sour-placeholder {
   background: color-mix(in srgb, var(--accent) 9%, transparent);
