@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.17';
+const APP_BUILD = '2026.07.03.18';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -522,9 +522,47 @@ function renderCities() {
   renderCityDrop(); // keep the landing dropdown label in sync with edits
 }
 
+/* Live pipeline status: GitHub's public API says whether a refresh or
+   scan is running right now (CORS-enabled, no key, 60 req/hr is plenty),
+   and the refresh schedule is fixed at :17 past 1,5,9,13,17,21 UTC. */
+async function renderScanStatus() {
+  const el = $('scanStatus');
+  const HOURS = [1, 5, 9, 13, 17, 21];
+  const now = new Date();
+  const next = new Date(now);
+  next.setUTCMinutes(17, 0, 0);
+  let h = HOURS.find(
+    (x) => x > now.getUTCHours() || (x === now.getUTCHours() && now.getUTCMinutes() < 17)
+  );
+  if (h === undefined) {
+    next.setUTCDate(next.getUTCDate() + 1);
+    h = HOURS[0];
+  }
+  next.setUTCHours(h);
+  const t = next.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  el.textContent = `Next refresh starts ≈ ${t}.`;
+  try {
+    const res = await fetch(
+      'https://api.github.com/repos/millsi-byte/sour-beer-finder/actions/runs?status=in_progress&per_page=5'
+    );
+    if (!res.ok) return;
+    const runs = ((await res.json()).workflow_runs ?? []).filter((r) =>
+      /refresh|discover/i.test(r.name)
+    );
+    if (runs.length) {
+      el.textContent =
+        `🔄 ${runs[0].name} running now (started ${fmtAgo(runs[0].run_started_at)}). ` +
+        el.textContent;
+    }
+  } catch {
+    /* offline or rate-limited — schedule line already shown */
+  }
+}
+
 async function citiesFlow() {
   await tapsReady;
   renderCities();
+  renderScanStatus();
   show('cities');
 }
 

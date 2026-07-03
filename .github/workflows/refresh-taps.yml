@@ -37,13 +37,21 @@ jobs:
       # One area at a time, each committed as soon as it finishes — a
       # failed or hung area is skipped (and retried by the next nightly
       # run), never taking the whole crawl down with it.
+      # Nightly cron rotates: each city gets a full crawl once a week
+      # (new widgets appear rarely); manual dispatch crawls everything.
       - name: Re-scan covered areas, one by one
         if: ${{ inputs.discover != 'false' }}
+        env:
+          ROTATE: ${{ github.event_name == 'schedule' && '1' || '' }}
         run: |
           python3 -c "
-          import json
-          for a in json.load(open('pipeline/areas.json')):
+          import json, os, datetime
+          rotate = bool(os.environ.get('ROTATE'))
+          dow = datetime.datetime.utcnow().weekday()
+          for i, a in enumerate(json.load(open('pipeline/areas.json'))):
+              if rotate and i % 7 != dow: continue
               print(f\"{a['center']}\t{a['label']}\")" > /tmp/areas.tsv
+          echo "areas tonight:"; cat /tmp/areas.tsv
           FAILED=""
           while IFS=$'\t' read -r CENTER LABEL; do
             echo "===== $LABEL ====="

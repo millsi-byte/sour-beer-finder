@@ -89,10 +89,11 @@
     <button id="btnCitiesBack" class="linkbtn back-btn">&#x2039; Home</button>
     <h2 class="section-title">Your cities</h2>
     <p class="explain">
-      S4S refreshes live tap lists <strong>every few hours</strong> and scans
-      covered areas for new tap-list sources overnight &mdash; nothing is
-      fetched on the fly. Add the cities you drink in (or plan to visit),
-      and tap &#x2605; to set your home city for one-tap access.
+      S4S re-reads every known tap list <strong>about every 4 hours</strong>,
+      and gives each covered city a full overnight re-scan for brand-new
+      tap-list sources <strong>once a week</strong> &mdash; nothing is fetched
+      on the fly. Add the cities you drink in (or plan to visit), and tap
+      &#x2605; to set your home city for one-tap access.
     </p>
     <form id="cityAddForm" class="cityform" autocomplete="off">
       <div class="suggest-wrap">
@@ -104,6 +105,7 @@
     <h3 class="section-sub">Areas with live tap data</h3>
     <p id="coveredAreas" class="explain"></p>
     <p id="dataAge" class="explain"></p>
+    <p id="scanStatus" class="explain"></p>
     <p class="explain">
       Cities outside these areas still work &mdash; you&rsquo;ll see every
       brewery nearby, just without the &#x1F34B; live sour data until the
