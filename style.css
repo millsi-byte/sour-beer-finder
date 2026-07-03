@@ -182,6 +182,12 @@ button.secondary {
 
 /* Missing-brewery report form */
 .missingform { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.mb-text {
+  background: var(--card); border: 0.5px solid var(--hairline); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 10px; font-size: 15px; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word; user-select: all; -webkit-user-select: all;
+}
+.mb-alt { display: block; margin: 10px auto 0; }
 .missingform input {
   width: 100%; padding: 13px 14px; font-size: 16px;
   background: var(--card); color: var(--text);

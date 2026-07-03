@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.26';
+const APP_BUILD = '2026.07.03.27';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -870,26 +870,44 @@ $('btnMissing').addEventListener('click', async () => {
   $('mbName').focus();
 });
 
-$('missingForm').addEventListener('submit', (e) => {
+// No login needed: the report is copied to the clipboard and DM'd to the
+// Instagram account. GitHub is the power path — an issue titled
+// "Add brewery: …" is parsed + geocoded + added by the workflow, so when
+// the owner receives a DM he re-enters it here and taps the GitHub button.
+let mbIssueUrl = '';
+
+$('missingForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = $('mbName').value.trim();
   const city = $('mbCity').value.trim();
   const site = $('mbSite').value.trim();
   if (!name || !city) return;
+  const report = `Missing brewery for S4S:\nName: ${name}\nCity: ${city}\nWebsite: ${site}`;
   const title = `Add brewery: ${name} (${city})`;
   const body =
     `Name: ${name}\nCity: ${city}\nWebsite: ${site}\n\n` +
     '(Filed from the S4S app — keep the three lines above intact.)';
-  window.open(
-    `${REPO_URL}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`,
-    '_blank',
-    'noopener'
-  );
-  const note = $('mbNote');
-  note.hidden = false;
-  note.textContent =
-    'A pre-filled report opened in a new tab — hit "Create" there (GitHub sign-in needed). Once approved, the brewery shows up in the app and joins the tap-list scans.';
-  $('missingForm').reset();
+  mbIssueUrl = `${REPO_URL}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+  $('mbText').textContent = report;
+  let copied = false;
+  try {
+    await navigator.clipboard.writeText(report);
+    copied = true;
+  } catch {
+    /* clipboard blocked — the report is shown for a long-press copy */
+  }
+  $('mbCopied').textContent = copied
+    ? 'Copied to your clipboard — now paste it into a DM:'
+    : 'Long-press the report below to copy it, then paste it into a DM:';
+  $('mbResult').hidden = false;
+  $('mbResult').scrollIntoView({ block: 'nearest' });
+});
+
+$('mbDM').addEventListener('click', () =>
+  window.open('https://ig.me/m/search4sourbeer', '_blank', 'noopener')
+);
+$('mbIssue').addEventListener('click', () => {
+  if (mbIssueUrl) window.open(mbIssueUrl, '_blank', 'noopener');
 });
 
 $('sheetBackdrop').addEventListener('click', closeSheet);

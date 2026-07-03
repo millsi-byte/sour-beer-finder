@@ -125,7 +125,12 @@
       <input id="mbSite" type="text" placeholder="Website (optional)" inputmode="url">
       <button type="submit" class="secondary block">Send it in</button>
     </form>
-    <p id="mbNote" class="explain" hidden></p>
+    <div id="mbResult" hidden>
+      <p id="mbCopied" class="explain"></p>
+      <pre id="mbText" class="mb-text"></pre>
+      <button type="button" id="mbDM" class="secondary block">&#x1F4E8; DM it to @search4sourbeer</button>
+      <button type="button" id="mbIssue" class="linkbtn mb-alt">Have a GitHub account? Auto-add it</button>
+    </div>
   </section>
 
   <!-- Data status -->
