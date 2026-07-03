@@ -1,0 +1,44 @@
+name: Debug - dump rendered page
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'URL to render, or an Open Brewery DB id (resolves to its website)'
+        required: true
+        type: string
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install headless browser
+        run: |
+          npm install -g playwright
+          npx playwright install --with-deps chromium
+      - name: Render and save
+        run: |
+          NODE_PATH=$(npm root -g) node -e "
+          const { fetchRendered, closeBrowser } = require('./pipeline/browser');
+          (async () => {
+            let url = process.env.TARGET;
+            if (!/^https?:/.test(url)) {
+              const res = await fetch('https://api.openbrewerydb.org/v1/breweries/' + url);
+              url = (await res.json()).website_url;
+              console.log('resolved website:', url);
+            }
+            const html = await fetchRendered(url, { timeoutMs: 30000 });
+            require('fs').writeFileSync('rendered.html', html);
+            console.log('saved', html.length, 'bytes from', url);
+            await closeBrowser();
+          })().catch((e) => { console.error(e); process.exit(1); });"
+        env:
+          TARGET: ${{ inputs.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rendered
+          path: rendered.html
