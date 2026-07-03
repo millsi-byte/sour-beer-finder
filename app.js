@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.15';
+const APP_BUILD = '2026.07.03.16';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -757,9 +757,8 @@ $('btnUpdate').addEventListener('click', async () => {
   location.reload();
 });
 
-// open straight to the home city when one is set
-const home = loadSavedCities().find((c) => c.home);
-if (home) openCity(home);
+// the app always opens on the home page; the ★ home city is one tap away
+// via the split button
 
 // ---------- service worker ----------
 if ('serviceWorker' in navigator) {
