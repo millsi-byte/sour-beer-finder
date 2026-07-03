@@ -37,9 +37,14 @@ function slug(s) {
 }
 
 function parseIssue(body) {
+  // [^\S\r\n] = horizontal whitespace only — \s would cross an empty
+  // value's newline and swallow the next line (bit us on issue #1)
   const grab = (label) =>
-    body.match(new RegExp(`^\\s*${label}\\s*:\\s*(.+)$`, 'im'))?.[1].trim() ?? '';
-  return { name: grab('Name'), city: grab('City'), website: grab('Website') };
+    body.match(new RegExp(`^[^\\S\\r\\n]*${label}[^\\S\\r\\n]*:[^\\S\\r\\n]*(.+)$`, 'im'))?.[1].trim() ?? '';
+  let website = grab('Website');
+  // must look like a domain — guards against prose on the Website line
+  if (!/^[\w.-]+\.[a-z]{2,}([/?#]\S*)?$/i.test(website.replace(/^https?:\/\//i, ''))) website = '';
+  return { name: grab('Name'), city: grab('City'), website };
 }
 
 async function geocode(cityRaw) {

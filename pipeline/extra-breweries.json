@@ -6,7 +6,8 @@
     "state": "Massachusetts",
     "lat": 42.135,
     "lng": -71.975,
-    "website_url": "https://treehousebrew.com"
+    "website_url": "https://treehousebrew.com",
+    "menu_url": "https://treehousebrew.com/draft-list"
   },
   {
     "id": "x-tree-house-tewksbury",
@@ -15,7 +16,8 @@
     "state": "Massachusetts",
     "lat": 42.6106,
     "lng": -71.2342,
-    "website_url": "https://treehousebrew.com"
+    "website_url": "https://treehousebrew.com",
+    "menu_url": "https://treehousebrew.com/draft-list-tewksbury"
   },
   {
     "id": "x-spyglass-nashua",
@@ -32,7 +34,6 @@
     "city": "Orlando",
     "state": "Florida",
     "lat": 28.5383,
-    "lng": -81.3792,
-    "website_url": "https://(Filed from the S4S app \u2014 keep the three lines above intact.)"
+    "lng": -81.3792
   }
 ]

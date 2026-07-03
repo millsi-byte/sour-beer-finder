@@ -878,15 +878,15 @@
     "obdb_id": "x-tree-house-charlton",
     "name": "Tree House Brewing Company",
     "source": "untappd",
-    "untappd_location_id": 38427,
-    "found_on": "https://treehousebrew.com/draft-list-deerfield"
+    "untappd_location_id": 30745,
+    "found_on": "https://treehousebrew.com/draft-list"
   },
   {
     "obdb_id": "x-tree-house-tewksbury",
     "name": "Tree House Brewing Company - Tewksbury",
     "source": "untappd",
-    "untappd_location_id": 38427,
-    "found_on": "https://treehousebrew.com/draft-list-deerfield"
+    "untappd_location_id": 42668,
+    "found_on": "https://treehousebrew.com/draft-list-tewksbury"
   },
   {
     "obdb_id": "47e1f46b-e172-4f32-882b-c7bdf619fffb",

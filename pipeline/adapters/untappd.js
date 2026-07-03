@@ -45,8 +45,16 @@ function dedupe(beers) {
 
 function parseEmbed(html) {
   const beers = [];
+  // grid theme: <h4 class="item-name"><a>…<span id="…">Name</span></a>…
   for (const [, block] of html.matchAll(/<h4 class="item-name">([\s\S]*?)<\/h4>/g)) {
     const name = block.match(/<span id="[^"]*">([^<]+)<\/span>/)?.[1]?.trim();
+    const style = block.match(/<span class="item-category">([^<]+)<\/span>/)?.[1]?.trim() ?? '';
+    if (name) beers.push({ name: decodeEntities(name), style: decodeEntities(style) });
+  }
+  // table theme (Tree House): each item is a class="item-bg-color menu-item"
+  // block with <span class="item">…<span id="…">Name</span> and .item-category
+  for (const block of html.split(/class="item-bg-color menu-item"/).slice(1)) {
+    const name = block.match(/<span class="item">[\s\S]*?<span id="[^"]*">([^<]+)<\/span>/)?.[1]?.trim();
     const style = block.match(/<span class="item-category">([^<]+)<\/span>/)?.[1]?.trim() ?? '';
     if (name) beers.push({ name: decodeEntities(name), style: decodeEntities(style) });
   }
@@ -120,7 +128,7 @@ module.exports = async function untappd(src, env) {
   if (browserAvailable() && src.found_on && src.untappd_location_id) {
     const html = await fetchRendered(src.found_on, {
       timeoutMs: 25000,
-      waitSelector: '.item-name', // menu injects async — wait for it
+      waitSelector: '.item-name, .menu-item', // menu injects async — wait for it (grid or table theme)
     });
     return parseEmbed(html);
   }
