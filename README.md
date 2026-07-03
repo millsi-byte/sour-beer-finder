@@ -132,7 +132,9 @@ paste its config. One-time setup, ~5 minutes, no credit card:
    `s4s`, disable Analytics).
 2. In the project: **Build → Firestore Database → Create database** →
    Start in **production mode** → pick a US location.
-3. **Rules** tab → replace everything with the rules below → Publish:
+3. **Rules** tab → replace everything with the rules below → Publish
+   (two collections: `reports` for drinker reports, `brewery_requests`
+   for the "Missing a brewery?" form below):
    ```
    rules_version = '2';
    service cloud.firestore {
@@ -144,6 +146,15 @@ paste its config. One-time setup, ~5 minutes, no credit card:
               'rating','author','review','report_id','text','vote',
               'created_at'])
            && request.resource.data.kind in ['report','comment','vote'];
+         allow update, delete: if false;
+       }
+       match /brewery_requests/{doc} {
+         allow read: if true;
+         allow create: if request.resource.data.keys().hasOnly(
+             ['name','city','website_url','author','created_at'])
+           && request.resource.data.name is string && request.resource.data.name.size() > 0
+           && request.resource.data.city is string && request.resource.data.city.size() > 0
+           && request.resource.data.website_url is string && request.resource.data.website_url.size() > 0;
          allow update, delete: if false;
        }
      }
@@ -161,18 +172,24 @@ paste its config. One-time setup, ~5 minutes, no credit card:
    to be public; the rules above are what limit writes.)
 
 **Moderation / admin delete:** open the Firebase console → Firestore
-→ `reports` collection → click the offending document → delete. Your
-Google login is the admin login; there is nothing else to run.
+→ pick the collection (`reports` or `brewery_requests`) → click the
+offending document → delete. Your Google login is the admin login;
+there is nothing else to run.
 
 ## Manually adding breweries (Open Brewery DB gaps)
 
 The brewery list comes from Open Brewery DB, which is missing some major
-breweries (Tree House!). `pipeline/extra-breweries.json` is the hand-kept
-supplement: entries carry `id` (`x-…` so they never collide with OBDB ids),
-`name`, `city`, `state`, `lat`, `lng`, `website_url`, and optionally
-`menu_url` — set it for multi-location sites (Tree House) so discovery
-scans THIS location's tap-list page instead of whichever location the
-homepage links first. They flow everywhere automatically:
+breweries (Tree House!). `pipeline/extra-breweries.json` is the
+supplement the app actually reads — but it's a **generated** file now,
+rebuilt every "Refresh tap data (fast)" run by
+`pipeline/sync-brewery-requests.js` from two sources: the hand-kept
+`pipeline/extra-breweries.seed.json` and every live submission in the
+`brewery_requests` Firestore collection (below). Entries carry `id`
+(`x-…` so they never collide with OBDB ids), `name`, `city`, `state`,
+`lat`, `lng`, `website_url`, and optionally `menu_url` — set it for
+multi-location sites (Tree House) so discovery scans THIS location's
+tap-list page instead of whichever location the homepage links first.
+They flow everywhere automatically:
 
 - `build.js` publishes them inside `data/taps.json` (`extra_breweries`),
   and the app injects them into search results — with real distances,
@@ -183,15 +200,23 @@ homepage links first. They flow everywhere automatically:
 
 Three ways an entry gets in:
 
-1. **The app's "Missing a brewery?" form** (results-page footer link, and
-   on Your Cities): fills a GitHub issue titled `Add brewery: …` with
-   `Name:` / `City:` / `Website:` lines. The **Add brewery** workflow
-   parses it, geocodes the city (Open-Meteo), appends the entry, updates
-   the published snapshot, comments, and closes the issue. Owner-filed
-   issues run instantly; anyone else's waits for a maintainer to add the
-   `approved` label.
-2. `node pipeline/add-brewery.js "Name" "City, ST" [website]` locally.
-3. Edit `pipeline/extra-breweries.json` by hand.
+1. **The app's "Missing a brewery?" form** (results page, and Your
+   Cities) — no login, posts straight to Firestore. Before submitting,
+   it checks nearby currently-listed breweries for a close name+location
+   match and nudges ("looks like X is already listed — add anyway?")
+   rather than blocking, since real multi-location breweries (Tree
+   House's two sites) legitimately share almost their whole name.
+   `sync-brewery-requests.js` runs the same check server-side (tighter,
+   since it's the actual backstop): within ~1 mile **and** a
+   normalized-name match skips the entry as a likely duplicate — the
+   submitter's Firestore doc is untouched (nothing to clean up), it's
+   just not republished. Delete a bad or duplicate entry the same way as
+   a crowd report: open the Firebase console, delete the
+   `brewery_requests` doc — the next sync run regenerates without it.
+2. `node pipeline/add-brewery.js "Name" "City, ST" <website>` locally —
+   writes to `pipeline/extra-breweries.seed.json` (not the generated
+   file, so it survives the next sync).
+3. Edit `pipeline/extra-breweries.seed.json` by hand.
 
 ## v1.1 — all pipelines (shipped)
 

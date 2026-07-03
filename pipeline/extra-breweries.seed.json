@@ -1,0 +1,31 @@
+[
+  {
+    "id": "x-tree-house-charlton",
+    "name": "Tree House Brewing Company",
+    "city": "Charlton",
+    "state": "Massachusetts",
+    "lat": 42.135,
+    "lng": -71.975,
+    "website_url": "https://treehousebrew.com",
+    "menu_url": "https://treehousebrew.com/draft-list"
+  },
+  {
+    "id": "x-tree-house-tewksbury",
+    "name": "Tree House Brewing Company - Tewksbury",
+    "city": "Tewksbury",
+    "state": "Massachusetts",
+    "lat": 42.6106,
+    "lng": -71.2342,
+    "website_url": "https://treehousebrew.com",
+    "menu_url": "https://treehousebrew.com/draft-list-tewksbury"
+  },
+  {
+    "id": "x-spyglass-nashua",
+    "name": "Spyglass Brewing Company",
+    "city": "Nashua",
+    "state": "New Hampshire",
+    "lat": 42.7654,
+    "lng": -71.4676,
+    "website_url": "https://spyglassbrewing.com"
+  }
+]

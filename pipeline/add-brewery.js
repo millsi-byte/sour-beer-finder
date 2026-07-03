@@ -1,78 +1,23 @@
-/* Adds a hand-reported brewery (missing from Open Brewery DB) to
-   pipeline/extra-breweries.json, geocoding the city via Open-Meteo,
-   and mirrors the list into data/taps.json so the app sees it on the
-   very next deploy (no build.js run needed).
+/* Manual one-off CLI: add a hand-reported brewery (missing from Open
+   Brewery DB) to the git-tracked seed file, geocoding the city via
+   Open-Meteo. Everyone else's submissions go through the app's
+   "Missing a brewery?" form -> Firestore -> pipeline/sync-brewery-
+   requests.js instead; this is for typing one in yourself from the
+   terminal.
 
-   Usage:
-     node pipeline/add-brewery.js "Brewery Name" "City, State" [website]
-     ISSUE_BODY="Name: ...\nCity: ...\nWebsite: ..." node pipeline/add-brewery.js --from-issue
+   Usage: node pipeline/add-brewery.js "Brewery Name" "City, State" <website>
 
-   Prints the added entry as JSON on success; exits 0 with "already present"
-   if the id exists. Exit 1 = couldn't parse or geocode (workflow comments
-   the failure back on the issue). */
+   Prints the added entry as JSON on success; exits 0 with "already
+   present" if the id exists. Exit 1 = missing args or couldn't geocode. */
 
 const fs = require('fs');
 const path = require('path');
+const { slug, geocode } = require('./brewery-lib');
 
-const EXTRAS = path.join(__dirname, 'extra-breweries.json');
-const TAPS = path.join(__dirname, '..', 'data', 'taps.json');
-
-const STATE_ABBR = {
-  AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
-  CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia',
-  HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa',
-  KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland',
-  MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi',
-  MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada',
-  NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York',
-  NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma',
-  OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina',
-  SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont',
-  VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin',
-  WY: 'Wyoming', DC: 'District of Columbia',
-};
-
-function slug(s) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-}
-
-function parseIssue(body) {
-  // [^\S\r\n] = horizontal whitespace only — \s would cross an empty
-  // value's newline and swallow the next line (bit us on issue #1)
-  const grab = (label) =>
-    body.match(new RegExp(`^[^\\S\\r\\n]*${label}[^\\S\\r\\n]*:[^\\S\\r\\n]*(.+)$`, 'im'))?.[1].trim() ?? '';
-  let website = grab('Website');
-  // must look like a domain — guards against prose on the Website line
-  if (!/^[\w.-]+\.[a-z]{2,}([/?#]\S*)?$/i.test(website.replace(/^https?:\/\//i, ''))) website = '';
-  return { name: grab('Name'), city: grab('City'), website };
-}
-
-async function geocode(cityRaw) {
-  const [city, stRaw] = cityRaw.split(',').map((s) => s.trim());
-  const wantState =
-    stRaw && (STATE_ABBR[stRaw.toUpperCase()] || stRaw).toLowerCase();
-  const url =
-    'https://geocoding-api.open-meteo.com/v1/search?count=10&language=en&format=json&name=' +
-    encodeURIComponent(city);
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`geocoder ${res.status}`);
-  const hits = ((await res.json()).results || []).filter(
-    (r) => r.country_code === 'US'
-  );
-  const match = wantState
-    ? hits.find((r) => (r.admin1 || '').toLowerCase() === wantState)
-    : hits[0];
-  if (!match) throw new Error(`no US geocoder match for "${cityRaw}"`);
-  return { city: match.name, state: match.admin1, lat: match.latitude, lng: match.longitude };
-}
+const SEED = path.join(__dirname, 'extra-breweries.seed.json');
 
 async function main() {
-  let name, cityRaw, website;
-  if (process.argv[2] === '--from-issue') {
-    ({ name, city: cityRaw, website } = parseIssue(process.env.ISSUE_BODY || ''));
-  } else {
-    [name, cityRaw, website] = process.argv.slice(2);
-  }
+  let [name, cityRaw, website] = process.argv.slice(2);
   if (!name || !cityRaw || !website) {
     console.error(
       'need a brewery name, a "City, State", AND a website — ' +
@@ -93,24 +38,17 @@ async function main() {
     website_url: website,
   };
 
-  const extras = JSON.parse(fs.readFileSync(EXTRAS, 'utf8'));
-  if (extras.some((e) => e.id === entry.id)) {
+  const seed = JSON.parse(fs.readFileSync(SEED, 'utf8'));
+  if (seed.some((e) => e.id === entry.id)) {
     console.log(`already present: ${entry.id}`);
     return;
   }
-  extras.push(entry);
-  fs.writeFileSync(EXTRAS, JSON.stringify(extras, null, 2) + '\n');
-
-  // mirror into the published snapshot so the app shows it immediately
-  try {
-    const taps = JSON.parse(fs.readFileSync(TAPS, 'utf8'));
-    taps.extra_breweries = extras;
-    fs.writeFileSync(TAPS, JSON.stringify(taps, null, 2) + '\n');
-  } catch {
-    /* no snapshot yet — build.js will publish it */
-  }
-
+  seed.push(entry);
+  fs.writeFileSync(SEED, JSON.stringify(seed, null, 2) + '\n');
   console.log(JSON.stringify(entry, null, 2));
+  console.log('Run pipeline/sync-brewery-requests.js (or just push — the');
+  console.log('next "Refresh tap data (fast)" run will pick it up) to');
+  console.log('publish this into extra-breweries.json.');
 }
 
 main().catch((e) => {

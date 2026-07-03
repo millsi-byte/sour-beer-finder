@@ -75,15 +75,17 @@ async function fetchRecent() {
   return cache;
 }
 
-async function createDoc(data) {
-  const res = await fetch(`${baseUrl()}/reports?key=${cfg.api_key}`, {
+async function createDoc(collection, data) {
+  const res = await fetch(`${baseUrl()}/${collection}?key=${cfg.api_key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ fields: toFields(data) }),
   });
   if (!res.ok) throw new Error(`crowd save ${res.status}`);
   const saved = fromDoc(await res.json());
-  cache?.push(saved);
+  // only 'reports' docs are ever read back client-side (brewery_requests
+  // are read solely by the pipeline's sync script)
+  if (collection === 'reports') cache?.push(saved);
   return saved;
 }
 
@@ -135,7 +137,7 @@ async function crowdCounts() {
 }
 
 function submitReport({ brewery, beer_name, style, rating, author, review }) {
-  return createDoc({
+  return createDoc('reports', {
     kind: 'report',
     brewery_id: brewery.id,
     brewery_name: brewery.name,
@@ -149,7 +151,7 @@ function submitReport({ brewery, beer_name, style, rating, author, review }) {
 }
 
 function submitComment(report, { author, text, rating }) {
-  return createDoc({
+  return createDoc('reports', {
     kind: 'comment',
     report_id: report._id,
     brewery_id: report.brewery_id,
@@ -161,11 +163,28 @@ function submitComment(report, { author, text, rating }) {
 }
 
 function submitVote(report, vote, author) {
-  return createDoc({
+  return createDoc('reports', {
     kind: 'vote',
     report_id: report._id,
     brewery_id: report.brewery_id,
     vote, // 'gone' | 'still'
+    author,
+    created_at: new Date().toISOString(),
+  });
+}
+
+/* Brewery-add requests: a separate collection (not a 'kind' on `reports`)
+   since its shape is unrelated — no brewery_id exists yet, that's the
+   whole point. No lat/lng is ever sent from the client; geocoding a free-
+   text city happens once, server-side, in pipeline/sync-brewery-requests.js
+   (toFields() only round-trips strings/integers cleanly — floats would be
+   mis-encoded — so keeping coordinates out of the client payload sidesteps
+   that entirely). */
+function submitBreweryRequest({ name, city, website_url, author }) {
+  return createDoc('brewery_requests', {
+    name,
+    city,
+    website_url,
     author,
     created_at: new Date().toISOString(),
   });
@@ -178,4 +197,5 @@ window.crowd = {
   submitReport,
   submitComment,
   submitVote,
+  submitBreweryRequest,
 };

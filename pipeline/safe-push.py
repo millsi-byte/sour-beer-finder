@@ -7,7 +7,15 @@ Instead: union by key — our working-tree entries win per-key, entries
 that only exist upstream are kept — then reset to origin/main, write the
 merged files, commit, push. Re-merges and retries if the push races.
 
-Usage: safe-push.py "commit message"
+Usage: safe-push.py "commit message" [--replace FILE ...]
+
+--replace: for these files, skip the union merge and let our working-
+tree copy win outright. Needed for pipeline/extra-breweries.json once
+sync-brewery-requests.js regenerates it from scratch each run — a union
+merge would resurrect an id whose Firestore doc (and therefore our
+freshly-regenerated copy) has since deleted it. Only the step that just
+ran that regeneration should pass this; every other caller keeps the
+default union behavior.
 """
 import json
 import subprocess
@@ -15,6 +23,7 @@ import sys
 import time
 
 MSG = sys.argv[1]
+REPLACE = set(sys.argv[3:]) if len(sys.argv) > 2 and sys.argv[2] == '--replace' else set()
 FILES = [
     'pipeline/sources.json',
     'pipeline/areas.json',
@@ -52,9 +61,12 @@ for attempt in range(4):
         by.update({a['center']: a for a in ours['pipeline/areas.json']})
         merged['pipeline/areas.json'] = list(by.values())
     if 'pipeline/extra-breweries.json' in ours:
-        by = {e['id']: e for e in theirs.get('pipeline/extra-breweries.json', [])}
-        by.update({e['id']: e for e in ours['pipeline/extra-breweries.json']})
-        merged['pipeline/extra-breweries.json'] = list(by.values())
+        if 'pipeline/extra-breweries.json' in REPLACE:
+            merged['pipeline/extra-breweries.json'] = ours['pipeline/extra-breweries.json']
+        else:
+            by = {e['id']: e for e in theirs.get('pipeline/extra-breweries.json', [])}
+            by.update({e['id']: e for e in ours['pipeline/extra-breweries.json']})
+            merged['pipeline/extra-breweries.json'] = list(by.values())
     if 'data/taps.json' in ours:
         o = ours['data/taps.json']
         t = theirs.get('data/taps.json', {})

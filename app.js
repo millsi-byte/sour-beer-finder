@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.31';
+const APP_BUILD = '2026.07.03.32';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -675,6 +675,7 @@ async function citiesFlow() {
   await tapsReady;
   renderCities();
   renderScanStatus();
+  await renderMissingBreweryGate();
   show('cities');
 }
 
@@ -1089,54 +1090,133 @@ $('cityAddForm').addEventListener('submit', async (e) => {
   addSavedCity(pick ?? { label: typed });
 });
 // ---------- missing brewery report ----------
-// Reports become a pre-filled GitHub issue; the "Add brewery" workflow
-// parses approved ones into pipeline/extra-breweries.json automatically.
-const REPO_URL = 'https://github.com/millsi-byte/sour-beer-finder';
+// Posts straight to Firestore (crowd.js -> submitBreweryRequest) — no
+// login, no GitHub issue. pipeline/sync-brewery-requests.js picks it up
+// on the next 4-hourly refresh, geocodes it, and (unless it looks like a
+// duplicate of something already listed) publishes it into
+// pipeline/extra-breweries.json.
+
+async function renderMissingBreweryGate() {
+  const enabled = await crowd.crowdEnabled();
+  $('missingForm').hidden = !enabled;
+  $('mbGate').hidden = enabled;
+}
 
 $('btnMissing').addEventListener('click', async () => {
-  await citiesFlow(); // async: the view shows only after taps.json is ready
+  await citiesFlow(); // async: the view (and the gate check) settle first
   $('missingHead').scrollIntoView({ block: 'start' });
-  $('mbName').focus();
+  if (!$('missingForm').hidden) $('mbName').focus();
 });
 
-// No login needed: the report is copied to the clipboard and DM'd to the
-// Instagram account. GitHub is the power path — an issue titled
-// "Add brewery: …" is parsed + geocoded + added by the workflow, so when
-// the owner receives a DM he re-enters it here and taps the GitHub button.
-let mbIssueUrl = '';
+/* ---- "did you mean X?" duplicate nudge ----
+   Same normalization as pipeline/brewery-lib.js's normalizeName/
+   namesLikelyMatch, kept in sync by convention (no bundler to share a
+   module between the browser and Node). Tight AND-gate — distance AND
+   name — so two real, near-identically-named locations (Tree House
+   Charlton vs. Tewksbury, ~40mi apart) are never blocked; this is a UX
+   nudge that catches honest mistakes, not the actual duplicate backstop
+   (that's server-side, in sync-brewery-requests.js, and runs regardless
+   of whether this check ran or was skipped). */
+const MB_FILLER_WORDS = /\b(brewing|brewery|breweries|company|co|llc|inc|taproom)\b/g;
+
+function normalizeBreweryName(s) {
+  return String(s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(MB_FILLER_WORDS, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function mbNamesLikelyMatch(a, b) {
+  const na = normalizeBreweryName(a);
+  const nb = normalizeBreweryName(b);
+  if (!na || !nb) return false;
+  if (na === nb || na.includes(nb) || nb.includes(na)) return true;
+  const ta = new Set(na.split(' '));
+  const tb = new Set(nb.split(' '));
+  const shared = [...ta].filter((t) => tb.has(t)).length;
+  return shared / Math.min(ta.size, tb.size) >= 0.6;
+}
+
+async function findPossibleDuplicate(name, cityRaw) {
+  try {
+    const geo = (await geocodeCities(cityRaw))[0];
+    if (!geo) return null; // couldn't geocode — never block on that alone
+    let pool = state.breweries;
+    // reuse the loaded list only if it plausibly covers this city;
+    // otherwise (e.g. reached via Your Cities directly) fetch fresh
+    if (!pool.length || !state.origin || haversineMiles(state.origin, geo) > 60) {
+      await tapsReady;
+      pool = prepare(await fetchByDist(geo.lat, geo.lng), geo);
+    }
+    for (const b of pool) {
+      if (!b.hasCoords) continue;
+      const miles = haversineMiles(geo, { lat: b.lat, lng: b.lng });
+      if (miles <= 1 && mbNamesLikelyMatch(name, b.name)) return { brewery: b, miles };
+    }
+    return null;
+  } catch {
+    return null; // network hiccup — never block a submission on this
+  }
+}
+
+let mbPending = null; // stashed {name, city, site, author} once a dupe nudge is showing
+
+async function submitBreweryRequest(name, city, site, author) {
+  const btn = $('missingForm').querySelector('button[type=submit]');
+  btn.disabled = true;
+  $('mbError').hidden = true;
+  try {
+    await crowd.submitBreweryRequest({ name, city, website_url: site, author });
+    $('missingForm').reset();
+    $('missingForm').hidden = true;
+    $('mbDupe').hidden = true;
+    $('mbSuccess').hidden = false;
+  } catch {
+    $('mbError').hidden = false;
+    $('mbError').textContent = "Couldn't send — try again in a minute.";
+  } finally {
+    btn.disabled = false;
+  }
+}
 
 $('missingForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = $('mbName').value.trim();
   const city = $('mbCity').value.trim();
   const site = $('mbSite').value.trim();
+  const author = $('mbAuthor').value.trim();
   if (!name || !city || !site) return; // website is required — it's what the tap-list scan reads
-  const report = `Missing brewery for S4S:\nName: ${name}\nCity: ${city}\nWebsite: ${site}`;
-  const title = `Add brewery: ${name} (${city})`;
-  const body =
-    `Name: ${name}\nCity: ${city}\nWebsite: ${site}\n\n` +
-    '(Filed from the S4S app — keep the three lines above intact.)';
-  mbIssueUrl = `${REPO_URL}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-  $('mbText').textContent = report;
-  let copied = false;
-  try {
-    await navigator.clipboard.writeText(report);
-    copied = true;
-  } catch {
-    /* clipboard blocked — the report is shown for a long-press copy */
+
+  const btn = $('missingForm').querySelector('button[type=submit]');
+  btn.disabled = true;
+  const match = await findPossibleDuplicate(name, city);
+  btn.disabled = false;
+  if (match) {
+    const { brewery: dupe, miles } = match;
+    mbPending = { name, city, site, author };
+    $('mbDupeNote').textContent =
+      `Looks like "${dupe.name}" (${[dupe.city, dupe.state_province].filter(Boolean).join(', ')}, ` +
+      `${fmtMiles(miles)} from there) is already listed nearby. Is this a different location?`;
+    $('mbDupe').hidden = false;
+    $('mbDupe').scrollIntoView({ block: 'nearest' });
+    return;
   }
-  $('mbCopied').textContent = copied
-    ? 'Copied to your clipboard — now paste it into a DM:'
-    : 'Long-press the report below to copy it, then paste it into a DM:';
-  $('mbResult').hidden = false;
-  $('mbResult').scrollIntoView({ block: 'nearest' });
+  await submitBreweryRequest(name, city, site, author);
 });
 
-$('mbDM').addEventListener('click', () =>
-  window.open('https://ig.me/m/search4sourbeer', '_blank', 'noopener')
-);
-$('mbIssue').addEventListener('click', () => {
-  if (mbIssueUrl) window.open(mbIssueUrl, '_blank', 'noopener');
+$('mbDupeYes').addEventListener('click', async () => {
+  if (!mbPending) return;
+  const { name, city, site, author } = mbPending;
+  mbPending = null;
+  $('mbDupe').hidden = true;
+  await submitBreweryRequest(name, city, site, author);
+});
+
+$('mbDupeNo').addEventListener('click', () => {
+  mbPending = null;
+  $('mbDupe').hidden = true;
 });
 
 $('sheetBackdrop').addEventListener('click', closeSheet);

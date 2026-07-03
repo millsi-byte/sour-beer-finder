@@ -120,18 +120,21 @@
       The brewery list comes from a public database that misses some spots
       (even famous ones). Report one and it joins the app and the scans.
     </p>
-    <form id="missingForm" class="missingform" autocomplete="off">
+    <form id="missingForm" class="missingform" autocomplete="off" hidden>
       <input id="mbName" type="text" placeholder="Brewery name" required>
       <input id="mbCity" type="text" placeholder="Closest city, state" required>
       <input id="mbSite" type="text" placeholder="Website (needed for the tap-list scan)" inputmode="url" required>
+      <input id="mbAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
       <button type="submit" class="secondary block">Send it in</button>
     </form>
-    <div id="mbResult" hidden>
-      <p id="mbCopied" class="explain"></p>
-      <pre id="mbText" class="mb-text"></pre>
-      <button type="button" id="mbDM" class="secondary block">&#x1F4E8; DM it to @search4sourbeer</button>
-      <button type="button" id="mbIssue" class="linkbtn mb-alt">Have a GitHub account? Auto-add it</button>
+    <p id="mbGate" class="explain" hidden>Brewery submissions aren&rsquo;t turned on yet.</p>
+    <div id="mbDupe" class="crowd-wrap" hidden>
+      <p id="mbDupeNote" class="explain"></p>
+      <button type="button" id="mbDupeYes" class="secondary block">It&rsquo;s different &mdash; send it anyway</button>
+      <button type="button" id="mbDupeNo" class="linkbtn mb-alt">Never mind</button>
     </div>
+    <p id="mbSuccess" class="explain" hidden>Thanks &mdash; it&rsquo;s in! It&rsquo;ll show up once it&rsquo;s checked against nearby entries.</p>
+    <p id="mbError" class="error" hidden></p>
   </section>
 
   <!-- Data status -->
