@@ -4,7 +4,8 @@
   --card-press: #26262e;
   --text: #f2f2f7;
   --text-dim: #98989f;
-  --accent: #c8e64a;      /* sour chartreuse */
+  --accent: #c8e64a;      /* sour chartreuse — fills only */
+  --accent-ink: #c8e64a;  /* accent used as text/icon color */
   --accent-dark: #4a5d10;
   --hairline: rgba(255,255,255,.08);
   --danger: #ff6b6b;
@@ -16,6 +17,7 @@
     --card-press: #ececf1;
     --text: #1c1c1e;
     --text-dim: #6e6e73;
+    --accent-ink: #4a5d10; /* chartreuse is unreadable on white */
     --hairline: rgba(0,0,0,.08);
   }
 }
@@ -42,7 +44,7 @@ html, body {
 }
 .topbar h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
 .iconbtn {
-  background: none; border: none; color: var(--accent);
+  background: none; border: none; color: var(--accent-ink);
   font-size: 22px; padding: 4px 6px; cursor: pointer;
 }
 
@@ -76,7 +78,7 @@ button.primary:active { filter: brightness(.9); }
   outline: none;
 }
 button.secondary {
-  padding: 13px 18px; background: var(--card); color: var(--accent);
+  padding: 13px 18px; background: var(--card); color: var(--accent-ink);
   border: 0.5px solid var(--hairline); border-radius: 12px;
   font-size: 16px; font-weight: 600; cursor: pointer;
 }
@@ -88,7 +90,7 @@ button.secondary {
   display: flex; align-items: baseline; justify-content: space-between;
   padding: 14px 2px 10px; color: var(--text-dim); font-size: 14px;
 }
-.linkbtn { background: none; border: none; color: var(--accent); font-size: 14px; font-weight: 600; cursor: pointer; }
+.linkbtn { background: none; border: none; color: var(--accent-ink); font-size: 14px; font-weight: 600; cursor: pointer; }
 
 .cards { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .card {
@@ -100,11 +102,11 @@ button.secondary {
 .card .info { flex: 1; min-width: 0; }
 .card .name { font-size: 16px; font-weight: 650; margin-bottom: 3px; }
 .card .sub { font-size: 13px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card .dist { font-size: 14px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+.card .dist { font-size: 14px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
 .card .chev { color: var(--text-dim); font-size: 14px; }
 .type-badge {
   display: inline-block; font-size: 11px; font-weight: 600; text-transform: capitalize;
-  color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 14%, transparent);
   border-radius: 6px; padding: 2px 6px; margin-right: 6px;
 }
 
@@ -114,7 +116,7 @@ button.secondary {
 .spinner { display: flex; justify-content: center; padding: 60px 0; }
 .ring {
   width: 30px; height: 30px; border-radius: 50%;
-  border: 3px solid var(--hairline); border-top-color: var(--accent);
+  border: 3px solid var(--hairline); border-top-color: var(--accent-ink);
   animation: spin .8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -140,7 +142,7 @@ button.secondary {
   border: 0.5px solid color-mix(in srgb, var(--accent) 25%, transparent);
   border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;
 }
-.sour-badge { font-size: 13px; font-weight: 700; color: var(--accent); }
+.sour-badge { font-size: 13px; font-weight: 700; color: var(--accent-ink); }
 .sour-placeholder p { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
 .sheet-actions { display: flex; gap: 8px; }
 .action {
