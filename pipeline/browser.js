@@ -25,8 +25,11 @@ async function getBrowser() {
   return browserPromise;
 }
 
-/* Load a page like a phone browser would and return the rendered DOM. */
-async function fetchRendered(url, { timeoutMs = 20000 } = {}) {
+/* Load a page like a phone browser would and return the rendered DOM.
+   waitSelector: wait (up to 12s) for a specific element instead of the
+   fixed settle — tap-list widgets inject their menu via their own
+   network fetch, which often lands after any fixed pause. */
+async function fetchRendered(url, { timeoutMs = 20000, waitSelector = null } = {}) {
   if (!pw) throw new Error('playwright not installed');
   const browser = await getBrowser();
   const ctx = await browser.newContext({
@@ -37,7 +40,12 @@ async function fetchRendered(url, { timeoutMs = 20000 } = {}) {
   const page = await ctx.newPage();
   try {
     await page.goto(url, { timeout: timeoutMs, waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1500); // let tap-list widgets inject
+    if (waitSelector) {
+      await page.waitForSelector(waitSelector, { timeout: 12000 }).catch(() => {});
+      await page.waitForTimeout(500); // let the rest of the list fill in
+    } else {
+      await page.waitForTimeout(1500);
+    }
     return await page.content();
   } finally {
     await ctx.close();

@@ -60,7 +60,11 @@ module.exports = async function untappd(src, env) {
 
   // keyless: render the page the widget lives on and parse the embed DOM
   if (browserAvailable() && src.found_on) {
-    return parseEmbed(await fetchRendered(src.found_on, { timeoutMs: 25000 }));
+    const html = await fetchRendered(src.found_on, {
+      timeoutMs: 25000,
+      waitSelector: '.item-name', // menu injects async — wait for it
+    });
+    return parseEmbed(html);
   }
   return null; // not configured for this environment
 };
