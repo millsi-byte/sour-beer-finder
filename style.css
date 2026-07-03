@@ -111,6 +111,11 @@ button.secondary {
 
 .error { color: var(--danger); font-size: 14px; margin-top: 16px; }
 
+.cities-quick { display: flex; gap: 8px; margin-top: 14px; }
+.drop-btn { width: 100%; text-align: left; padding: 13px 14px; }
+.gear-btn { white-space: nowrap; }
+.suggest .drop-manage { color: var(--accent-ink); font-weight: 600; }
+
 .ig-note { margin-top: 30px; }
 .ig-link {
   font-family: var(--serif); font-size: 15px; letter-spacing: .3px;

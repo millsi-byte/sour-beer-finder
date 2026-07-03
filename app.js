@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.2';
+const APP_BUILD = '2026.07.03.3';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -333,6 +333,48 @@ function renderList(label) {
   show('list');
 }
 
+// ---------- landing quick-access dropdown ----------
+function renderCityDrop() {
+  const cities = loadSavedCities();
+  const home = cities.find((c) => c.home);
+  $('btnCityDrop').innerHTML = '';
+  $('btnCityDrop').textContent = cities.length
+    ? `${home ? '★ ' + home.q : 'Your cities'} ▾`
+    : 'Add your cities…';
+}
+
+function toggleCityDrop() {
+  const cities = loadSavedCities();
+  if (!cities.length) return citiesFlow(); // nothing saved yet — go manage
+  const list = $('cityDrop');
+  if (!list.hidden) {
+    list.hidden = true;
+    return;
+  }
+  list.innerHTML = '';
+  cities.forEach((c) => {
+    const li = document.createElement('li');
+    li.textContent = (c.home ? '★ ' : '') + c.q;
+    // pointerdown (not click) so the button's blur doesn't kill the tap
+    li.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      list.hidden = true;
+      openCity(c);
+    });
+    list.appendChild(li);
+  });
+  const manage = document.createElement('li');
+  manage.className = 'drop-manage';
+  manage.textContent = '⚙︎ Manage cities…';
+  manage.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    list.hidden = true;
+    citiesFlow();
+  });
+  list.appendChild(manage);
+  list.hidden = false;
+}
+
 // ---------- your cities ----------
 function renderCities() {
   const cities = loadSavedCities();
@@ -372,6 +414,7 @@ function renderCities() {
   $('dataAge').textContent = state.taps?.generated_at
     ? `Tap data last gathered ${fmtAgo(state.taps.generated_at)}.`
     : '';
+  renderCityDrop(); // keep the landing dropdown label in sync with edits
 }
 
 async function citiesFlow() {
@@ -536,6 +579,11 @@ $('btnRefresh').addEventListener('click', () => {
   else show('locate');
 });
 $('btnCities').addEventListener('click', citiesFlow);
+$('btnCityDrop').addEventListener('click', toggleCityDrop);
+$('btnCityDrop').addEventListener('blur', () =>
+  setTimeout(() => { $('cityDrop').hidden = true; }, 200)
+);
+renderCityDrop();
 
 function addSavedCity(c) {
   const cities = loadSavedCities();

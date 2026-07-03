@@ -24,7 +24,6 @@
 <header class="topbar">
   <h1>S<span class="brand-4">4</span>S</h1>
   <div class="topbar-actions">
-    <button id="btnCities" class="iconbtn" aria-label="Your cities" title="Your cities">&#x2699;&#xfe0e;</button>
     <button id="btnRefresh" class="iconbtn" aria-label="Refresh" title="Refresh">&#x21bb;</button>
   </div>
 </header>
@@ -49,6 +48,13 @@
         </div>
         <button type="submit" class="secondary">Search</button>
       </form>
+      <div class="cities-quick">
+        <div class="suggest-wrap">
+          <button type="button" id="btnCityDrop" class="secondary drop-btn">Your cities &#x25BE;</button>
+          <ul id="cityDrop" class="suggest" hidden></ul>
+        </div>
+        <button type="button" id="btnCities" class="secondary gear-btn" aria-label="Manage your cities">&#x2699;&#xfe0e; Cities</button>
+      </div>
       <p id="locateError" class="error" hidden></p>
       <p class="ig-note">
         <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>
