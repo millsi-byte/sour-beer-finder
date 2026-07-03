@@ -26,6 +26,36 @@ async function main() {
     breweries: {},
   };
 
+  const outPath = path.join(__dirname, '..', 'data', 'taps.json');
+  // last snapshot: an empty or failed read usually means the source
+  // throttled the runner's IP (Untappd cuts embeds off a few minutes
+  // into every run), not that the taproom went dry — keep the previous
+  // menu (with its older fetched_at) rather than wiping real data
+  let prev = {};
+  try {
+    prev = JSON.parse(fs.readFileSync(outPath, 'utf8')).breweries || {};
+  } catch {
+    /* first run */
+  }
+
+  // shuffle: whoever sits late in the list lands in the throttle window,
+  // so rotate the order — across runs everyone gets a fresh read
+  for (let i = sources.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [sources[i], sources[j]] = [sources[j], sources[i]];
+  }
+
+  let kept = 0;
+  const keepPrev = (src, why) => {
+    if (prev[src.obdb_id]?.beer_count > 0) {
+      out.breweries[src.obdb_id] = prev[src.obdb_id];
+      kept++;
+      console.log(`${src.name}: ${why} — kept previous ${prev[src.obdb_id].beer_count} beers (${src.source})`);
+      return true;
+    }
+    return false;
+  };
+
   for (const src of sources) {
     const adapter = adapters[src.source];
     if (!adapter) {
@@ -35,9 +65,12 @@ async function main() {
     try {
       const beers = await adapter(src, process.env);
       if (beers == null) {
-        console.warn(`skip ${src.name}: ${src.source} adapter not configured`);
+        if (!keepPrev(src, 'adapter not configured')) {
+          console.warn(`skip ${src.name}: ${src.source} adapter not configured`);
+        }
         continue;
       }
+      if (!beers.length && keepPrev(src, 'empty read')) continue;
       const sours = beers.filter((b) => isSourStyle(b.style));
       out.breweries[src.obdb_id] = {
         source: src.source,
@@ -47,13 +80,16 @@ async function main() {
       };
       console.log(`${src.name}: ${beers.length} beers, ${sours.length} sours (${src.source})`);
     } catch (e) {
-      console.warn(`skip ${src.name}: ${e.message}`);
+      if (!keepPrev(src, `error (${e.message})`)) {
+        console.warn(`skip ${src.name}: ${e.message}`);
+      }
     }
   }
 
-  const outPath = path.join(__dirname, '..', 'data', 'taps.json');
   fs.writeFileSync(outPath, JSON.stringify(out, null, 2) + '\n');
-  console.log(`wrote data/taps.json — ${Object.keys(out.breweries).length} breweries`);
+  console.log(
+    `wrote data/taps.json — ${Object.keys(out.breweries).length} breweries (${kept} kept from previous run)`
+  );
   await require('./browser').closeBrowser();
 }
 

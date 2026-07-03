@@ -170,9 +170,21 @@ adapter to `pipeline/adapters/`.
   beverage parsing is lower-fidelity, but the volume is unmatched.
 - **Known extraction gaps to debug** (dump the page, adjust gate/wait):
   Foulmouthed Brewing + Swamp Head + Sailfish (arryved, 0 beers —
-  likely age-gate wording variants beyond GATE_CLICKS), Barreled Souls
-  (untappd, 0 beers), Taplist.io venue pages (403 to plain fetch,
-  0 beers rendered), DigitalPour (4 sources, 0 beers).
+  likely age-gate wording variants beyond GATE_CLICKS), Taplist.io
+  venue pages (403 to plain fetch, 0 beers rendered), DigitalPour
+  (4 sources, 0 beers).
+- **Untappd embed throttling (diagnosed 2026-07-03).** Untappd
+  rate-limits the runner's IP a few minutes into every run: the first
+  ~60 embed renders return menus, everything after times out at the
+  12s waitSelector and parses to 0. Mitigated in build.js — source
+  order is shuffled per run and an empty/failed read keeps the
+  previous run's menu (older fetched_at) instead of wiping it — so
+  coverage accumulates across the 4-hourly refreshes. A real fix is
+  an Untappd API key (see "Adding an Untappd API key").
+- **Spyglass Brewing (Nashua)** — Squarespace site behind an
+  "over 21?" age gate; behind it there's no tap-list widget, and the
+  site itself says to watch Facebook for beer availability. No
+  machine-readable menu → crowd layer (v2) is the only path.
 - **v1.2 — keyword fallback.** For breweries with no widget, scan their
   /menu or /beer page for beer-style keywords and flag "possible sours,
   tap to verify" — lower confidence, wider net.
