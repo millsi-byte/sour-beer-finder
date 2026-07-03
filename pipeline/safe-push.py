@@ -15,7 +15,12 @@ import sys
 import time
 
 MSG = sys.argv[1]
-FILES = ['pipeline/sources.json', 'pipeline/areas.json', 'data/taps.json']
+FILES = [
+    'pipeline/sources.json',
+    'pipeline/areas.json',
+    'pipeline/extra-breweries.json',
+    'data/taps.json',
+]
 
 
 def sh(*a):
@@ -46,15 +51,24 @@ for attempt in range(4):
         by = {a['center']: a for a in theirs.get('pipeline/areas.json', [])}
         by.update({a['center']: a for a in ours['pipeline/areas.json']})
         merged['pipeline/areas.json'] = list(by.values())
+    if 'pipeline/extra-breweries.json' in ours:
+        by = {e['id']: e for e in theirs.get('pipeline/extra-breweries.json', [])}
+        by.update({e['id']: e for e in ours['pipeline/extra-breweries.json']})
+        merged['pipeline/extra-breweries.json'] = list(by.values())
     if 'data/taps.json' in ours:
         o = ours['data/taps.json']
         t = theirs.get('data/taps.json', {})
         brew = dict(t.get('breweries', {}))
         brew.update(o.get('breweries', {}))
         areas = merged.get('pipeline/areas.json') or o.get('areas') or []
+        extras = (merged.get('pipeline/extra-breweries.json')
+                  or o.get('extra_breweries')
+                  or t.get('extra_breweries')
+                  or [])
         merged['data/taps.json'] = {
             'generated_at': max(o.get('generated_at') or '', t.get('generated_at') or '') or None,
             'areas': [{'label': a['label'], 'center': a['center']} for a in areas],
+            'extra_breweries': extras,
             'breweries': brew,
         }
 

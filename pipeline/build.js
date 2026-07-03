@@ -14,9 +14,15 @@ async function main() {
   const areas = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'areas.json'), 'utf8')
   );
+  // hand-added breweries that Open Brewery DB is missing (Tree House!) —
+  // published to the app so they appear in search results like any other
+  const extras = JSON.parse(
+    fs.readFileSync(path.join(__dirname, 'extra-breweries.json'), 'utf8')
+  );
   const out = {
     generated_at: new Date().toISOString(),
     areas: areas.map(({ label, center }) => ({ label, center })),
+    extra_breweries: extras,
     breweries: {},
   };
 

@@ -70,6 +70,35 @@
       "center": "47.61,-122.33"
     }
   ],
+  "extra_breweries": [
+    {
+      "id": "x-tree-house-charlton",
+      "name": "Tree House Brewing Company",
+      "city": "Charlton",
+      "state": "Massachusetts",
+      "lat": 42.135,
+      "lng": -71.975,
+      "website_url": "https://treehousebrew.com"
+    },
+    {
+      "id": "x-tree-house-tewksbury",
+      "name": "Tree House Brewing Company - Tewksbury",
+      "city": "Tewksbury",
+      "state": "Massachusetts",
+      "lat": 42.6106,
+      "lng": -71.2342,
+      "website_url": "https://treehousebrew.com"
+    },
+    {
+      "id": "x-spyglass-nashua",
+      "name": "Spyglass Brewing Company",
+      "city": "Nashua",
+      "state": "New Hampshire",
+      "lat": 42.7654,
+      "lng": -71.4676,
+      "website_url": "https://spyglassbrewing.com"
+    }
+  ],
   "breweries": {
     "dc3e008a-2387-4aea-addd-c05a1049ee89": {
       "source": "taplist",
@@ -664,7 +693,7 @@
       "beer_count": 17,
       "sours": [
         {
-          "name": "\ud83c\udf49 Watermelon Sour",
+          "name": "🍉 Watermelon Sour",
           "style": "Sour - Fruited Berliner Weisse"
         }
       ]
@@ -758,7 +787,7 @@
       "beer_count": 57,
       "sours": [
         {
-          "name": "Vick\u2019s View - Gose",
+          "name": "Vick’s View - Gose",
           "style": "Sour - Traditional Gose"
         },
         {

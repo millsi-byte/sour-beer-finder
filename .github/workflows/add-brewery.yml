@@ -1,0 +1,67 @@
+name: Add brewery (from issue)
+
+# Issue-ops for the app's "Missing a brewery?" form: it opens a pre-filled
+# issue titled "Add brewery: Name (City, ST)" with Name/City/Website lines
+# in the body. This parses + geocodes it into pipeline/extra-breweries.json
+# (and the published taps.json), comments the result, and closes the issue.
+#
+# Reports from the repo owner/collaborators run immediately; anyone else's
+# report waits until a maintainer adds the "approved" label.
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: taps-data
+
+jobs:
+  add-brewery:
+    if: >-
+      startsWith(github.event.issue.title, 'Add brewery:') &&
+      (contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association) ||
+       contains(github.event.issue.labels.*.name, 'approved'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Parse, geocode, and add
+        id: add
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          set -o pipefail
+          node pipeline/add-brewery.js --from-issue | tee result.txt
+      - name: Commit
+        run: |
+          python3 pipeline/safe-push.py "Add brewery from issue #${{ github.event.issue.number }}"
+      - name: Comment + close
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "Added! It shows up in the app after the next Pages deploy,"
+            echo "and its website gets scanned for a tap-list source on the next overnight run."
+            echo
+            echo '```json'
+            cat result.txt
+            echo '```'
+          } > comment.txt
+          gh issue comment ${{ github.event.issue.number }} --body-file comment.txt
+          gh issue close ${{ github.event.issue.number }} --reason completed
+      - name: Comment on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} --body \
+            "Couldn't add this automatically — check the body has \`Name:\` and \`City:\` lines (city as \"City, ST\") and that the city geocodes in the US. Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

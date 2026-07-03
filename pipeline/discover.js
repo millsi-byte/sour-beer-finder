@@ -169,6 +169,25 @@ async function main() {
   const known = new Set(sources.map((s) => s.obdb_id));
   const areas = JSON.parse(fs.readFileSync(AREAS, 'utf8'));
 
+  // hand-added breweries (missing from Open Brewery DB) get their
+  // websites scanned on every run — the list is tiny
+  const extras = JSON.parse(
+    fs.readFileSync(path.join(__dirname, 'extra-breweries.json'), 'utf8')
+  );
+  for (const e of extras) {
+    if (known.has(e.id) || !e.website_url) continue;
+    try {
+      const hit = await scanSite(e.website_url);
+      if (hit) {
+        sources.push({ obdb_id: e.id, name: e.name, ...hit });
+        known.add(e.id);
+        console.log(`  ${e.name} (manual add): ${hit.source}`);
+      }
+    } catch (err) {
+      console.warn(`  ${e.name} (manual add): ${err.message}`);
+    }
+  }
+
   let found = 0;
   if (arg === '--all') {
     for (const a of areas) found += await discoverArea(a.center, sources, known);

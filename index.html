@@ -81,7 +81,8 @@
     <div id="radiusBar" class="radius-bar" hidden></div>
     <div id="sortBar" class="radius-bar" hidden></div>
     <ul id="breweryList" class="cards"></ul>
-    <p class="footnote">Brewery data: Open Brewery DB &middot; &#x1F34B; = sours on tap</p>
+    <p class="footnote">Brewery data: Open Brewery DB &middot; &#x1F34B; = sours on tap
+      &middot; <button type="button" id="btnMissing" class="linkbtn inline-link">Missing a brewery?</button></p>
   </section>
 
   <!-- Your cities -->
@@ -113,6 +114,18 @@
       area joins the overnight scan. Want yours added? Message
       <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>.
     </p>
+    <h3 class="section-sub" id="missingHead">Missing a brewery?</h3>
+    <p class="explain">
+      The brewery list comes from a public database that misses some spots
+      (even famous ones). Report one and it joins the app and the scans.
+    </p>
+    <form id="missingForm" class="missingform" autocomplete="off">
+      <input id="mbName" type="text" placeholder="Brewery name" required>
+      <input id="mbCity" type="text" placeholder="Closest city, state" required>
+      <input id="mbSite" type="text" placeholder="Website (optional)" inputmode="url">
+      <button type="submit" class="secondary block">Send it in</button>
+    </form>
+    <p id="mbNote" class="explain" hidden></p>
   </section>
 
   <!-- Data status -->

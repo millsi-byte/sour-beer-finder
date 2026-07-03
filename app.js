@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.23';
+const APP_BUILD = '2026.07.03.24';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -211,8 +211,36 @@ async function fetchByCity(city, stateName) {
   return res.json();
 }
 
-function prepare(list, origin) {
+/* Hand-added breweries (pipeline/extra-breweries.json, published inside
+   taps.json) that Open Brewery DB is missing — Tree House! Injected when
+   they're near the search origin, or in the searched city. Skipped if
+   OBDB starts returning them (matched by name+city). */
+function relevantExtras(list, origin, cityName) {
+  const extras = state.taps?.extra_breweries ?? [];
+  if (!extras.length) return [];
+  const names = new Set(list.map((b) => `${b.name}|${b.city}`.toLowerCase()));
+  return extras
+    .filter((e) => !names.has(`${e.name}|${e.city}`.toLowerCase()))
+    .filter((e) =>
+      origin
+        ? haversineMiles(origin, { lat: e.lat, lng: e.lng }) <= 150
+        : cityName && e.city.toLowerCase() === cityName.toLowerCase()
+    )
+    .map((e) => ({
+      id: e.id,
+      name: e.name,
+      brewery_type: 'micro',
+      city: e.city,
+      state_province: e.state,
+      latitude: String(e.lat),
+      longitude: String(e.lng),
+      website_url: e.website_url || null,
+    }));
+}
+
+function prepare(list, origin, cityName) {
   return list
+    .concat(relevantExtras(list, origin, cityName))
     .filter((b) => !HIDDEN_TYPES.has(b.brewery_type))
     .map((b) => {
       const lat = parseFloat(b.latitude);
@@ -747,7 +775,7 @@ async function cityFlow(q) {
     state.lastCity = q;
     const raw = await fetchByCity(city, st);
     await tapsReady;
-    state.breweries = prepare(raw, null);
+    state.breweries = prepare(raw, null, city);
     renderList(`in ${city}`);
   } catch (e) {
     fail(`Couldn't load breweries: ${e.message}`);
@@ -831,6 +859,39 @@ $('cityAddForm').addEventListener('submit', async (e) => {
   addAC.close();
   addSavedCity(pick ?? { label: typed });
 });
+// ---------- missing brewery report ----------
+// Reports become a pre-filled GitHub issue; the "Add brewery" workflow
+// parses approved ones into pipeline/extra-breweries.json automatically.
+const REPO_URL = 'https://github.com/millsi-byte/sour-beer-finder';
+
+$('btnMissing').addEventListener('click', async () => {
+  await citiesFlow(); // async: the view shows only after taps.json is ready
+  $('missingHead').scrollIntoView({ block: 'start' });
+  $('mbName').focus();
+});
+
+$('missingForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('mbName').value.trim();
+  const city = $('mbCity').value.trim();
+  const site = $('mbSite').value.trim();
+  if (!name || !city) return;
+  const title = `Add brewery: ${name} (${city})`;
+  const body =
+    `Name: ${name}\nCity: ${city}\nWebsite: ${site}\n\n` +
+    '(Filed from the S4S app — keep the three lines above intact.)';
+  window.open(
+    `${REPO_URL}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`,
+    '_blank',
+    'noopener'
+  );
+  const note = $('mbNote');
+  note.hidden = false;
+  note.textContent =
+    'A pre-filled report opened in a new tab — hit "Create" there (GitHub sign-in needed). Once approved, the brewery shows up in the app and joins the tap-list scans.';
+  $('missingForm').reset();
+});
+
 $('sheetBackdrop').addEventListener('click', closeSheet);
 $('sheet').querySelector('.grabber').addEventListener('click', closeSheet);
 

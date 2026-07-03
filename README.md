@@ -92,6 +92,33 @@ Manual entries for chalkboard-only taprooms still work via
   "beers": [{ "name": "Peach Gose", "style": "Gose" }] }
 ```
 
+## Manually adding breweries (Open Brewery DB gaps)
+
+The brewery list comes from Open Brewery DB, which is missing some major
+breweries (Tree House!). `pipeline/extra-breweries.json` is the hand-kept
+supplement: entries carry `id` (`x-…` so they never collide with OBDB ids),
+`name`, `city`, `state`, `lat`, `lng`, `website_url`. They flow everywhere
+automatically:
+
+- `build.js` publishes them inside `data/taps.json` (`extra_breweries`),
+  and the app injects them into search results — with real distances,
+  radius filtering, and 🍋 badges — whenever they're within 150 mi of the
+  search point (or match a searched city by name).
+- `discover.js` scans their websites for tap-list widgets on **every**
+  run, so a new entry joins the tap-list scans the very next night.
+
+Three ways an entry gets in:
+
+1. **The app's "Missing a brewery?" form** (results-page footer link, and
+   on Your Cities): fills a GitHub issue titled `Add brewery: …` with
+   `Name:` / `City:` / `Website:` lines. The **Add brewery** workflow
+   parses it, geocodes the city (Open-Meteo), appends the entry, updates
+   the published snapshot, comments, and closes the issue. Owner-filed
+   issues run instantly; anyone else's waits for a maintainer to add the
+   `approved` label.
+2. `node pipeline/add-brewery.js "Name" "City, ST" [website]` locally.
+3. Edit `pipeline/extra-breweries.json` by hand.
+
 ## v1.1 — all pipelines (shipped)
 
 Every planned source now has an adapter; coverage estimate for
