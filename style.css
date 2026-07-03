@@ -115,8 +115,9 @@ button.secondary {
 .cities-quick { display: flex; gap: 8px; margin-top: 14px; }
 .citysplit { display: flex; gap: 6px; }
 .drop-btn { flex: 1; text-align: left; padding: 13px 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chev-btn { padding: 13px 13px; }
+.chev-btn { padding: 0 15px; font-size: 24px; line-height: 1; }
 .gear-btn { white-space: nowrap; }
+.gear-glyph { font-size: 22px; vertical-align: -2px; line-height: 1; }
 .suggest .drop-manage { color: var(--accent-ink); font-weight: 600; }
 
 .ig-note { margin-top: 30px; }
