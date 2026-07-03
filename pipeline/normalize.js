@@ -13,6 +13,11 @@ const SOUR_KEYWORDS = [
   'brett',
   'flanders',
   'kettle',
+  // brewer-speak for tart/funky programs (Oxbow, blenderies): a
+  // "mixed-fermentation farmhouse ale" is exactly what sour hunters want
+  /mixed[- ]ferment/,
+  'spontaneous',
+  /\btart\b/,
 ];
 
 function isSourStyle(style) {

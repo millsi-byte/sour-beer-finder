@@ -911,5 +911,37 @@
     "untappd_venue_id": 13766612,
     "found_on": "http://www.amherstbrewing.com/whats-on-tap",
     "untappd_venue_url": "https://untappd.com/v/x/13766612"
+  },
+  {
+    "obdb_id": "5937f6df-a6e0-48cf-9234-bfd66b3c4c8e",
+    "name": "Wicked Weed Funkatorium",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://www.wickedweedbrewing.com/location/funkatorium"
+    ]
+  },
+  {
+    "obdb_id": "2849f939-f34f-498f-beba-c243b678765b",
+    "name": "Wicked Weed Brewing",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://www.wickedweedbrewing.com/location/brewpub"
+    ]
+  },
+  {
+    "obdb_id": "1931756b-8cf2-4dc4-9ee6-b406cdf5f5aa",
+    "name": "Oxbow Blending & Bottling",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://oxbowbeer.com/location/portland"
+    ]
+  },
+  {
+    "obdb_id": "e37d3cfa-dc4a-46fe-ae52-e6b4d25f173a",
+    "name": "Oxbow Brewing Co",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://oxbowbeer.com/location/newcastle"
+    ]
   }
 ]

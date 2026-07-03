@@ -4,6 +4,7 @@
 
 module.exports = {
   untappd: require('./untappd'),
+  craftpeak: require('./craftpeak'),
   arryved: require('./arryved'),
   beermenus: require('./beermenus'),
   taplist: require('./taplist'),

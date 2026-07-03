@@ -26,6 +26,26 @@ const AREAS = path.join(__dirname, 'areas.json');
    anchor source, so it's checked first). */
 const SIGNATURES = [
   {
+    // Craftpeak-built sites (Wicked Weed/Funkatorium, Oxbow…) render a
+    // live tap list server-side on /location/<taproom> pages. Checked
+    // before untappd: the native list is richer and never throttled.
+    source: 'craftpeak',
+    detect: (html, pageUrl) => {
+      if (!/craftpeak(\.site|-cooler)/i.test(html)) return null;
+      const locs = new Set();
+      for (const [, href] of html.matchAll(/href="([^"#?]*\/location\/[^"#?]+)/gi)) {
+        try {
+          locs.add(new URL(href, pageUrl).href);
+        } catch {
+          /* bad href */
+        }
+      }
+      // fingerprint without location pages = nothing to read (their
+      // /beers catalog is the lineup, not what's pouring)
+      return locs.size ? { craftpeak_locations: [...locs].slice(0, 4) } : null;
+    },
+  },
+  {
     source: 'untappd',
     detect: (html) => {
       const loc =
@@ -74,9 +94,9 @@ const SIGNATURES = [
   },
 ];
 
-function detect(html) {
+function detect(html, pageUrl) {
   for (const sig of SIGNATURES) {
-    const fields = sig.detect(html);
+    const fields = sig.detect(html, pageUrl);
     if (fields) return { source: sig.source, ...fields };
   }
   return null;
@@ -110,11 +130,11 @@ function fetchPage(url, timeoutMs) {
 
 async function scanSite(websiteUrl) {
   const html = await fetchPage(websiteUrl, 10000);
-  let hit = detect(html);
+  let hit = detect(html, websiteUrl);
   if (hit) return { ...hit, found_on: websiteUrl };
   for (const link of menuLinks(html, websiteUrl)) {
     try {
-      hit = detect(await fetchPage(link, 8000));
+      hit = detect(await fetchPage(link, 8000), link);
       if (hit) return { ...hit, found_on: link }; // extraction re-renders this page
     } catch {
       /* subpage unreachable — keep trying the rest */

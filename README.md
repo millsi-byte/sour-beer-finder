@@ -196,17 +196,22 @@ inspect), write the parser against that reality with a fixture test,
 then add the detection signature to `pipeline/discover.js` and the
 adapter to `pipeline/adapters/`.
 
-- **Craftpeak adapter — probably the biggest single unlock left.**
-  Craftpeak builds the websites of exactly the breweries sour hunters
-  care about (Wicked Weed/Funkatorium, Oxbow, Bissell Brothers, Rising
-  Tide all confirmed), with structured /beer pages. Their footers carry
-  a "powered by Arryved web solutions" marketing link that is NOT a menu
-  embed — diagnostics count it, discovery correctly rejects it. Detect
-  via Craftpeak's own markup/footer instead, parse the rendered beer
-  pages.
-- **Toast extractor.** The #1 platform everywhere measured (27 in
-  Portland ME, 17 in Greenville, 16 in Orlando). Food-menu oriented, so
-  beverage parsing is lower-fidelity, but the volume is unmatched.
+- **Craftpeak adapter — SHIPPED 2026-07-03.** Detection fingerprint is
+  `craftpeak.site` / `craftpeak-cooler` assets; the live tap list is the
+  server-rendered "wot-list" module on /location/<taproom> pages (the
+  /beers page is the catalog, not what's pouring). Verified against real
+  dumps: Funkatorium 32 beers / 13 sours, Oxbow Portland 51 beers /
+  17 sours (after teaching the sour matcher brewer-speak:
+  mixed-fermentation, spontaneous, tart). Caveat learned the honest way:
+  not every Craftpeak client turns the module on — Bissell Brothers and
+  Rising Tide publish no draft list anywhere ("call us"), so they're
+  crowd-layer candidates, not adapter targets.
+- **Toast — investigated and REJECTED 2026-07-03.** The platform counts
+  in diagnostics (27 in Portland ME etc.) are food-ordering links, not
+  tap lists: Goodfire's Toast page carries wings, sandwiches, and
+  seltzers — zero draft beer. Building a Toast adapter would harvest
+  chicken sandwiches. Do not revisit without first checking a specific
+  brewery's Toast page actually lists draft beer.
 - **Known extraction gaps to debug** (dump the page, adjust gate/wait):
   Foulmouthed Brewing + Swamp Head + Sailfish (arryved, 0 beers —
   likely age-gate wording variants beyond GATE_CLICKS), Taplist.io
