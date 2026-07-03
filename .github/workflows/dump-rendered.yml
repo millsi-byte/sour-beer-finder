@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: 'URL to render, or an Open Brewery DB id (resolves to its website)'
+        description: 'URL(s) to render, separated by "||" (or one Open Brewery DB id)'
         required: true
         type: string
       click:
@@ -32,17 +32,25 @@ jobs:
           NODE_PATH=$(npm root -g) node -e "
           const { fetchRendered, closeBrowser } = require('./pipeline/browser');
           (async () => {
-            let url = process.env.TARGET;
-            if (!/^https?:/.test(url)) {
-              const res = await fetch('https://api.openbrewerydb.org/v1/breweries/' + url);
-              url = (await res.json()).website_url;
-              console.log('resolved website:', url);
-            }
+            const targets = process.env.TARGET.split('||').map((t) => t.trim()).filter(Boolean);
             const opts = { timeoutMs: 30000 };
             if (process.env.CLICK) opts.clickText = process.env.CLICK.split('||').map((c) => new RegExp(c, 'i'));
-            const html = await fetchRendered(url, opts);
-            require('fs').writeFileSync('rendered.html', html);
-            console.log('saved', html.length, 'bytes from', url);
+            for (let i = 0; i < targets.length; i++) {
+              let url = targets[i];
+              try {
+                if (!/^https?:/.test(url)) {
+                  const res = await fetch('https://api.openbrewerydb.org/v1/breweries/' + url);
+                  url = (await res.json()).website_url;
+                  console.log('resolved website:', url);
+                }
+                const html = await fetchRendered(url, opts);
+                const name = targets.length === 1 ? 'rendered.html' : 'rendered-' + (i + 1) + '.html';
+                require('fs').writeFileSync(name, html);
+                console.log('saved', name, html.length, 'bytes from', url);
+              } catch (e) {
+                console.warn('FAILED', url, e.message); // keep going — partial dumps still useful
+              }
+            }
             await closeBrowser();
           })().catch((e) => { console.error(e); process.exit(1); });"
         env:
@@ -56,6 +64,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout --orphan debug-dump
           git rm -rfq --cached .
-          git add -f rendered.html
-          git commit -m "dump: ${{ inputs.target }}"
+          git add -f rendered*.html
+          git commit -m "dump batch"
           git push -f origin HEAD:debug-dump
