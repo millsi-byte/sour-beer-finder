@@ -247,6 +247,10 @@ button.block { display: block; width: 100%; margin-top: 8px; }
   padding: 10px 20px calc(env(safe-area-inset-bottom) + 22px);
   max-width: 640px; margin: 0 auto;
   animation: sheetup .22s ease-out;
+  /* long sour/crowd lists must scroll INSIDE the sheet, never grow past
+     the viewport — otherwise the grabber and backdrop both go unreachable */
+  max-height: 86vh; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
 }
 @keyframes sheetup { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .grabber { width: 38px; height: 5px; border-radius: 3px; background: var(--hairline); margin: 2px auto 14px; }
