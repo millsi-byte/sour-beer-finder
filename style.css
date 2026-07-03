@@ -195,6 +195,8 @@ button.secondary {
   font-size: 20px; padding: 8px 10px;
 }
 .city-star { color: var(--accent-ink); }
+.status-area { cursor: default; }
+.status-when { color: var(--text-dim); font-weight: 500; padding-right: 8px; }
 .city-remove { color: var(--text-dim); font-size: 17px; }
 button.block { display: block; width: 100%; margin-top: 8px; }
 .build-info { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 10px; }

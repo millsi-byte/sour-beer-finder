@@ -31,6 +31,12 @@ jobs:
         run: |
           npm install -g playwright
           npx playwright install --with-deps chromium
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Publish scanning status
+        run: bash pipeline/push-status.sh discovery "${{ inputs.label || inputs.center }}" "[]" || true
       - name: Scan brewery websites for tap-list widgets
         run: NODE_PATH=$(npm root -g) node pipeline/discover.js "${{ inputs.center }}" "${{ inputs.label }}"
       - name: Build tap data with the new sources
@@ -40,13 +46,13 @@ jobs:
           UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
       - name: Commit discovered sources and data
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add pipeline/sources.json pipeline/areas.json data/taps.json
           git diff --cached --quiet && exit 0
           git commit -m "Discover tap-list sources: ${{ inputs.label || inputs.center }}"
           for i in 1 2 3; do
-            git pull --rebase origin main && git push && exit 0
+            git pull --rebase origin main && git push && break
             sleep 5
           done
-          exit 1
+      - name: Publish idle status
+        if: always()
+        run: bash pipeline/push-status.sh idle "" "[]" "${{ inputs.label || inputs.center }}" || true

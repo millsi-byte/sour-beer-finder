@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.18';
+const APP_BUILD = '2026.07.03.19';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -231,6 +231,7 @@ function show(view) {
   $('viewList').hidden = view !== 'list';
   $('viewCities').hidden = view !== 'cities';
   $('viewSettings').hidden = view !== 'settings';
+  $('viewStatus').hidden = view !== 'status';
   $('spinner').hidden = view !== 'loading';
 }
 
@@ -522,11 +523,18 @@ function renderCities() {
   renderCityDrop(); // keep the landing dropdown label in sync with edits
 }
 
-/* Live pipeline status: GitHub's public API says whether a refresh or
-   scan is running right now (CORS-enabled, no key, 60 req/hr is plenty),
-   and the refresh schedule is fixed at :17 past 1,5,9,13,17,21 UTC. */
-async function renderScanStatus() {
-  const el = $('scanStatus');
+/* Live pipeline status. Two sources, cross-checked:
+   - status.json on the repo's `status` branch, pushed by the workflows
+     as they move city to city (raw.githubusercontent.com, CORS-enabled)
+   - GitHub's public runs API to confirm something is actually running
+     (a crashed job can leave status.json stale)
+   The refresh schedule is fixed at :17 past 1,5,9,13,17,21 UTC. */
+const STATUS_URL =
+  'https://raw.githubusercontent.com/millsi-byte/sour-beer-finder/status/status.json';
+const RUNS_URL =
+  'https://api.github.com/repos/millsi-byte/sour-beer-finder/actions/runs?status=in_progress&per_page=5';
+
+function nextRefreshText() {
   const HOURS = [1, 5, 9, 13, 17, 21];
   const now = new Date();
   const next = new Date(now);
@@ -539,24 +547,71 @@ async function renderScanStatus() {
     h = HOURS[0];
   }
   next.setUTCHours(h);
-  const t = next.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  el.textContent = `Next refresh starts ≈ ${t}.`;
+  return next.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
+
+async function fetchPipelineState() {
+  let status = null;
+  let running = false;
   try {
-    const res = await fetch(
-      'https://api.github.com/repos/millsi-byte/sour-beer-finder/actions/runs?status=in_progress&per_page=5'
-    );
-    if (!res.ok) return;
-    const runs = ((await res.json()).workflow_runs ?? []).filter((r) =>
-      /refresh|discover/i.test(r.name)
-    );
-    if (runs.length) {
-      el.textContent =
-        `🔄 ${runs[0].name} running now (started ${fmtAgo(runs[0].run_started_at)}). ` +
-        el.textContent;
+    const r = await fetch(STATUS_URL, { cache: 'no-store' });
+    if (r.ok) status = await r.json();
+  } catch { /* no status yet */ }
+  try {
+    const r = await fetch(RUNS_URL);
+    if (r.ok) {
+      running = ((await r.json()).workflow_runs ?? []).some((x) =>
+        /refresh|discover/i.test(x.name)
+      );
     }
-  } catch {
-    /* offline or rate-limited — schedule line already shown */
+  } catch { /* offline or rate-limited */ }
+  const active = running && status && status.phase !== 'idle';
+  return { status, active };
+}
+
+function liveLine({ status, active }) {
+  if (!active) return `All quiet — next refresh starts ≈ ${nextRefreshText()}.`;
+  if (status.phase === 'discovery' && status.current) {
+    const q = status.queue?.length
+      ? ` Up next: ${status.queue.join(', ')}.`
+      : '';
+    return `🔄 Scanning ${status.current} for new tap-list sources now.${q}`;
   }
+  return '🔄 Refreshing menus of known breweries now.';
+}
+
+async function renderScanStatus() {
+  $('scanStatus').textContent = liveLine(await fetchPipelineState());
+}
+
+// ---------- data status page ----------
+const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']; // rotation uses python weekday, Mon=0
+
+function nextScanNight(areaIndex) {
+  const target = areaIndex % 7;
+  const todayPy = (new Date().getUTCDay() + 6) % 7;
+  return target === todayPy ? 'tonight' : `${DAY_NAMES[target]} night`;
+}
+
+async function statusFlow() {
+  show('status');
+  $('statusLive').textContent = 'Checking…';
+  $('areaSchedule').innerHTML = '';
+  await tapsReady;
+  const state = await fetchPipelineState();
+  $('statusLive').textContent = liveLine(state);
+  const hist = state.status?.area_history ?? {};
+  areaObjects().forEach((a, i) => {
+    const li = document.createElement('li');
+    li.className = 'city-row';
+    li.innerHTML = '<span class="city-name status-area"></span><span class="city-covered status-when"></span>';
+    li.querySelector('.city-name').textContent =
+      (state.status?.current === a.label ? '🔄 ' : '') + a.label;
+    const last = hist[a.label];
+    li.querySelector('.city-covered').textContent =
+      (last ? `scanned ${fmtAgo(last)} · ` : '') + `next ${nextScanNight(i)}`;
+    $('areaSchedule').appendChild(li);
+  });
 }
 
 async function citiesFlow() {
@@ -729,6 +784,8 @@ $('btnSettings').addEventListener('click', () => {
   show('settings');
 });
 $('btnSettingsBack').addEventListener('click', () => show('locate'));
+$('btnDataStatus').addEventListener('click', statusFlow);
+$('btnStatusBack').addEventListener('click', () => show('locate'));
 
 // app-first Untappd: try the app scheme, fall back to the web page if
 // nothing grabbed the navigation (i.e. the app isn't installed)

@@ -52,10 +52,18 @@ jobs:
               if rotate and i % 7 != dow: continue
               print(f\"{a['center']}\t{a['label']}\")" > /tmp/areas.tsv
           echo "areas tonight:"; cat /tmp/areas.tsv
-          FAILED=""
-          while IFS=$'\t' read -r CENTER LABEL; do
+          mapfile -t LINES < /tmp/areas.tsv
+          FAILED=""; PREV=""
+          for idx in "${!LINES[@]}"; do
+            IFS=$'\t' read -r CENTER LABEL <<< "${LINES[$idx]}"
+            QUEUE=$(python3 -c "
+          import sys, json
+          print(json.dumps([l.split('\t')[1] for l in sys.argv[1:]]))" "${LINES[@]:idx+1}")
+            bash pipeline/push-status.sh discovery "$LABEL" "$QUEUE" "$PREV" || true
+            PREV=""
             echo "===== $LABEL ====="
             if timeout 1500 env NODE_PATH=$(npm root -g) node pipeline/discover.js "$CENTER" "$LABEL"; then
+              PREV="$LABEL"
               git add pipeline/sources.json pipeline/areas.json
               if ! git diff --cached --quiet; then
                 git commit -m "Discover tap-list sources: $LABEL"
@@ -69,7 +77,8 @@ jobs:
               git checkout -- pipeline/sources.json pipeline/areas.json 2>/dev/null || true
               FAILED="$FAILED $LABEL"
             fi
-          done < /tmp/areas.tsv
+          done
+          bash pipeline/push-status.sh menus "" "[]" "$PREV" || true
           [ -n "$FAILED" ] && echo "::warning::Areas to retry next run:$FAILED"
           true
       - name: Build tap data
@@ -84,7 +93,9 @@ jobs:
           git commit -m "Refresh tap data"
           # main may have moved during a long crawl — rebase and retry
           for i in 1 2 3; do
-            git pull --rebase origin main && git push && exit 0
+            git pull --rebase origin main && git push && break
             sleep 5
           done
-          exit 1
+      - name: Publish idle status
+        if: always()
+        run: bash pipeline/push-status.sh idle "" "[]" || true
