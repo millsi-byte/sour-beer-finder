@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.9';
+const APP_BUILD = '2026.07.03.10';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -211,7 +211,49 @@ function show(view) {
   $('viewLocate').hidden = view !== 'locate';
   $('viewList').hidden = view !== 'list';
   $('viewCities').hidden = view !== 'cities';
+  $('viewSettings').hidden = view !== 'settings';
   $('spinner').hidden = view !== 'loading';
+}
+
+// ---------- settings: maps provider ----------
+const MAPS_KEY = 's4s.maps';
+const MAP_PROVIDERS = [
+  ['apple', 'Apple Maps'],
+  ['google', 'Google Maps'],
+  ['waze', 'Waze'],
+];
+
+function directionsUrl(b) {
+  const provider = localStorage.getItem(MAPS_KEY) || 'apple';
+  const name = encodeURIComponent(b.name);
+  const dest = b.hasCoords ? `${b.lat},${b.lng}` : null;
+  if (provider === 'google') {
+    return dest
+      ? `https://www.google.com/maps/dir/?api=1&destination=${dest}`
+      : `https://www.google.com/maps/search/?api=1&query=${name}`;
+  }
+  if (provider === 'waze') {
+    return dest ? `https://waze.com/ul?ll=${dest}&navigate=yes` : `https://waze.com/ul?q=${name}`;
+  }
+  return dest
+    ? `https://maps.apple.com/?daddr=${dest}&q=${name}`
+    : `https://maps.apple.com/?q=${encodeURIComponent(`${b.name} ${b.city || ''}`)}`;
+}
+
+function renderMapsBar() {
+  const bar = $('mapsBar');
+  bar.innerHTML = '';
+  const cur = localStorage.getItem(MAPS_KEY) || 'apple';
+  for (const [id, label] of MAP_PROVIDERS) {
+    const btn = document.createElement('button');
+    btn.className = 'radius-chip' + (id === cur ? ' active' : '');
+    btn.textContent = label;
+    btn.addEventListener('click', () => {
+      localStorage.setItem(MAPS_KEY, id);
+      renderMapsBar();
+    });
+    bar.appendChild(btn);
+  }
 }
 
 // ---------- list controls: radius, sort, sours-only ----------
@@ -508,9 +550,7 @@ function openSheet(b) {
   $('actWebsite').hidden = !site;
   if (site) $('actWebsite').href = site;
 
-  $('actMaps').href = b.hasCoords
-    ? `https://maps.apple.com/?daddr=${b.lat},${b.lng}&q=${encodeURIComponent(b.name)}`
-    : `https://maps.apple.com/?q=${encodeURIComponent(`${b.name} ${b.city || ''}`)}`;
+  $('actMaps').href = directionsUrl(b);
 
   $('sheet').hidden = false;
   $('sheetBackdrop').hidden = false;
@@ -622,6 +662,11 @@ $('btnRefresh').addEventListener('click', () => {
 $('btnCities').addEventListener('click', citiesFlow);
 $('btnCitiesBack').addEventListener('click', () => show('locate'));
 $('brandHome').addEventListener('click', () => show('locate'));
+$('btnSettings').addEventListener('click', () => {
+  renderMapsBar();
+  show('settings');
+});
+$('btnSettingsBack').addEventListener('click', () => show('locate'));
 $('btnCityGo').addEventListener('click', cityGoAction);
 $('btnCityDrop').addEventListener('click', toggleCityDrop);
 for (const id of ['btnCityGo', 'btnCityDrop']) {

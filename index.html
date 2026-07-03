@@ -54,11 +54,14 @@
           <button type="button" id="btnCityDrop" class="secondary chev-btn" aria-label="Other cities" hidden>&#x25BE;</button>
           <ul id="cityDrop" class="suggest" hidden></ul>
         </div>
-        <button type="button" id="btnCities" class="secondary gear-btn" aria-label="Manage your cities"><span class="gear-glyph">&#x2699;&#xfe0e;</span> Cities</button>
+        <button type="button" id="btnCities" class="secondary gear-btn" aria-label="Manage your cities"><span class="gear-glyph">&#x1F4CD;</span> Cities</button>
       </div>
       <p id="locateError" class="error" hidden></p>
       <p class="ig-note">
         <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>
+      </p>
+      <p class="settings-note">
+        <button type="button" id="btnSettings" class="pillbtn"><span class="gear-glyph">&#x2699;&#xfe0e;</span> Settings</button>
       </p>
     </div>
   </section>
@@ -104,6 +107,16 @@
       area joins the overnight scan. Want yours added? Message
       <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>.
     </p>
+  </section>
+
+  <!-- Settings -->
+  <section id="viewSettings" class="view" hidden>
+    <button id="btnSettingsBack" class="linkbtn back-btn">&#x2039; Home</button>
+    <h2 class="section-title">Settings</h2>
+    <h3 class="section-sub">Open directions in</h3>
+    <div id="mapsBar" class="radius-bar"></div>
+    <p class="explain">Used by the Directions button on every brewery. Saved on this device.</p>
+    <h3 class="section-sub">App</h3>
     <button id="btnUpdate" class="secondary block">Check for updates</button>
     <p id="buildInfo" class="build-info"></p>
   </section>

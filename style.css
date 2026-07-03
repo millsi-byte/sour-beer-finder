@@ -121,6 +121,7 @@ button.secondary {
 .suggest .drop-manage { color: var(--accent-ink); font-weight: 600; }
 
 .ig-note { margin-top: 30px; }
+.settings-note { margin-top: 18px; }
 .ig-link {
   font-family: var(--serif); font-size: 15px; letter-spacing: .3px;
   color: var(--accent-ink); text-decoration: none;
