@@ -31,13 +31,16 @@ const SIGNATURES = [
       const loc =
         html.match(/business\.untappd\.com\/(?:embeds\/)?locations\/(\d+)/) ??
         html.match(/business\.untappd\.com\/(?:api\/)?v\d\/locations\/(\d+)/);
-      // venue link without a widget: useless keyless, but the consumer
-      // API (v4) can read the venue once UNTAPPD_CLIENT_ID/SECRET exist
-      const venue = html.match(/untappd\.com\/v(?:enue)?\/[\w-]+\/(\d+)/i);
+      // venue link: untappd.com's OWN venue page (untappd.com/v/slug/id) is
+      // public and keyless — no API key needed, unlike the v4 API path
+      const venue = html.match(/untappd\.com\/v(?:enue)?\/[\w-]+\/\d+/i);
       if (!loc && !venue) return null;
       return {
         ...(loc && { untappd_location_id: Number(loc[1]) }),
-        ...(venue && { untappd_venue_id: Number(venue[1]) }),
+        ...(venue && {
+          untappd_venue_id: Number(venue[0].match(/(\d+)$/)[1]),
+          untappd_venue_url: `https://${venue[0].replace(/^https?:\/\//i, '')}`,
+        }),
       };
     },
   },

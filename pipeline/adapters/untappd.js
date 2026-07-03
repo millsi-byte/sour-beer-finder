@@ -1,23 +1,30 @@
 /* Untappd adapter — the anchor source (verified menus, structured styles).
-   Three modes, tried best-first; adding EITHER credential set as repo
-   secrets lights the corresponding mode up with no code changes:
+   Four modes, tried best-first; adding a credential set as a repo secret
+   lights up modes 1-2 with no code changes, but 3-4 are the ones that
+   actually run today (Untappd's Consumer API is no longer self-serve —
+   see the README):
 
    1. Untappd for Business API (secrets UNTAPPD_EMAIL + UNTAPPD_TOKEN):
       HTTP Basic with the account email and a read-only token
       (docs.business.untappd.com). Verified menus; only works for
-      locations the account can read.
+      locations that specific business account can read.
 
    2. Untappd consumer API v4 (secrets UNTAPPD_CLIENT_ID +
-      UNTAPPD_CLIENT_SECRET): GET /v4/venue/info/{venue_id}. Only
-      menu-labeled sections of the response are mined (checkin/photo
-      feeds are NOT a tap list and are ignored). Venue ids are captured
-      by discovery from untappd.com/v/... links on brewery sites — this
-      unlocks the many breweries that link their Untappd page without
-      embedding a widget. Rate limit is 100 calls/hr: the 4-hourly
-      refresh stays under it; on 429 the keyless mode covers the gap.
+      UNTAPPD_CLIENT_SECRET): GET /v4/venue/info/{venue_id}. Kept in
+      case Untappd ever reopens Consumer API signup; there is currently
+      no way to obtain these credentials for a third-party app.
 
-   3. Keyless (no secrets): brewery sites embed their Untappd menu with
-      a public script that injects markup like
+   3. Keyless venue-page scrape (untappd_venue_url): Untappd's OWN public
+      venue page (untappd.com/v/slug/id) needs no key, no account, no
+      approval — any brewery whose site merely LINKS its Untappd page
+      (far more common than embedding a widget) unlocks this way. Markup:
+        <h5><a class="track-click" ...>Beer Name</a><em>Style</em></h5>
+      (one hidden Handlebars template row always sits in the DOM and is
+      filtered out — it is never a real beer).
+
+   4. Keyless embed scrape (found_on + untappd_location_id): brewery
+      sites embed their Untappd menu with a public script that injects
+      markup like
         <h4 class="item-name">
           <a ...><span class="item-tap-number">1.</span>
                  <span id="...">Beer Name</span></a>
@@ -28,8 +35,9 @@
 
    sources.json entry shape (written by discover.js):
      { "obdb_id": "...", "name": "...", "source": "untappd",
-       "untappd_location_id": 12345,     // when an embed was found
-       "untappd_venue_id": 987654,       // when a venue link was found
+       "untappd_location_id": 12345,          // when an embed was found
+       "untappd_venue_id": 987654,            // when a venue link was found
+       "untappd_venue_url": "https://untappd.com/v/slug/987654",
        "found_on": "https://brewery.com/on-tap" } */
 
 const { browserAvailable, fetchRendered } = require('../browser');
@@ -41,6 +49,22 @@ const V4 = 'https://api.untappd.com/v4';
 function dedupe(beers) {
   const seen = new Set();
   return beers.filter((b) => !seen.has(b.name) && seen.add(b.name));
+}
+
+/* Untappd's OWN public venue page (untappd.com/v/slug/id) — no API key,
+   no business account, no approval. Rendered markup per item:
+     <h5><a class="track-click" ...>Beer Name</a><em>Style</em></h5>
+   One hidden Handlebars template row ({{this.beer.beer_name}}) always
+   sits in the DOM — filtered out, never a real beer. */
+function parseVenuePage(html) {
+  const beers = [];
+  for (const [, name, style] of html.matchAll(
+    /<h5>\s*<a class="track-click"[^>]*>\s*([^<]+?)\s*<\/a>\s*<em>([^<]*)<\/em>/g
+  )) {
+    if (name.includes('{{')) continue; // template placeholder row
+    beers.push({ name: decodeEntities(name.trim()), style: decodeEntities(style.trim()) });
+  }
+  return dedupe(beers);
 }
 
 function parseEmbed(html) {
@@ -124,7 +148,23 @@ module.exports = async function untappd(src, env) {
     }
   }
 
-  // 3) keyless: render the page the widget lives on and parse the embed DOM
+  // 3) keyless: Untappd's own public venue page — no key, no account,
+  // works for any brewery whose site links its venue (far more breweries
+  // do this than embed a widget)
+  if (browserAvailable() && src.untappd_venue_url) {
+    try {
+      const html = await fetchRendered(src.untappd_venue_url, {
+        timeoutMs: 25000,
+        waitSelector: '.menu-item',
+      });
+      const beers = parseVenuePage(html);
+      if (beers.length) return beers;
+    } catch (e) {
+      console.warn(`  untappd venue page failed for ${src.name ?? src.obdb_id} (${e.message}) — falling back`);
+    }
+  }
+
+  // 4) keyless: render the page the widget lives on and parse the embed DOM
   if (browserAvailable() && src.found_on && src.untappd_location_id) {
     const html = await fetchRendered(src.found_on, {
       timeoutMs: 25000,
@@ -136,4 +176,5 @@ module.exports = async function untappd(src, env) {
 };
 
 module.exports.parseEmbed = parseEmbed;
+module.exports.parseVenuePage = parseVenuePage;
 module.exports.beersFromV4 = beersFromV4;

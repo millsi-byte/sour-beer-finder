@@ -88,11 +88,22 @@ credentials):
    `UNTAPPD_TOKEN` (read-only API token).
 2. Run **"Refresh tap data (fast)"**.
 
-**The real, permanent path is keyless:** discovery finds Untappd's
-public embed widget on brewery sites and parses the rendered menu —
-no account, no key, no approval needed. This is what's actually
-covering the app's live data today (see the throttle-mitigation note
-below).
+**The real, permanent path is keyless — and there are two of them:**
+
+1. **Venue-page scrape** (discovered 2026-07-03, biggest lever): any
+   brewery whose site merely *links* its Untappd page (`untappd.com/v/
+   slug/id`) unlocks a full menu — Untappd's own venue page is public
+   HTML, no key or account required, and it resolves by the numeric id
+   alone (the slug is cosmetic). This is far more common than a brewery
+   embedding Untappd's widget on their own site, which is what the
+   adapter was previously limited to.
+2. **Embed-widget scrape**: brewery sites that DO embed Untappd's menu
+   widget get parsed directly off the rendered page.
+
+Both are keyless and are what's actually covering the app's live data
+today (see the throttle-mitigation note below). Coverage is still
+capped by how many breweries publish *any* machine-readable tap
+list at all — see "Known coverage gaps" below for the honest number.
 
 Manual entries for chalkboard-only taprooms still work via
 `pipeline/sources.json`:
@@ -157,6 +168,24 @@ Untappd + BeerMenus + widget detection is ~70–80% of metro-area taprooms.
   device) and shows which areas have live data.
 - **Untappd** (`untappd`) — the anchor source, still gated on
   `UNTAPPD_EMAIL` / `UNTAPPD_TOKEN` secrets (see "Enabling live data").
+
+## Known coverage gaps (the honest number)
+
+As of 2026-07-03, a fresh discovery scan of the Boston metro (188
+breweries with websites) found a widget or venue-link signature on
+**1** of them organically (plus 3 hand-added extras). That is the real
+bottleneck — most breweries simply don't publish a machine-readable
+tap list anywhere on their own website (Instagram-only, chalkboard, or
+a third-party platform this pipeline doesn't parse yet). National
+coverage sits around 4-5% of scanned breweries, concentrated on
+whichever platforms are supported (Untappd, Arryved, BeerMenus,
+Taplist.io, DigitalPour).
+
+This means: for any specific city, most breweries will show up in the
+app with location/directions but genuinely have no live sour data yet
+— not a bug, a coverage gap. Closing it further needs either more
+platform adapters (Craftpeak and Toast are the two biggest known
+remaining platforms — see Roadmap) or the crowd-reporting layer (v2).
 
 ## Roadmap
 
