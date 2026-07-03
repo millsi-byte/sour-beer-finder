@@ -8,8 +8,13 @@ const HIDDEN_TYPES = new Set(['closed', 'planning']);
 const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
+// bump on every release — shown under Check for updates on the Cities page
+const APP_BUILD = '2026.07.03.1';
+
 // ---------- tap data ----------
-const tapsReady = fetch('data/taps.json', { cache: 'no-cache' })
+// cache:'reload' = always hit the network; the service worker still keeps
+// an offline fallback copy
+const tapsReady = fetch('data/taps.json', { cache: 'reload' })
   .then((r) => (r.ok ? r.json() : null))
   .then((d) => { state.taps = d; })
   .catch(() => {});
@@ -502,6 +507,8 @@ $('cityAddForm').addEventListener('submit', async (e) => {
 });
 $('sheetBackdrop').addEventListener('click', closeSheet);
 $('sheet').querySelector('.grabber').addEventListener('click', closeSheet);
+
+$('buildInfo').textContent = `Build ${APP_BUILD}`;
 
 // hard update: refresh the service worker, drop caches, reload everything
 $('btnUpdate').addEventListener('click', async () => {
