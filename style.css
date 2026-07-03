@@ -44,8 +44,9 @@ html, body {
 }
 .topbar h1 {
   font-family: var(--serif); font-size: 24px; font-weight: 600;
-  letter-spacing: 1px; color: var(--accent-ink);
+  letter-spacing: 1px; color: var(--accent-ink); cursor: pointer;
 }
+.back-btn { display: block; padding: 14px 0 0; font-size: 16px; }
 .brand-4 { font-size: .68em; }
 .topbar-actions { display: flex; gap: 2px; }
 .iconbtn {
