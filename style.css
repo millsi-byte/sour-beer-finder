@@ -178,7 +178,7 @@ button.secondary {
 }
 
 .footnote { text-align: center; color: var(--text-dim); font-size: 14px; padding: 22px 0 8px; }
-.inline-link { font-size: 14px; text-decoration: underline; padding: 0; }
+.missing-note { text-align: center; padding-top: 18px; }
 
 /* Missing-brewery report form */
 .missingform { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
