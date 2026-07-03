@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.11';
+const APP_BUILD = '2026.07.03.12';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -659,6 +659,7 @@ $('cityForm').addEventListener('submit', async (e) => {
 });
 
 $('btnNewSearch').addEventListener('click', () => show('locate'));
+$('btnListHome').addEventListener('click', () => show('locate'));
 $('btnFavCity').addEventListener('click', toggleFavCity);
 $('btnRefresh').addEventListener('click', () => {
   if (state.lastSearch) coordsFlow(state.lastSearch.label, state.lastSearch.lat, state.lastSearch.lng);
