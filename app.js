@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.33';
+const APP_BUILD = '2026.07.03.34';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -298,16 +298,37 @@ function prepare(list, origin, cityName) {
     .sort((x, y) => (x.miles ?? Infinity) - (y.miles ?? Infinity));
 }
 
-// ---------- views ----------
+// ---------- views + bottom nav ----------
+// every view maps to the bottom-nav tab it lives under, so the active
+// tab stays lit on child views (results under Search, status under
+// Settings, the loading spinner keeps whatever was lit)
+const TAB_FOR_VIEW = {
+  locate: 'locate',
+  list: 'locate',
+  cities: 'cities',
+  breweries: 'breweries',
+  beers: 'beers',
+  settings: 'settings',
+  status: 'settings',
+};
+
 function show(view) {
   state.view = view;
   $('btnRefresh').hidden = view !== 'status'; // refresh lives on the Data Status page only
   $('viewLocate').hidden = view !== 'locate';
   $('viewList').hidden = view !== 'list';
   $('viewCities').hidden = view !== 'cities';
+  $('viewBreweries').hidden = view !== 'breweries';
+  $('viewBeers').hidden = view !== 'beers';
   $('viewSettings').hidden = view !== 'settings';
   $('viewStatus').hidden = view !== 'status';
   $('spinner').hidden = view !== 'loading';
+  const tab = TAB_FOR_VIEW[view];
+  if (tab) {
+    document.querySelectorAll('.bottomnav .nav-item').forEach((b) => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+  }
 }
 
 // ---------- settings: maps provider ----------
@@ -535,8 +556,8 @@ function renderCityDrop() {
   $('btnCityGo').textContent = home
     ? `★ ${home.q}`
     : cities.length
-      ? 'Your cities ▾'
-      : 'Add your cities…';
+      ? 'Your locations ▾'
+      : 'Add your locations…';
   $('btnCityDrop').hidden = !cities.length;
 }
 
@@ -567,7 +588,7 @@ function toggleCityDrop() {
   });
   const manage = document.createElement('li');
   manage.className = 'drop-manage';
-  manage.textContent = '⚙︎ Manage cities…';
+  manage.textContent = '⚙︎ Manage locations…';
   onTap(manage, () => {
     list.hidden = true;
     citiesFlow();
@@ -596,7 +617,7 @@ function renderCities() {
     li.querySelector('.city-covered').hidden = !isCovered(c);
     const star = li.querySelector('.city-star');
     star.textContent = c.home ? '★' : '☆';
-    star.title = c.home ? 'Home city' : 'Set as home city';
+    star.title = c.home ? 'Home location' : 'Set as home location';
     li.querySelector('.city-name').addEventListener('click', () => openCity(c));
     star.addEventListener('click', () => {
       cities.forEach((x, j) => (x.home = j === i && !x.home));
@@ -1071,17 +1092,22 @@ $('btnFavCity').addEventListener('click', toggleFavCity);
 // visible only on the Data Status page — re-fetches the live statuses
 $('btnRefresh').addEventListener('click', statusFlow);
 $('btnRefresh').hidden = true;
-$('btnCities').addEventListener('click', citiesFlow);
-$('btnCitiesBack').addEventListener('click', () => show('locate'));
 $('brandHome').addEventListener('click', () => show('locate'));
-$('btnSettings').addEventListener('click', () => {
+$('btnDataStatus').addEventListener('click', statusFlow);
+$('btnStatusBack').addEventListener('click', () => {
   renderSettings();
   show('settings');
 });
-$('btnSettingsBack').addEventListener('click', () => show('locate'));
-$('btnDataStatus').addEventListener('click', statusFlow);
-$('btnStatusBack').addEventListener('click', citiesFlow);
-$('btnStatusHome').addEventListener('click', () => show('locate'));
+
+// bottom navigation — each tab runs its view's setup flow
+$('navSearch').addEventListener('click', () => show('locate'));
+$('navLocations').addEventListener('click', citiesFlow);
+$('navBreweries').addEventListener('click', () => show('breweries'));
+$('navBeers').addEventListener('click', () => show('beers'));
+$('navSettings').addEventListener('click', () => {
+  renderSettings();
+  show('settings');
+});
 
 // app-first Untappd: try the app scheme, fall back to the web page if
 // nothing grabbed the navigation (i.e. the app isn't installed)

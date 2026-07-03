@@ -50,20 +50,16 @@
       </form>
       <div class="cities-quick">
         <div class="suggest-wrap citysplit">
-          <button type="button" id="btnCityGo" class="secondary drop-btn">Add your cities&hellip;</button>
-          <button type="button" id="btnCityDrop" class="secondary chev-btn" aria-label="Other cities" hidden>
+          <button type="button" id="btnCityGo" class="secondary drop-btn">Add your locations&hellip;</button>
+          <button type="button" id="btnCityDrop" class="secondary chev-btn" aria-label="Other locations" hidden>
             <svg width="22" height="14" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <ul id="cityDrop" class="suggest" hidden></ul>
         </div>
-        <button type="button" id="btnCities" class="secondary gear-btn" aria-label="Manage your cities"><span class="gear-glyph">&#x1F4CD;</span> Cities</button>
       </div>
       <p id="locateError" class="error" hidden></p>
       <p class="ig-note">
         <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>
-      </p>
-      <p class="settings-note">
-        <button type="button" id="btnSettings" class="pillbtn"><span class="gear-glyph">&#x2699;&#xfe0e;</span> Settings</button>
       </p>
     </div>
   </section>
@@ -86,20 +82,19 @@
     <p class="footnote">Brewery data: Open Brewery DB &middot; &#x1F34B; = sours on tap</p>
   </section>
 
-  <!-- Your cities -->
+  <!-- Locations (tab root) -->
   <section id="viewCities" class="view" hidden>
-    <button id="btnCitiesBack" class="linkbtn back-btn">&#x2039; Home</button>
-    <h2 class="section-title">Your cities</h2>
+    <h2 class="section-title">Your locations</h2>
     <p class="explain">
       S4S re-reads every known tap list <strong>about every 4 hours</strong>,
-      and gives each covered city a full overnight re-scan for brand-new
+      and gives each covered location a full overnight re-scan for brand-new
       tap-list sources <strong>once a week</strong> &mdash; nothing is fetched
-      on the fly. Add the cities you drink in (or plan to visit), and tap
-      &#x2605; to set your home city for one-tap access.
+      on the fly. Add the places you drink in (or plan to visit), and tap
+      &#x2605; to set your home location for one-tap access.
     </p>
     <form id="cityAddForm" class="cityform" autocomplete="off">
       <div class="suggest-wrap">
-        <input id="cityAddInput" type="text" placeholder="Search a city to add&hellip;" enterkeyhint="done">
+        <input id="cityAddInput" type="text" placeholder="Search a location to add&hellip;" enterkeyhint="done">
       </div>
       <button type="submit" class="secondary">Add</button>
     </form>
@@ -108,9 +103,8 @@
     <p id="coveredAreas" class="explain"></p>
     <p id="dataAge" class="explain"></p>
     <p id="scanStatus" class="explain"></p>
-    <button id="btnDataStatus" class="secondary block">&#x1F4E1; Full data status</button>
     <p class="explain">
-      Cities outside these areas still work &mdash; you&rsquo;ll see every
+      Locations outside these areas still work &mdash; you&rsquo;ll see every
       brewery nearby, just without the &#x1F34B; live sour data until the
       area joins the overnight scan. Want yours added? Message
       <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>.
@@ -137,12 +131,30 @@
     <p id="mbError" class="error" hidden></p>
   </section>
 
+  <!-- Breweries (tab root — fills out in a coming update) -->
+  <section id="viewBreweries" class="view" hidden>
+    <h2 class="section-title">Breweries</h2>
+    <p class="explain">
+      Search any brewery, favorite the ones you love, and see your
+      check-in history &mdash; coming in the next update. For now, find
+      breweries by searching a location from the
+      <strong>Search</strong> tab.
+    </p>
+  </section>
+
+  <!-- Beers (tab root — fills out in a coming update) -->
+  <section id="viewBeers" class="view" hidden>
+    <h2 class="section-title">Beers</h2>
+    <p class="explain">
+      Search every beer S4S knows about, favorite them, mark the ones
+      you&rsquo;ve had, and read drinker reviews &mdash; coming in the
+      next update. For now, beers live on each brewery&rsquo;s page.
+    </p>
+  </section>
+
   <!-- Data status -->
   <section id="viewStatus" class="view" hidden>
-    <span class="back-row">
-      <button id="btnStatusBack" class="linkbtn back-btn">&#x2039; Cities</button>
-      <button id="btnStatusHome" class="linkbtn back-btn">&#x2039; Home</button>
-    </span>
+    <button id="btnStatusBack" class="linkbtn back-btn">&#x2039; Settings</button>
     <h2 class="section-title">Data status</h2>
     <p id="statusLive" class="explain">Checking&hellip;</p>
     <h3 class="section-sub">Covered areas</h3>
@@ -155,9 +167,8 @@
     </p>
   </section>
 
-  <!-- Settings -->
+  <!-- Settings (tab root) -->
   <section id="viewSettings" class="view" hidden>
-    <button id="btnSettingsBack" class="linkbtn back-btn">&#x2039; Home</button>
     <h2 class="section-title">Settings</h2>
     <h3 class="section-sub">Open directions in</h3>
     <div id="mapsBar" class="radius-bar"></div>
@@ -165,6 +176,8 @@
     <h3 class="section-sub">Untappd button opens</h3>
     <div id="untappdBar" class="radius-bar"></div>
     <p class="explain">"App" launches the Untappd app when installed (its home screen &mdash; Untappd doesn&rsquo;t allow deep links to a venue), falling back to the web. "Web" goes straight to the brewery&rsquo;s page on untappd.com.</p>
+    <h3 class="section-sub">Data</h3>
+    <button id="btnDataStatus" class="secondary block">&#x1F4E1; Full data status</button>
     <h3 class="section-sub">App</h3>
     <button id="btnUpdate" class="secondary block">Check for updates</button>
     <p id="buildInfo" class="build-info"></p>
@@ -173,6 +186,15 @@
   <!-- Loading -->
   <div id="spinner" class="spinner" hidden><div class="ring"></div></div>
 </main>
+
+<!-- Bottom navigation -->
+<nav class="bottomnav" aria-label="Main">
+  <button type="button" id="navSearch" class="nav-item" data-tab="locate"><span class="nav-icon">&#x1F50D;</span><span class="nav-label">Search</span></button>
+  <button type="button" id="navLocations" class="nav-item" data-tab="cities"><span class="nav-icon">&#x1F4CD;</span><span class="nav-label">Locations</span></button>
+  <button type="button" id="navBreweries" class="nav-item" data-tab="breweries"><span class="nav-icon">&#x1F3ED;</span><span class="nav-label">Breweries</span></button>
+  <button type="button" id="navBeers" class="nav-item" data-tab="beers"><span class="nav-icon">&#x1F37A;</span><span class="nav-label">Beers</span></button>
+  <button type="button" id="navSettings" class="nav-item" data-tab="settings"><span class="nav-icon">&#x2699;&#xfe0e;</span><span class="nav-label">Settings</span></button>
+</nav>
 
 <!-- Detail bottom sheet -->
 <div id="sheetBackdrop" class="sheet-backdrop" hidden></div>
