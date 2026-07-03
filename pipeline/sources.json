@@ -873,5 +873,40 @@
     "source": "untappd",
     "untappd_location_id": 13249,
     "found_on": "http://www.tuckermanbrewing.com/our-brewery/tasting-room-taps.php"
+  },
+  {
+    "obdb_id": "x-tree-house-charlton",
+    "name": "Tree House Brewing Company",
+    "source": "untappd",
+    "untappd_location_id": 38427,
+    "found_on": "https://treehousebrew.com/draft-list-deerfield"
+  },
+  {
+    "obdb_id": "x-tree-house-tewksbury",
+    "name": "Tree House Brewing Company - Tewksbury",
+    "source": "untappd",
+    "untappd_location_id": 38427,
+    "found_on": "https://treehousebrew.com/draft-list-deerfield"
+  },
+  {
+    "obdb_id": "47e1f46b-e172-4f32-882b-c7bdf619fffb",
+    "name": "Long Live Beerworks",
+    "source": "untappd",
+    "untappd_venue_id": 4174253,
+    "found_on": "http://www.longlivebeerworks.com/providence-taproom"
+  },
+  {
+    "obdb_id": "3a56defa-55f4-47b9-8237-b3f98bf1064a",
+    "name": "Proclamation Ale Company",
+    "source": "untappd",
+    "untappd_venue_id": 6878570,
+    "found_on": "http://www.proclamationaleco.com/beer/"
+  },
+  {
+    "obdb_id": "fb1c5883-f652-4375-b887-a424584d0d9d",
+    "name": "Amherst Brewing Co / Hangar Pub and Grill",
+    "source": "untappd",
+    "untappd_venue_id": 13766612,
+    "found_on": "http://www.amherstbrewing.com/whats-on-tap"
   }
 ]
