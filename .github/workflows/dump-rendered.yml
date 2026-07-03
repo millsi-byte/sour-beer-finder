@@ -39,7 +39,7 @@ jobs:
               console.log('resolved website:', url);
             }
             const opts = { timeoutMs: 30000 };
-            if (process.env.CLICK) opts.clickText = new RegExp(process.env.CLICK, 'i');
+            if (process.env.CLICK) opts.clickText = process.env.CLICK.split('||').map((c) => new RegExp(c, 'i'));
             const html = await fetchRendered(url, opts);
             require('fs').writeFileSync('rendered.html', html);
             console.log('saved', html.length, 'bytes from', url);

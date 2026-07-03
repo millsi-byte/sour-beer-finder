@@ -40,13 +40,13 @@ async function fetchRendered(url, { timeoutMs = 20000, waitSelector = null, clic
   const page = await ctx.newPage();
   try {
     await page.goto(url, { timeout: timeoutMs, waitUntil: 'domcontentloaded' });
-    if (clickText) {
-      // age gates etc. — click through and let the real content load
+    // age gates, order-type choosers etc. — click through each in order
+    for (const t of clickText ? [].concat(clickText) : []) {
       try {
-        await page.getByText(clickText).first().click({ timeout: 4000 });
+        await page.getByText(t).first().click({ timeout: 4000 });
         await page.waitForTimeout(2500);
       } catch {
-        /* no gate present — fine */
+        /* step not present — fine */
       }
     }
     if (waitSelector) {
