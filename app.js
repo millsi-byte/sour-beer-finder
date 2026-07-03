@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.35';
+const APP_BUILD = '2026.07.03.36';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -166,9 +166,83 @@ function loadSavedCities() {
   }
 }
 
-function saveSavedCities(cities) {
-  localStorage.setItem(CITIES_KEY, JSON.stringify(cities));
+/* Stable cloud key for a saved location: coords when we have them
+   (4 decimals ≈ 11m), name otherwise. */
+function locKey(c) {
+  return c.lat != null
+    ? `loc:${(+c.lat).toFixed(4)},${(+c.lng).toFixed(4)}`
+    : `loc:${c.q.trim().toLowerCase()}`;
 }
+
+function saveSavedCities(cities) {
+  const before = loadSavedCities();
+  localStorage.setItem(CITIES_KEY, JSON.stringify(cities));
+  // signed in → mirror adds/removes to the cloud as append-only fav
+  // events (setFav is idempotent, so replays can't flip other devices);
+  // fire-and-forget: localStorage stays the offline-readable copy
+  if (!crowd.authState()) return;
+  const beforeKeys = new Set(before.map(locKey));
+  const afterKeys = new Set(cities.map(locKey));
+  for (const c of cities) {
+    if (!beforeKeys.has(locKey(c))) {
+      crowd.setFav('location', locKey(c), true, {
+        label: c.q,
+        lat: c.lat != null ? String(c.lat) : undefined,
+        lng: c.lng != null ? String(c.lng) : undefined,
+      }).catch(() => {});
+    }
+  }
+  for (const c of before) {
+    if (!afterKeys.has(locKey(c))) {
+      crowd.setFav('location', locKey(c), false, { label: c.q }).catch(() => {});
+    }
+  }
+}
+
+/* On sign-in (or app start while signed in): pull cloud location favs
+   into the local list, and push local-only ones up. Union only — a
+   remove is only ever an explicit user action, never a sync side-effect. */
+async function syncLocationFavs() {
+  if (!crowd.authState()) return;
+  try {
+    const { favs } = await crowd.myMarks();
+    const cities = loadSavedCities();
+    const localKeys = new Set(cities.map(locKey));
+    let changed = false;
+    for (const e of favs.values()) {
+      if (e.target_type !== 'location' || localKeys.has(e.target_key)) continue;
+      if (!e.label) continue;
+      cities.push({
+        q: e.label,
+        lat: e.lat != null ? +e.lat : undefined,
+        lng: e.lng != null ? +e.lng : undefined,
+        home: false,
+      });
+      changed = true;
+    }
+    for (const c of cities) {
+      if (!favs.has(`location|${locKey(c)}`)) {
+        crowd.setFav('location', locKey(c), true, {
+          label: c.q,
+          lat: c.lat != null ? String(c.lat) : undefined,
+          lng: c.lng != null ? String(c.lng) : undefined,
+        }).catch(() => {});
+      }
+    }
+    if (changed) {
+      localStorage.setItem(CITIES_KEY, JSON.stringify(cities));
+      renderCityDrop();
+      if (state.view === 'cities') renderCities();
+    }
+  } catch {
+    /* offline — next session syncs */
+  }
+}
+window.addEventListener('s4s:authchange', () => {
+  crowd.clearMarksCache();
+  if (crowd.authState()) syncLocationFavs();
+});
+if (crowd.authState?.()) setTimeout(syncLocationFavs, 800);
 
 /* taps.json `areas` entries are {label, center} (older snapshots: strings) */
 function areaObjects() {
@@ -545,14 +619,14 @@ window.addEventListener('s4s:signedout', () =>
   showToast('Signed out — sign back in with your PIN.')
 );
 
-// ---------- list controls: radius, sort, sours-only ----------
+// ---------- list controls: radius, sort, drinker-reported filter ----------
 const RADII = [10, 25, 50, 100, 'All'];
 const RADIUS_KEY = 's4s.radius';
 const SORT_KEY = 's4s.sort'; // 'sours' (default) | 'dist'
-const ONLY_KEY = 's4s.soursOnly';
+const ONLY_KEY = 's4s.crowdOnly'; // replaced the old sours-only toggle
 let radius = Number(localStorage.getItem(RADIUS_KEY)) || 'All';
 let sortMode = localStorage.getItem(SORT_KEY) || 'sours';
-let soursOnly = localStorage.getItem(ONLY_KEY) === '1';
+let crowdOnly = localStorage.getItem(ONLY_KEY) === '1';
 
 function chip(label, active, onTap) {
   const btn = document.createElement('button');
@@ -595,9 +669,10 @@ function renderControls() {
     })
   );
   sort.appendChild(
-    chip('\u{1F34B} only', soursOnly, () => {
-      soursOnly = !soursOnly;
-      localStorage.setItem(ONLY_KEY, soursOnly ? '1' : '');
+    // breweries where a drinker has manually marked a beer On Tap
+    chip('\u{1F465} on tap', crowdOnly, () => {
+      crowdOnly = !crowdOnly;
+      localStorage.setItem(ONLY_KEY, crowdOnly ? '1' : '');
       renderList();
     })
   );
@@ -616,8 +691,9 @@ function visibleBreweries() {
   }
   // drinker reports count as live sour info, badged 👥 instead of 🍋
   const hasSours = (b) => (tapInfo(b)?.sours.length || 0) + (state.crowdCounts[b.id] || 0);
-  if (soursOnly) {
-    list = list.filter(hasSours);
+  if (crowdOnly) {
+    // only breweries with a drinker-reported beer currently marked On Tap
+    list = list.filter((b) => state.crowdCounts[b.id]);
   }
   if (sortMode === 'sours') {
     // stable sort: sours float to the top, distance order kept within groups
@@ -674,8 +750,8 @@ function renderList(label) {
       ? `<li class="footnote">${
           nameFilter
             ? 'No brewery names match — check the spelling or clear the search.'
-            : soursOnly
-              ? 'No live sour data here yet — widen the radius or turn off \u{1F34B} only.'
+            : crowdOnly
+              ? 'No drinker-reported taps here yet — turn off \u{1F465} on tap, or be the first to report one.'
               : `Nothing within ${radius} mi — widen the radius.`
         }</li>`
       : '<li class="footnote">No breweries found here. Try a nearby city.</li>';
@@ -951,11 +1027,87 @@ function openSheet(b) {
 
   $('actMaps').href = directionsUrl(b);
 
+  // Tap List starts expanded on every open
+  setTapListOpen(true);
+  renderSheetPills(b);
   renderCrowdSection(b);
 
   $('sheet').hidden = false;
   $('sheetBackdrop').hidden = false;
 }
+
+// ---------- sheet: Favorite + Check In pills, collapsible Tap List ----------
+function setTapListOpen(open) {
+  $('tapListBody').hidden = !open;
+  $('tapListToggle').setAttribute('aria-expanded', String(open));
+  $('tapListToggle').classList.toggle('collapsed', !open);
+}
+
+$('tapListToggle').addEventListener('click', () =>
+  setTapListOpen($('tapListBody').hidden)
+);
+
+function fmtWhen(iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+async function renderSheetPills(b) {
+  const fav = $('btnFavBrewery');
+  const chk = $('btnCheckIn');
+  const enabled = await crowd.crowdEnabled();
+  fav.hidden = chk.hidden = !enabled;
+  if (!enabled || sheetBrewery !== b) return;
+  fav.textContent = '⭐ Favorite';
+  if (crowd.authState()) {
+    const { favs } = await crowd.myMarks();
+    if (sheetBrewery !== b) return;
+    if (favs.has(`brewery|${b.id}`)) fav.textContent = '★ Favorited';
+  }
+}
+
+$('btnFavBrewery').addEventListener('click', async () => {
+  const b = sheetBrewery;
+  if (!b) return;
+  if (!crowd.authState()) {
+    showToast('Sign in (Settings → Profile) to save favorites.');
+    return;
+  }
+  $('btnFavBrewery').disabled = true;
+  try {
+    const on = await crowd.toggleFav('brewery', b.id, {
+      brewery_id: b.id,
+      brewery_name: b.name,
+      city: b.city,
+      state: b.state_province,
+    });
+    showToast(on ? `⭐ ${b.name} favorited` : `Removed ${b.name} from favorites`);
+    renderSheetPills(b);
+  } catch (e) {
+    showToast(e.message);
+  } finally {
+    $('btnFavBrewery').disabled = false;
+  }
+});
+
+$('btnCheckIn').addEventListener('click', async () => {
+  const b = sheetBrewery;
+  if (!b) return;
+  if (!crowd.authState()) {
+    showToast('Sign in (Settings → Profile) to check in.');
+    return;
+  }
+  $('btnCheckIn').disabled = true;
+  try {
+    await crowd.checkIn(b);
+    showToast(`🍻 Checked in at ${b.name}`);
+  } catch (e) {
+    showToast(e.message);
+  } finally {
+    $('btnCheckIn').disabled = false;
+  }
+});
 
 // ---------- crowd layer: drinker reports (see crowd.js) ----------
 let sheetBrewery = null;
@@ -1008,16 +1160,15 @@ function crowdReportRow(rep) {
     li.appendChild(rv);
   }
 
-  // status trail: dated, named gone / back-on-tap notes — never hides the
-  // report; reviews keep their value and beers come back
-  rep.trail.forEach((t) => {
-    const st = document.createElement('div');
-    st.className = 'crowd-meta';
-    st.textContent =
-      (t.vote === 'gone' ? '👎 marked gone' : '👍 back on tap') +
-      ` by ${t.author || 'a drinker'} · ${fmtAgo(t.created_at)}`;
-    li.appendChild(st);
-  });
+  // LAST recorded status: who said it, day + time (the report itself
+  // counts as the first "on tap" record)
+  const last = rep.trail.at(-1);
+  const status = document.createElement('div');
+  status.className = 'crowd-status';
+  status.textContent = last
+    ? `${last.vote === 'gone' ? '👎 Gone' : '👍 On tap'} — ${last.author || 'a drinker'} · ${fmtWhen(last.created_at)}`
+    : `👍 On tap — ${rep.author || 'a drinker'} · ${fmtWhen(rep.created_at)}`;
+  li.appendChild(status);
 
   rep.comments.forEach((c) => {
     const cm = document.createElement('div');
@@ -1029,15 +1180,30 @@ function crowdReportRow(rep) {
 
   const row = document.createElement('div');
   row.className = 'crowd-actions';
-  const statusBtn = document.createElement('button');
-  statusBtn.type = 'button';
-  statusBtn.className = 'pillbtn crowd-pill';
-  statusBtn.textContent = rep.currentlyGone ? '👍 It’s back on tap' : '👎 Mark as gone';
-  statusBtn.addEventListener('click', () => {
-    if (li.querySelector('.crowd-vform')) return;
-    li.appendChild(crowdStatusForm(rep, rep.currentlyGone ? 'still' : 'gone'));
-  });
-  row.appendChild(statusBtn);
+  // both Mark buttons always offered — beers come back on tap
+  for (const [vote, label] of [['still', '👍 Mark On Tap'], ['gone', '👎 Mark as Gone']]) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pillbtn crowd-pill';
+    btn.textContent = label;
+    btn.addEventListener('click', async () => {
+      if (crowd.authState()) {
+        // signed in: one tap, auto-attributed
+        btn.disabled = true;
+        try {
+          await crowd.submitVote(rep, vote);
+          renderCrowdSection(sheetBrewery);
+        } catch (e) {
+          showToast(e.message);
+          btn.disabled = false;
+        }
+        return;
+      }
+      if (li.querySelector('.crowd-vform')) return;
+      li.appendChild(crowdStatusForm(rep, vote));
+    });
+    row.appendChild(btn);
+  }
 
   const cbtn = document.createElement('button');
   cbtn.type = 'button';

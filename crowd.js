@@ -167,6 +167,7 @@ async function sendPinReset(email) {
 function signOut() {
   saveAuth(null);
   localStorage.removeItem('s4s.me.cache');
+  marksCache = null;
 }
 
 /* Single-flight token refresh: concurrent callers share one promise. */
@@ -225,6 +226,140 @@ async function authedFetch(url, opts = {}) {
     }
   }
   return res;
+}
+
+/* ============== user marks: favorites / had-it / check-ins ==============
+   One owner-private, append-only event log (collection `user_marks`).
+   {uid, kind: fav|unfav|had|unhad|checkin, target_type, target_key,
+    ...denormalized display fields, created_at}
+   Current state = latest event per (toggle family, target_key); check-ins
+   are a pure timeline. Nothing is ever updated, so a stale device can
+   never clobber another device's marks — later timestamp simply wins. */
+
+let marksCache = null; // this session's decoded events, newest last
+
+function marksSnapshotSave() {
+  try {
+    localStorage.setItem(
+      's4s.me.cache',
+      JSON.stringify({ synced_at: new Date().toISOString(), events: marksCache })
+    );
+  } catch {
+    /* storage full — offline display just degrades */
+  }
+}
+
+async function fetchMyMarks(force = false) {
+  const a = authState();
+  if (!a || !(await crowdEnabled())) return [];
+  if (marksCache && !force) return marksCache;
+  try {
+    const res = await authedFetch(`${baseUrl()}:runQuery?key=${cfg.api_key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        structuredQuery: {
+          from: [{ collectionId: 'user_marks' }],
+          where: {
+            fieldFilter: {
+              field: { fieldPath: 'uid' },
+              op: 'EQUAL',
+              value: { stringValue: a.uid },
+            },
+          },
+          limit: 1000, // no orderBy: keeps us index-free; sorted client-side
+        },
+      }),
+    });
+    if (!res.ok) throw new Error(`marks fetch ${res.status}`);
+    const rows = await res.json();
+    marksCache = rows
+      .filter((r) => r.document)
+      .map((r) => fromDoc(r.document))
+      .sort((x, y) => (x.created_at ?? '').localeCompare(y.created_at ?? ''));
+    marksSnapshotSave();
+    return marksCache;
+  } catch {
+    // offline / hiccup: serve the last-synced snapshot for display
+    try {
+      return JSON.parse(localStorage.getItem('s4s.me.cache'))?.events ?? [];
+    } catch {
+      return [];
+    }
+  }
+}
+
+/* {favs: Map(type|key -> event), had: Map(key -> event), checkins: [events]} */
+function assembleMarks(events) {
+  const favs = new Map();
+  const had = new Map();
+  const checkins = [];
+  for (const e of events) {
+    const k = `${e.target_type}|${e.target_key}`;
+    if (e.kind === 'fav' || e.kind === 'unfav') favs.set(k, e);
+    else if (e.kind === 'had' || e.kind === 'unhad') had.set(k, e);
+    else if (e.kind === 'checkin') checkins.push(e);
+  }
+  for (const [k, e] of favs) if (e.kind === 'unfav') favs.delete(k);
+  for (const [k, e] of had) if (e.kind === 'unhad') had.delete(k);
+  checkins.reverse(); // newest first
+  return { favs, had, checkins };
+}
+
+async function myMarks(force) {
+  return assembleMarks(await fetchMyMarks(force));
+}
+
+async function submitMark(kind, target_type, target_key, denorm = {}) {
+  const a = authState();
+  if (!a) throw Object.assign(new Error('sign in first'), { code: 'NOT_SIGNED_IN' });
+  const saved = await createDoc('user_marks', {
+    uid: a.uid,
+    kind,
+    target_type,
+    target_key,
+    ...denorm,
+    created_at: new Date().toISOString(),
+  });
+  marksCache?.push(saved);
+  marksSnapshotSave();
+  return saved;
+}
+
+async function toggleFav(target_type, target_key, denorm) {
+  const { favs } = await myMarks();
+  const on = favs.has(`${target_type}|${target_key}`);
+  await submitMark(on ? 'unfav' : 'fav', target_type, target_key, denorm);
+  return !on;
+}
+
+/* Idempotent set — used by the local<->cloud favorites sync so a stale
+   device can only ever ADD missing state, never flip someone else's. */
+async function setFav(target_type, target_key, on, denorm) {
+  const { favs } = await myMarks();
+  if (favs.has(`${target_type}|${target_key}`) === on) return on;
+  await submitMark(on ? 'fav' : 'unfav', target_type, target_key, denorm);
+  return on;
+}
+
+async function toggleHad(target_key, denorm) {
+  const { had } = await myMarks();
+  const on = had.has(`beer|${target_key}`);
+  await submitMark(on ? 'unhad' : 'had', 'beer', target_key, denorm);
+  return !on;
+}
+
+function checkIn(brewery) {
+  return submitMark('checkin', 'brewery', brewery.id, {
+    brewery_id: brewery.id,
+    brewery_name: brewery.name,
+    city: brewery.city,
+    state: brewery.state_province,
+  });
+}
+
+function clearMarksCache() {
+  marksCache = null;
 }
 
 /* Writes never queue offline — connectivity is required, which makes
@@ -399,4 +534,11 @@ window.crowd = {
   sendPinReset,
   authedFetch,
   requireOnline,
+  // user marks (favorites / had-it / check-ins)
+  myMarks,
+  toggleFav,
+  setFav,
+  toggleHad,
+  checkIn,
+  clearMarksCache,
 };

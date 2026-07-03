@@ -231,17 +231,28 @@
   <div class="grabber"></div>
   <h3 id="sheetName"></h3>
   <p id="sheetSub" class="sheet-sub"></p>
-  <div class="sour-placeholder">
-    <span id="sourBadge" class="sour-badge">&#x1F34B; Tap list</span>
-    <p id="sourBody"></p>
-    <ul id="sourList" class="sour-list" hidden></ul>
+  <div class="sheet-pills">
+    <button type="button" id="btnFavBrewery" class="pillbtn">&#x2B50; Favorite</button>
+    <button type="button" id="btnCheckIn" class="pillbtn">&#x2705; Check In</button>
   </div>
-  <div id="crowdWrap" class="sour-placeholder crowd-wrap" hidden>
-    <span class="sour-badge crowd-badge">&#x1F465; Reported by drinkers</span>
-    <p class="crowd-note">Drinker reports age out after 30 days &mdash; check the date.</p>
-    <ul id="crowdList" class="crowd-list"></ul>
+  <button type="button" id="tapListToggle" class="tl-toggle" aria-expanded="true">
+    <span class="tl-title">Tap List</span>
+    <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div id="tapListBody">
+    <div class="sour-placeholder">
+      <div class="tl-sec-head">From the brewery&rsquo;s menu</div>
+      <span id="sourBadge" class="sour-badge">&#x1F34B; Tap list</span>
+      <p id="sourBody"></p>
+      <ul id="sourList" class="sour-list" hidden></ul>
+    </div>
+    <div id="crowdWrap" class="sour-placeholder crowd-wrap" hidden>
+      <div class="tl-sec-head">Reported by drinkers &#x1F465;</div>
+      <p class="crowd-note">Drinker reports show who said what, and when &mdash; check the dates.</p>
+      <ul id="crowdList" class="crowd-list"></ul>
+    </div>
   </div>
-  <button type="button" id="btnCrowdReport" class="secondary block" hidden>&#x1F34B; Report &amp; Review a Sour</button>
+  <button type="button" id="btnCrowdReport" class="secondary block" hidden>&#x1F37A; Report a new beer here</button>
   <form id="crowdForm" class="missingform crowd-form" autocomplete="off" hidden>
     <input id="crBeer" type="text" placeholder="Sour beer name" required>
     <div id="crStars" class="stars" role="radiogroup" aria-label="Your rating"></div>
