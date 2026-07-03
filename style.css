@@ -180,6 +180,14 @@ button.secondary {
 .footnote { text-align: center; color: var(--text-dim); font-size: 14px; padding: 22px 0 8px; }
 .missing-note { text-align: center; padding: 2px 0 12px; }
 
+/* results-page name filter — 16px stops iOS zoom-on-focus */
+.list-filter {
+  width: 100%; padding: 12px 14px; margin-bottom: 10px; font-size: 16px;
+  background: var(--card); color: var(--text);
+  border: 0.5px solid var(--hairline); border-radius: 12px; outline: none;
+  -webkit-appearance: none;
+}
+
 /* Missing-brewery report form */
 .missingform { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .mb-text {

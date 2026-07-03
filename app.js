@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.28';
+const APP_BUILD = '2026.07.03.29';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -371,8 +371,14 @@ function renderControls() {
   );
 }
 
+let nameFilter = ''; // live text filter on the results page (not persisted)
+
 function visibleBreweries() {
   let list = state.breweries;
+  if (nameFilter) {
+    const f = nameFilter.toLowerCase();
+    list = list.filter((b) => b.name.toLowerCase().includes(f));
+  }
   if (radius !== 'All' && state.origin) {
     list = list.filter((b) => b.miles != null && b.miles <= radius);
   }
@@ -419,7 +425,11 @@ function toggleFavCity() {
 }
 
 function renderList(label) {
-  if (label !== undefined) state.listLabel = label;
+  if (label !== undefined) {
+    state.listLabel = label; // fresh search — start with an unfiltered list
+    nameFilter = '';
+    $('listFilter').value = '';
+  }
   const shown = visibleBreweries();
   $('listTitle').textContent =
     `${shown.length} ${shown.length === 1 ? 'brewery' : 'breweries'} ${state.listLabel}`;
@@ -430,9 +440,11 @@ function renderList(label) {
   if (!shown.length) {
     ul.innerHTML = state.breweries.length
       ? `<li class="footnote">${
-          soursOnly
-            ? 'No live sour data here yet — widen the radius or turn off \u{1F34B} only.'
-            : `Nothing within ${radius} mi — widen the radius.`
+          nameFilter
+            ? 'No brewery names match — check the spelling or clear the search.'
+            : soursOnly
+              ? 'No live sour data here yet — widen the radius or turn off \u{1F34B} only.'
+              : `Nothing within ${radius} mi — widen the radius.`
         }</li>`
       : '<li class="footnote">No breweries found here. Try a nearby city.</li>';
   }
@@ -795,6 +807,11 @@ $('cityForm').addEventListener('submit', async (e) => {
   searchAC.close();
   if (pick) coordsFlow(pick.label, pick.lat, pick.lng);
   else cityFlow(typed); // geocoder found nothing — try the name as-is
+});
+
+$('listFilter').addEventListener('input', () => {
+  nameFilter = $('listFilter').value.trim();
+  renderList();
 });
 
 $('btnNewSearch').addEventListener('click', () => show('locate'));
