@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.6';
+const APP_BUILD = '2026.07.03.7';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -289,11 +289,42 @@ function visibleBreweries() {
   return list;
 }
 
+// ---------- save-this-city star on results ----------
+function currentCityCandidate() {
+  if (state.lastSearch) {
+    return { q: state.lastSearch.label, lat: state.lastSearch.lat, lng: state.lastSearch.lng };
+  }
+  if (state.lastCity) return { q: state.lastCity };
+  return null; // geolocation searches have no city to save
+}
+
+function renderFavBtn() {
+  const c = currentCityCandidate();
+  const btn = $('btnFavCity');
+  btn.hidden = !c;
+  if (!c) return;
+  const saved = loadSavedCities().some((x) => x.q.toLowerCase() === c.q.toLowerCase());
+  btn.textContent = saved ? '★ Saved' : '☆ Save';
+}
+
+function toggleFavCity() {
+  const c = currentCityCandidate();
+  if (!c) return;
+  let cities = loadSavedCities();
+  const i = cities.findIndex((x) => x.q.toLowerCase() === c.q.toLowerCase());
+  if (i >= 0) cities.splice(i, 1);
+  else cities.push({ ...c, home: cities.length === 0 }); // first city becomes home
+  saveSavedCities(cities);
+  renderFavBtn();
+  renderCityDrop();
+}
+
 function renderList(label) {
   if (label !== undefined) state.listLabel = label;
   const shown = visibleBreweries();
   $('listTitle').textContent =
     `${shown.length} ${shown.length === 1 ? 'brewery' : 'breweries'} ${state.listLabel}`;
+  renderFavBtn();
   renderControls();
   const ul = $('breweryList');
   ul.innerHTML = '';
@@ -581,6 +612,7 @@ $('cityForm').addEventListener('submit', async (e) => {
 });
 
 $('btnNewSearch').addEventListener('click', () => show('locate'));
+$('btnFavCity').addEventListener('click', toggleFavCity);
 $('btnRefresh').addEventListener('click', () => {
   if (state.lastSearch) coordsFlow(state.lastSearch.label, state.lastSearch.lat, state.lastSearch.lng);
   else if (state.origin) locateFlow();

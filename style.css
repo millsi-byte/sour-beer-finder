@@ -130,7 +130,8 @@ button.secondary {
   display: flex; align-items: baseline; justify-content: space-between;
   padding: 14px 2px 10px; color: var(--text-dim); font-size: 16px;
 }
-.linkbtn { background: none; border: none; color: var(--accent-ink); font-size: 14px; font-weight: 600; cursor: pointer; }
+.linkbtn { background: none; border: none; color: var(--accent-ink); font-size: 15px; font-weight: 600; cursor: pointer; }
+.listmeta-actions { display: flex; gap: 14px; white-space: nowrap; }
 
 .radius-bar { display: flex; gap: 6px; padding: 0 2px 12px; }
 .radius-chip {
