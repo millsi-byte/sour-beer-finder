@@ -175,9 +175,11 @@ async function main() {
     fs.readFileSync(path.join(__dirname, 'extra-breweries.json'), 'utf8')
   );
   for (const e of extras) {
-    if (known.has(e.id) || !e.website_url) continue;
+    if (known.has(e.id) || !(e.menu_url || e.website_url)) continue;
     try {
-      const hit = await scanSite(e.website_url);
+      // menu_url pins multi-location sites (Tree House) to THIS location's
+      // tap-list page; otherwise the homepage scan picks a random location
+      const hit = await scanSite(e.menu_url || e.website_url);
       if (hit) {
         sources.push({ obdb_id: e.id, name: e.name, ...hit });
         known.add(e.id);

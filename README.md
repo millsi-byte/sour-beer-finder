@@ -97,8 +97,10 @@ Manual entries for chalkboard-only taprooms still work via
 The brewery list comes from Open Brewery DB, which is missing some major
 breweries (Tree House!). `pipeline/extra-breweries.json` is the hand-kept
 supplement: entries carry `id` (`x-…` so they never collide with OBDB ids),
-`name`, `city`, `state`, `lat`, `lng`, `website_url`. They flow everywhere
-automatically:
+`name`, `city`, `state`, `lat`, `lng`, `website_url`, and optionally
+`menu_url` — set it for multi-location sites (Tree House) so discovery
+scans THIS location's tap-list page instead of whichever location the
+homepage links first. They flow everywhere automatically:
 
 - `build.js` publishes them inside `data/taps.json` (`extra_breweries`),
   and the app injects them into search results — with real distances,
