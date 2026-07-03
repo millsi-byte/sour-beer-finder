@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { fetchText } = require('./lib');
+const { browserAvailable, fetchRendered, closeBrowser } = require('./browser');
 
 const OBDB = 'https://api.openbrewerydb.org/v1/breweries';
 const SOURCES = path.join(__dirname, 'sources.json');
@@ -82,13 +83,21 @@ function menuLinks(html, baseUrl) {
   return [...out].slice(0, 3);
 }
 
+/* Rendered fetch when Playwright is available (sees through bot walls and
+   JS-built sites), plain fetch otherwise. */
+function fetchPage(url, timeoutMs) {
+  return browserAvailable()
+    ? fetchRendered(url, { timeoutMs: timeoutMs + 10000 })
+    : fetchText(url, { timeoutMs });
+}
+
 async function scanSite(websiteUrl) {
-  const html = await fetchText(websiteUrl, { timeoutMs: 10000 });
+  const html = await fetchPage(websiteUrl, 10000);
   let hit = detect(html);
   if (hit) return hit;
   for (const link of menuLinks(html, websiteUrl)) {
     try {
-      hit = detect(await fetchText(link, { timeoutMs: 8000 }));
+      hit = detect(await fetchPage(link, 8000));
       if (hit) return hit;
     } catch {
       /* subpage unreachable — keep trying the rest */
@@ -161,6 +170,8 @@ async function main() {
 
   fs.writeFileSync(SOURCES, JSON.stringify(sources, null, 2) + '\n');
   console.log(`discovered ${found} new sources — sources.json now has ${sources.length} entries`);
+  console.log(`fetch mode: ${browserAvailable() ? 'headless browser' : 'plain HTTP'}`);
+  await closeBrowser();
 }
 
 if (require.main === module) {

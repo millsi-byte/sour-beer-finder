@@ -8,11 +8,12 @@
      { "obdb_id": "...", "name": "...", "source": "taplist",
        "embed_url": "https://app.taplist.io/embed/..." } */
 
-const { fetchText, beersFromEmbeddedJson, collectBeers } = require('../lib');
+const { beersFromEmbeddedJson, collectBeers } = require('../lib');
+const { fetchSmart } = require('../browser');
 
 module.exports = async function taplist(src) {
   if (!src.embed_url) throw new Error('missing embed_url');
-  const body = await fetchText(src.embed_url);
+  const body = await fetchSmart(src.embed_url);
   try {
     return collectBeers(JSON.parse(body)); // URL may serve raw JSON
   } catch {

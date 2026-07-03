@@ -48,6 +48,7 @@ async function main() {
   const outPath = path.join(__dirname, '..', 'data', 'taps.json');
   fs.writeFileSync(outPath, JSON.stringify(out, null, 2) + '\n');
   console.log(`wrote data/taps.json — ${Object.keys(out.breweries).length} breweries`);
+  await require('./browser').closeBrowser();
 }
 
 main().catch((e) => {

@@ -20,10 +20,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Install headless browser (sees through bot walls + JS sites)
+        run: |
+          npm install -g playwright
+          npx playwright install --with-deps chromium
       - name: Re-scan covered areas for new tap-list widgets
-        run: node pipeline/discover.js --all
+        run: NODE_PATH=$(npm root -g) node pipeline/discover.js --all
       - name: Build tap data
-        run: node pipeline/build.js
+        run: NODE_PATH=$(npm root -g) node pipeline/build.js
         env:
           UNTAPPD_EMAIL: ${{ secrets.UNTAPPD_EMAIL }}
           UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}

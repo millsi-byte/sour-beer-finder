@@ -6,11 +6,12 @@
      { "obdb_id": "...", "name": "...", "source": "digitalpour",
        "embed_url": "https://mobile.digitalpour.com/..." } */
 
-const { fetchText, beersFromEmbeddedJson, collectBeers } = require('../lib');
+const { beersFromEmbeddedJson, collectBeers } = require('../lib');
+const { fetchSmart } = require('../browser');
 
 module.exports = async function digitalpour(src) {
   if (!src.embed_url) throw new Error('missing embed_url');
-  const body = await fetchText(src.embed_url);
+  const body = await fetchSmart(src.embed_url);
   try {
     return collectBeers(JSON.parse(body));
   } catch {

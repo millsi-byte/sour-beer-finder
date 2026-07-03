@@ -10,7 +10,8 @@
    Place pages list beers as <a href="/beers/...">Name</a> with a nearby
    style/ABV caption; parsing is tolerant of markup drift. */
 
-const { fetchText, robotsDisallows } = require('../lib');
+const { robotsDisallows } = require('../lib');
+const { fetchSmart } = require('../browser');
 
 const ORIGIN = 'https://www.beermenus.com';
 
@@ -19,7 +20,7 @@ module.exports = async function beermenus(src) {
   if (await robotsDisallows(ORIGIN, '/places')) {
     throw new Error('robots.txt disallows /places — skipping');
   }
-  const html = await fetchText(`${ORIGIN}/places/${src.beermenus_slug}`);
+  const html = await fetchSmart(`${ORIGIN}/places/${src.beermenus_slug}`);
 
   const beers = [];
   const anchors = [...html.matchAll(/<a[^>]+href="\/beers\/[^"]+"[^>]*>([^<]+)<\/a>/g)];
