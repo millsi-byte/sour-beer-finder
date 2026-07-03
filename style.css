@@ -271,3 +271,32 @@ button.block { display: block; width: 100%; margin-top: 8px; }
   font-size: 15px; font-weight: 600;
 }
 .action[hidden] { display: none; }
+
+/* Crowd layer: drinker reports (crowd.js) */
+.crowd-wrap { margin-top: 10px; }
+.crowd-badge { color: var(--text); }
+.crowd-note { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
+.crowd-list { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 14px; }
+.crowd-item { border-left: 3px solid var(--hairline); padding-left: 10px; }
+.crowd-item.crowd-gone { opacity: 0.65; }
+.crowd-head { font-size: 17px; font-weight: 650; }
+.crowd-stars { color: var(--accent-ink); font-size: 15px; }
+.crowd-meta { color: var(--text-dim); font-size: 14px; margin-top: 2px; }
+.crowd-review { font-size: 16px; margin-top: 4px; line-height: 1.4; }
+.crowd-comment { font-size: 15px; color: var(--text-dim); margin-top: 6px; padding-left: 10px; border-left: 2px solid var(--hairline); }
+.crowd-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.crowd-pill { font-size: 14px; padding: 8px 12px; }
+.crowd-form { margin-top: 10px; }
+.crowd-form textarea {
+  width: 100%; padding: 13px 14px; font-size: 16px; resize: vertical;
+  background: var(--card); color: var(--text);
+  border: 0.5px solid var(--hairline); border-radius: 12px; outline: none;
+  font-family: inherit;
+}
+.crowd-cform, .crowd-vform { margin-top: 8px; }
+.stars { display: flex; gap: 4px; }
+.star-btn {
+  background: none; border: none; font-size: 28px; line-height: 1;
+  color: var(--accent-ink); cursor: pointer; padding: 2px;
+}
+.crowd-chip { color: var(--text-dim); }

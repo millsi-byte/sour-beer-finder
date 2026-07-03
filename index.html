@@ -182,6 +182,20 @@
     <p id="sourBody"></p>
     <ul id="sourList" class="sour-list" hidden></ul>
   </div>
+  <div id="crowdWrap" class="sour-placeholder crowd-wrap" hidden>
+    <span class="sour-badge crowd-badge">&#x1F465; Reported by drinkers</span>
+    <p class="crowd-note">Drinker reports age out after 30 days &mdash; check the date.</p>
+    <ul id="crowdList" class="crowd-list"></ul>
+  </div>
+  <button type="button" id="btnCrowdReport" class="secondary block" hidden>&#x1F34B; Report &amp; Review a Sour</button>
+  <form id="crowdForm" class="missingform crowd-form" autocomplete="off" hidden>
+    <input id="crBeer" type="text" placeholder="Sour beer name" required>
+    <div id="crStars" class="stars" role="radiogroup" aria-label="Your rating"></div>
+    <input id="crAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
+    <textarea id="crReview" placeholder="Quick review (optional)" rows="2" maxlength="400"></textarea>
+    <button type="submit" class="secondary block">Post it</button>
+    <p id="crNote" class="explain" hidden></p>
+  </form>
   <div class="sheet-actions">
     <a id="actUntappd" class="action" target="_blank" rel="noopener">&#x1F37A; Untappd</a>
     <a id="actWebsite" class="action" target="_blank" rel="noopener">&#x1F310; Website</a>
@@ -189,6 +203,7 @@
   </div>
 </div>
 
+<script src="crowd.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

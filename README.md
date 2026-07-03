@@ -113,6 +113,57 @@ Manual entries for chalkboard-only taprooms still work via
   "beers": [{ "name": "Peach Gose", "style": "Gose" }] }
 ```
 
+## Turning on drinker reports (the crowd layer)
+
+"🍋 Report & Review a Sour" on every brewery page: anonymous reports
+(no login) with an optional name, star rating, and review; comments;
+and dated "gone / back on tap" notes. Reports never expire — reviews
+keep their value and beers come back — and drinker data is always
+badged 👥 (vs 🍋 for scraped menus) with visible dates, since people
+reports go stale faster than scraped ones. This is the only data
+source for breweries that publish no tap list at all (Bissell, Rising
+Tide, Spyglass…).
+
+The feature is invisible until you create the (free) storage and
+paste its config. One-time setup, ~5 minutes, no credit card:
+
+1. Go to [console.firebase.google.com](https://console.firebase.google.com),
+   sign in with any Google account, **Create a project** (name it
+   `s4s`, disable Analytics).
+2. In the project: **Build → Firestore Database → Create database** →
+   Start in **production mode** → pick a US location.
+3. **Rules** tab → replace everything with the rules below → Publish:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /reports/{doc} {
+         allow read: if true;
+         allow create: if request.resource.data.keys().hasOnly(
+             ['kind','brewery_id','brewery_name','beer_name','style',
+              'rating','author','review','report_id','text','vote',
+              'created_at'])
+           && request.resource.data.kind in ['report','comment','vote'];
+         allow update, delete: if false;
+       }
+     }
+   }
+   ```
+4. Project settings (gear icon) → **General** → "Your apps" → the
+   `</>` (web) icon → register app (nickname `s4s`, no hosting). Copy
+   the `projectId` and `apiKey` values it shows.
+5. In this repo, create the file `data/crowd-config.json`
+   (GitHub → Add file) containing:
+   ```json
+   { "project_id": "YOUR_PROJECT_ID", "api_key": "YOUR_API_KEY" }
+   ```
+   Commit — the app lights up on the next deploy. (This key is meant
+   to be public; the rules above are what limit writes.)
+
+**Moderation / admin delete:** open the Firebase console → Firestore
+→ `reports` collection → click the offending document → delete. Your
+Google login is the admin login; there is nothing else to run.
+
 ## Manually adding breweries (Open Brewery DB gaps)
 
 The brewery list comes from Open Brewery DB, which is missing some major

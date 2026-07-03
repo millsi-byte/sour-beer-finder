@@ -6,10 +6,17 @@ const API = 'https://api.openbrewerydb.org/v1/breweries';
 const HIDDEN_TYPES = new Set(['closed', 'planning']);
 
 const $ = (id) => document.getElementById(id);
-const state = { origin: null, breweries: [], taps: null };
+const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.29';
+const APP_BUILD = '2026.07.03.30';
+
+// drinker-report badge counts (crowd.js) — cheap, loads once in the
+// background; re-render whenever they arrive after the list is up
+crowd.crowdCounts().then((c) => {
+  state.crowdCounts = c;
+  if (state.view === 'list') renderList();
+});
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -382,14 +389,14 @@ function visibleBreweries() {
   if (radius !== 'All' && state.origin) {
     list = list.filter((b) => b.miles != null && b.miles <= radius);
   }
+  // drinker reports count as live sour info, badged 👥 instead of 🍋
+  const hasSours = (b) => (tapInfo(b)?.sours.length || 0) + (state.crowdCounts[b.id] || 0);
   if (soursOnly) {
-    list = list.filter((b) => tapInfo(b)?.sours.length);
+    list = list.filter(hasSours);
   }
   if (sortMode === 'sours') {
     // stable sort: sours float to the top, distance order kept within groups
-    list = [...list].sort(
-      (a, c) => (tapInfo(c)?.sours.length ? 1 : 0) - (tapInfo(a)?.sours.length ? 1 : 0)
-    );
+    list = [...list].sort((a, c) => (hasSours(c) ? 1 : 0) - (hasSours(a) ? 1 : 0));
   }
   return list;
 }
@@ -461,10 +468,18 @@ function renderList(label) {
       <span class="chev">&#x203A;</span>`;
     li.querySelector('.name').textContent = b.name;
     const info = tapInfo(b);
+    const crowdN = state.crowdCounts[b.id] || 0;
     if (info?.sours.length) {
       const chip = li.querySelector('.sour-chip');
       chip.hidden = false;
       chip.textContent = `\u{1F34B} ${info.sours.length}`;
+    } else if (crowdN) {
+      // drinker-reported, not scraped — different icon so staleness
+      // expectations stay honest
+      const chip = li.querySelector('.sour-chip');
+      chip.hidden = false;
+      chip.classList.add('crowd-chip');
+      chip.textContent = `\u{1F465} ${crowdN}`;
     }
     li.querySelector('.type-badge').textContent = b.brewery_type || 'brewery';
     li.querySelector('.loc').textContent = [b.city, b.state_province].filter(Boolean).join(', ');
@@ -710,9 +725,206 @@ function openSheet(b) {
 
   $('actMaps').href = directionsUrl(b);
 
+  renderCrowdSection(b);
+
   $('sheet').hidden = false;
   $('sheetBackdrop').hidden = false;
 }
+
+// ---------- crowd layer: drinker reports (see crowd.js) ----------
+let sheetBrewery = null;
+let crStars = 0;
+
+function starRow(n) {
+  return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
+}
+
+async function renderCrowdSection(b) {
+  sheetBrewery = b;
+  $('crowdWrap').hidden = true;
+  $('crowdForm').hidden = true;
+  $('btnCrowdReport').hidden = true;
+  $('crNote').hidden = true;
+  if (!(await crowd.crowdEnabled()) || sheetBrewery !== b) return;
+  $('btnCrowdReport').hidden = false;
+  const reports = await crowd.crowdReportsFor(b.id);
+  if (sheetBrewery !== b || !reports.length) return;
+  const ul = $('crowdList');
+  ul.innerHTML = '';
+  reports.forEach((rep) => ul.appendChild(crowdReportRow(rep)));
+  $('crowdWrap').hidden = false;
+}
+
+function crowdReportRow(rep) {
+  const li = document.createElement('li');
+  li.className = 'crowd-item' + (rep.currentlyGone ? ' crowd-gone' : '');
+
+  const head = document.createElement('div');
+  head.className = 'crowd-head';
+  head.textContent = rep.beer_name + (rep.style ? ` — ${rep.style}` : '');
+  if (rep.rating) {
+    const stars = document.createElement('span');
+    stars.className = 'crowd-stars';
+    stars.textContent = ' ' + starRow(rep.rating);
+    head.appendChild(stars);
+  }
+  li.appendChild(head);
+
+  const meta = document.createElement('div');
+  meta.className = 'crowd-meta';
+  meta.textContent = `reported by ${rep.author || 'a drinker'} · ${fmtAgo(rep.created_at)}`;
+  li.appendChild(meta);
+
+  if (rep.review) {
+    const rv = document.createElement('div');
+    rv.className = 'crowd-review';
+    rv.textContent = rep.review;
+    li.appendChild(rv);
+  }
+
+  // status trail: dated, named gone / back-on-tap notes — never hides the
+  // report; reviews keep their value and beers come back
+  rep.trail.forEach((t) => {
+    const st = document.createElement('div');
+    st.className = 'crowd-meta';
+    st.textContent =
+      (t.vote === 'gone' ? '👎 marked gone' : '👍 back on tap') +
+      ` by ${t.author || 'a drinker'} · ${fmtAgo(t.created_at)}`;
+    li.appendChild(st);
+  });
+
+  rep.comments.forEach((c) => {
+    const cm = document.createElement('div');
+    cm.className = 'crowd-comment';
+    cm.textContent =
+      `${c.author || 'a drinker'}: ${c.text || ''}` + (c.rating ? ` ${starRow(c.rating)}` : '');
+    li.appendChild(cm);
+  });
+
+  const row = document.createElement('div');
+  row.className = 'crowd-actions';
+  const statusBtn = document.createElement('button');
+  statusBtn.type = 'button';
+  statusBtn.className = 'pillbtn crowd-pill';
+  statusBtn.textContent = rep.currentlyGone ? '👍 It’s back on tap' : '👎 Mark as gone';
+  statusBtn.addEventListener('click', () => {
+    if (li.querySelector('.crowd-vform')) return;
+    li.appendChild(crowdStatusForm(rep, rep.currentlyGone ? 'still' : 'gone'));
+  });
+  row.appendChild(statusBtn);
+
+  const cbtn = document.createElement('button');
+  cbtn.type = 'button';
+  cbtn.className = 'pillbtn crowd-pill';
+  cbtn.textContent = '💬 Comment';
+  cbtn.addEventListener('click', () => {
+    if (li.querySelector('.crowd-cform')) return;
+    li.appendChild(crowdCommentForm(rep));
+  });
+  row.appendChild(cbtn);
+  li.appendChild(row);
+  return li;
+}
+
+function crowdStatusForm(rep, vote) {
+  const form = document.createElement('form');
+  form.className = 'missingform crowd-vform';
+  form.innerHTML = `
+    <input type="text" class="cv-author" placeholder="Your name (optional)" maxlength="40">
+    <button type="submit" class="secondary block">${
+      vote === 'gone' ? 'Confirm: it’s gone' : 'Confirm: it’s pouring again'
+    }</button>`;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    form.querySelector('button').disabled = true;
+    try {
+      await crowd.submitVote(rep, vote, form.querySelector('.cv-author').value.trim());
+      renderCrowdSection(sheetBrewery);
+    } catch {
+      form.querySelector('button').disabled = false;
+    }
+  });
+  return form;
+}
+
+function crowdCommentForm(rep) {
+  const form = document.createElement('form');
+  form.className = 'missingform crowd-cform';
+  form.innerHTML = `
+    <input type="text" class="cc-text" placeholder="Your comment" required maxlength="300">
+    <input type="text" class="cc-author" placeholder="Your name (optional)" maxlength="40">
+    <button type="submit" class="secondary block">Post comment</button>`;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = form.querySelector('.cc-text').value.trim();
+    if (!text) return;
+    form.querySelector('button').disabled = true;
+    try {
+      await crowd.submitComment(rep, {
+        text,
+        author: form.querySelector('.cc-author').value.trim(),
+      });
+      renderCrowdSection(sheetBrewery);
+    } catch {
+      form.querySelector('button').disabled = false;
+    }
+  });
+  return form;
+}
+
+function renderStarsInput() {
+  const bar = $('crStars');
+  bar.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const s = document.createElement('button');
+    s.type = 'button';
+    s.className = 'star-btn';
+    s.textContent = i <= crStars ? '★' : '☆';
+    s.setAttribute('aria-label', `${i} star${i > 1 ? 's' : ''}`);
+    s.addEventListener('click', () => {
+      crStars = crStars === i ? 0 : i; // tap the same star again to clear
+      renderStarsInput();
+    });
+    bar.appendChild(s);
+  }
+}
+
+$('btnCrowdReport').addEventListener('click', () => {
+  const f = $('crowdForm');
+  f.hidden = !f.hidden;
+  if (!f.hidden) {
+    crStars = 0;
+    renderStarsInput();
+    $('crBeer').focus();
+  }
+});
+
+$('crowdForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const beer = $('crBeer').value.trim();
+  if (!beer || !sheetBrewery) return;
+  const btn = $('crowdForm').querySelector('button[type=submit]');
+  btn.disabled = true;
+  try {
+    await crowd.submitReport({
+      brewery: sheetBrewery,
+      beer_name: beer,
+      rating: crStars || undefined,
+      author: $('crAuthor').value.trim(),
+      review: $('crReview').value.trim(),
+    });
+    $('crowdForm').reset();
+    $('crowdForm').hidden = true;
+    state.crowdCounts[sheetBrewery.id] = (state.crowdCounts[sheetBrewery.id] || 0) + 1;
+    renderCrowdSection(sheetBrewery);
+  } catch {
+    const note = $('crNote');
+    note.hidden = false;
+    note.textContent = "Couldn't post right now — try again in a minute.";
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 function closeSheet() {
   $('sheet').hidden = true;
