@@ -29,7 +29,7 @@ async function getBrowser() {
    waitSelector: wait (up to 12s) for a specific element instead of the
    fixed settle — tap-list widgets inject their menu via their own
    network fetch, which often lands after any fixed pause. */
-async function fetchRendered(url, { timeoutMs = 20000, waitSelector = null } = {}) {
+async function fetchRendered(url, { timeoutMs = 20000, waitSelector = null, clickText = null } = {}) {
   if (!pw) throw new Error('playwright not installed');
   const browser = await getBrowser();
   const ctx = await browser.newContext({
@@ -40,6 +40,15 @@ async function fetchRendered(url, { timeoutMs = 20000, waitSelector = null } = {
   const page = await ctx.newPage();
   try {
     await page.goto(url, { timeout: timeoutMs, waitUntil: 'domcontentloaded' });
+    if (clickText) {
+      // age gates etc. — click through and let the real content load
+      try {
+        await page.getByText(clickText).first().click({ timeout: 4000 });
+        await page.waitForTimeout(2500);
+      } catch {
+        /* no gate present — fine */
+      }
+    }
     if (waitSelector) {
       await page.waitForSelector(waitSelector, { timeout: 12000 }).catch(() => {});
       await page.waitForTimeout(500); // let the rest of the list fill in

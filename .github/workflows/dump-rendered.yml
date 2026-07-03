@@ -7,6 +7,10 @@ on:
         description: 'URL to render, or an Open Brewery DB id (resolves to its website)'
         required: true
         type: string
+      click:
+        description: 'Optional text (regex, case-insensitive) of a button to click after load, e.g. an age gate'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -34,13 +38,16 @@ jobs:
               url = (await res.json()).website_url;
               console.log('resolved website:', url);
             }
-            const html = await fetchRendered(url, { timeoutMs: 30000 });
+            const opts = { timeoutMs: 30000 };
+            if (process.env.CLICK) opts.clickText = new RegExp(process.env.CLICK, 'i');
+            const html = await fetchRendered(url, opts);
             require('fs').writeFileSync('rendered.html', html);
             console.log('saved', html.length, 'bytes from', url);
             await closeBrowser();
           })().catch((e) => { console.error(e); process.exit(1); });"
         env:
           TARGET: ${{ inputs.target }}
+          CLICK: ${{ inputs.click }}
       # artifacts live on Azure blob storage, unreachable from the dev
       # sandbox — a throwaway branch is fetchable through the git proxy
       - name: Push dump to debug-dump branch
