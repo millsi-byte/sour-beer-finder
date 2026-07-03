@@ -44,7 +44,9 @@
       <button id="btnLocate" class="primary">Use my location</button>
       <div class="divider"><span>or</span></div>
       <form id="cityForm" class="cityform" autocomplete="off">
-        <input id="cityInput" type="text" placeholder="City, ST &mdash; e.g. Tampa, FL" enterkeyhint="search">
+        <div class="suggest-wrap">
+          <input id="cityInput" type="text" placeholder="Search a city&hellip;" enterkeyhint="search">
+        </div>
         <button type="submit" class="secondary">Search</button>
       </form>
       <p id="locateError" class="error" hidden></p>
@@ -74,7 +76,9 @@
       city: the app will open straight to it.
     </p>
     <form id="cityAddForm" class="cityform" autocomplete="off">
-      <input id="cityAddInput" type="text" placeholder="City, ST &mdash; e.g. Orlando, FL" enterkeyhint="done">
+      <div class="suggest-wrap">
+        <input id="cityAddInput" type="text" placeholder="Search a city to add&hellip;" enterkeyhint="done">
+      </div>
       <button type="submit" class="secondary">Add</button>
     </form>
     <ul id="cityList" class="citylist"></ul>

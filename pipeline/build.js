@@ -16,7 +16,7 @@ async function main() {
   );
   const out = {
     generated_at: new Date().toISOString(),
-    areas: areas.map((a) => a.label),
+    areas: areas.map(({ label, center }) => ({ label, center })),
     breweries: {},
   };
 

@@ -1,8 +1,62 @@
 {
-  "generated_at": "2026-07-03T04:41:36.438Z",
+  "generated_at": "2026-07-03T04:55:33.930Z",
   "areas": [
-    "Orlando, FL",
-    "Lowell, MA"
+    {
+      "label": "Orlando, FL",
+      "center": "28.54,-81.38"
+    },
+    {
+      "label": "Tampa, FL",
+      "center": "27.95,-82.46"
+    },
+    {
+      "label": "Miami, FL",
+      "center": "25.76,-80.19"
+    },
+    {
+      "label": "Boston, MA",
+      "center": "42.36,-71.06"
+    },
+    {
+      "label": "New York, NY",
+      "center": "40.71,-74.01"
+    },
+    {
+      "label": "Philadelphia, PA",
+      "center": "39.95,-75.17"
+    },
+    {
+      "label": "Chicago, IL",
+      "center": "41.88,-87.63"
+    },
+    {
+      "label": "Denver, CO",
+      "center": "39.74,-104.99"
+    },
+    {
+      "label": "Austin, TX",
+      "center": "30.27,-97.74"
+    },
+    {
+      "label": "Los Angeles, CA",
+      "center": "34.05,-118.24"
+    },
+    {
+      "label": "San Diego, CA",
+      "center": "32.72,-117.16"
+    },
+    {
+      "label": "San Francisco, CA",
+      "center": "37.77,-122.42"
+    },
+    {
+      "label": "Portland, OR",
+      "center": "45.52,-122.68"
+    },
+    {
+      "label": "Seattle, WA",
+      "center": "47.61,-122.33"
+    }
   ],
   "breweries": {}
 }

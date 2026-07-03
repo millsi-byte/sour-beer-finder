@@ -34,6 +34,89 @@ function fmtAgo(iso) {
   return `${Math.round(mins / 1440)}d ago`;
 }
 
+// ---------- city autocomplete (Open-Meteo geocoder: free, keyless) ----------
+const GEO = 'https://geocoding-api.open-meteo.com/v1/search';
+const STATE_ABBR = {
+  Alabama: 'AL', Alaska: 'AK', Arizona: 'AZ', Arkansas: 'AR', California: 'CA',
+  Colorado: 'CO', Connecticut: 'CT', Delaware: 'DE', 'District of Columbia': 'DC',
+  Florida: 'FL', Georgia: 'GA', Hawaii: 'HI', Idaho: 'ID', Illinois: 'IL',
+  Indiana: 'IN', Iowa: 'IA', Kansas: 'KS', Kentucky: 'KY', Louisiana: 'LA',
+  Maine: 'ME', Maryland: 'MD', Massachusetts: 'MA', Michigan: 'MI',
+  Minnesota: 'MN', Mississippi: 'MS', Missouri: 'MO', Montana: 'MT',
+  Nebraska: 'NE', Nevada: 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ',
+  'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC',
+  'North Dakota': 'ND', Ohio: 'OH', Oklahoma: 'OK', Oregon: 'OR',
+  Pennsylvania: 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC',
+  'South Dakota': 'SD', Tennessee: 'TN', Texas: 'TX', Utah: 'UT',
+  Vermont: 'VT', Virginia: 'VA', Washington: 'WA', 'West Virginia': 'WV',
+  Wisconsin: 'WI', Wyoming: 'WY',
+};
+
+async function geocodeCities(raw) {
+  const [city, st] = raw.split(',').map((s) => s.trim()).filter(Boolean);
+  if (!city) return [];
+  try {
+    const res = await fetch(`${GEO}?name=${encodeURIComponent(city)}&count=10&language=en&format=json`);
+    if (!res.ok) return [];
+    let hits = ((await res.json()).results ?? []).filter((r) => r.country_code === 'US');
+    if (st) {
+      hits = hits.filter(
+        (r) =>
+          STATE_ABBR[r.admin1] === st.toUpperCase() ||
+          (r.admin1 ?? '').toLowerCase() === st.toLowerCase()
+      );
+    }
+    return hits.slice(0, 6).map((r) => ({
+      label: r.admin1 ? `${r.name}, ${STATE_ABBR[r.admin1] ?? r.admin1}` : r.name,
+      lat: r.latitude,
+      lng: r.longitude,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/* Dropdown of matching cities under `input`; onPick gets {label, lat, lng}.
+   Returns {first} so submit handlers can take the top suggestion. */
+function attachCityAutocomplete(input, onPick) {
+  const list = document.createElement('ul');
+  list.className = 'suggest';
+  list.hidden = true;
+  input.parentElement.appendChild(list);
+  let timer = 0;
+  let current = [];
+  const close = () => {
+    list.hidden = true;
+    list.innerHTML = '';
+    current = [];
+  };
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    const q = input.value.trim();
+    if (q.length < 2) return close();
+    timer = setTimeout(async () => {
+      current = await geocodeCities(q);
+      if (document.activeElement !== input) return close();
+      list.innerHTML = '';
+      current.forEach((c) => {
+        const li = document.createElement('li');
+        li.textContent = c.label;
+        // pointerdown (not click) so the input's blur doesn't kill the tap
+        li.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          input.value = '';
+          close();
+          onPick(c);
+        });
+        list.appendChild(li);
+      });
+      list.hidden = !current.length;
+    }, 250);
+  });
+  input.addEventListener('blur', () => setTimeout(close, 200));
+  return { first: () => current[0] ?? null, close };
+}
+
 // ---------- saved cities (this device only) ----------
 const CITIES_KEY = 's4s.cities';
 
@@ -49,11 +132,26 @@ function saveSavedCities(cities) {
   localStorage.setItem(CITIES_KEY, JSON.stringify(cities));
 }
 
-function isCovered(cityQ) {
-  const city = cityQ.split(',')[0].trim().toLowerCase();
-  return (state.taps?.areas ?? []).some(
-    (a) => a.split(',')[0].trim().toLowerCase() === city
+/* taps.json `areas` entries are {label, center} (older snapshots: strings) */
+function areaObjects() {
+  return (state.taps?.areas ?? []).map((a) =>
+    typeof a === 'string' ? { label: a } : a
   );
+}
+
+function isCovered(city) {
+  return areaObjects().some((a) => {
+    const m = (a.center ?? '').match(/(-?[\d.]+)\s*,\s*(-?[\d.]+)/);
+    if (m && city.lat != null) {
+      return (
+        haversineMiles({ lat: city.lat, lng: city.lng }, { lat: +m[1], lng: +m[2] }) < 60
+      );
+    }
+    return (
+      a.label.split(',')[0].trim().toLowerCase() ===
+      city.q.split(',')[0].trim().toLowerCase()
+    );
+  });
 }
 
 // ---------- geo helpers ----------
@@ -161,11 +259,11 @@ function renderCities() {
       <button class="city-star" aria-label="Set as home city"></button>
       <button class="city-remove" aria-label="Remove">&#x2715;</button>`;
     li.querySelector('.city-name').textContent = c.q;
-    li.querySelector('.city-covered').hidden = !isCovered(c.q);
+    li.querySelector('.city-covered').hidden = !isCovered(c);
     const star = li.querySelector('.city-star');
     star.textContent = c.home ? '★' : '☆';
     star.title = c.home ? 'Home city' : 'Set as home city';
-    li.querySelector('.city-name').addEventListener('click', () => cityFlow(c.q));
+    li.querySelector('.city-name').addEventListener('click', () => openCity(c));
     star.addEventListener('click', () => {
       cities.forEach((x, j) => (x.home = j === i && !x.home));
       saveSavedCities(cities);
@@ -178,7 +276,8 @@ function renderCities() {
     });
     ul.appendChild(li);
   });
-  $('coveredAreas').textContent = (state.taps?.areas ?? []).join(' · ') || 'Loading…';
+  $('coveredAreas').textContent =
+    areaObjects().map((a) => a.label).join(' · ') || 'Loading…';
   $('dataAge').textContent = state.taps?.generated_at
     ? `Tap data last gathered ${fmtAgo(state.taps.generated_at)}.`
     : '';
@@ -264,6 +363,7 @@ async function locateFlow() {
     async (pos) => {
       try {
         state.origin = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        state.lastSearch = null;
         const raw = await fetchByDist(state.origin.lat, state.origin.lng);
         await tapsReady;
         state.breweries = prepare(raw, state.origin);
@@ -283,6 +383,28 @@ async function locateFlow() {
   );
 }
 
+/* Coordinate search: includes suburbs and shows real distances. */
+async function coordsFlow(label, lat, lng) {
+  $('locateError').hidden = true;
+  show('loading');
+  try {
+    state.origin = { lat, lng };
+    state.lastSearch = { label, lat, lng };
+    const raw = await fetchByDist(lat, lng);
+    await tapsReady;
+    state.breweries = prepare(raw, state.origin);
+    renderList(`${state.breweries.length} breweries near ${label}`);
+  } catch (e) {
+    fail(`Couldn't load breweries: ${e.message}`);
+  }
+}
+
+/* Saved-city entry: coords when added via autocomplete, name otherwise. */
+function openCity(c) {
+  if (c.lat != null) coordsFlow(c.q, c.lat, c.lng);
+  else cityFlow(c.q);
+}
+
 async function cityFlow(q) {
   $('locateError').hidden = true;
   show('loading');
@@ -290,6 +412,7 @@ async function cityFlow(q) {
     const [city, st] = q.split(',').map((s) => s.trim()).filter(Boolean);
     if (!city) return fail('Enter a city name.');
     state.origin = null;
+    state.lastSearch = null;
     state.lastCity = q;
     const raw = await fetchByCity(city, st);
     await tapsReady;
@@ -302,28 +425,46 @@ async function cityFlow(q) {
 
 // ---------- wire up ----------
 $('btnLocate').addEventListener('click', locateFlow);
-$('cityForm').addEventListener('submit', (e) => {
+
+const searchAC = attachCityAutocomplete($('cityInput'), (c) =>
+  coordsFlow(c.label, c.lat, c.lng)
+);
+$('cityForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  cityFlow($('cityInput').value);
+  const typed = $('cityInput').value.trim();
+  const pick = searchAC.first() ?? (await geocodeCities(typed))[0];
+  searchAC.close();
+  if (pick) coordsFlow(pick.label, pick.lat, pick.lng);
+  else cityFlow(typed); // geocoder found nothing — try the name as-is
 });
+
 $('btnNewSearch').addEventListener('click', () => show('locate'));
 $('btnRefresh').addEventListener('click', () => {
-  if (state.origin) locateFlow();
+  if (state.lastSearch) coordsFlow(state.lastSearch.label, state.lastSearch.lat, state.lastSearch.lng);
+  else if (state.origin) locateFlow();
   else if (state.lastCity) cityFlow(state.lastCity);
   else show('locate');
 });
 $('btnCities').addEventListener('click', citiesFlow);
-$('cityAddForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const q = $('cityAddInput').value.trim();
-  if (!q) return;
+
+function addSavedCity(c) {
   const cities = loadSavedCities();
-  if (!cities.some((c) => c.q.toLowerCase() === q.toLowerCase())) {
-    cities.push({ q, home: cities.length === 0 }); // first city becomes home
+  if (!cities.some((x) => x.q.toLowerCase() === c.label.toLowerCase())) {
+    // first city becomes home
+    cities.push({ q: c.label, lat: c.lat, lng: c.lng, home: cities.length === 0 });
     saveSavedCities(cities);
   }
   $('cityAddInput').value = '';
   renderCities();
+}
+const addAC = attachCityAutocomplete($('cityAddInput'), addSavedCity);
+$('cityAddForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const typed = $('cityAddInput').value.trim();
+  if (!typed) return;
+  const pick = addAC.first() ?? (await geocodeCities(typed))[0];
+  addAC.close();
+  addSavedCity(pick ?? { label: typed });
 });
 $('sheetBackdrop').addEventListener('click', closeSheet);
 $('sheet').querySelector('.grabber').addEventListener('click', closeSheet);
@@ -346,7 +487,7 @@ $('btnUpdate').addEventListener('click', async () => {
 
 // open straight to the home city when one is set
 const home = loadSavedCities().find((c) => c.home);
-if (home) cityFlow(home.q);
+if (home) openCity(home);
 
 // ---------- service worker ----------
 if ('serviceWorker' in navigator) {
