@@ -35,6 +35,13 @@ const SIGNATURES = [
     },
   },
   {
+    source: 'arryved',
+    detect: (html) => {
+      const m = html.match(/https?:\/\/commerce\.arryved\.com\/location\/[\w-]+/i);
+      return m && { arryved_url: m[0] };
+    },
+  },
+  {
     source: 'beermenus',
     detect: (html) => {
       const m = html.match(/beermenus\.com\/(?:widget\/)?places\/([a-z0-9-]+)/i);

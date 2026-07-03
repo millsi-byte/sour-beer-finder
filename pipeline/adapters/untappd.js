@@ -21,13 +21,9 @@
        "found_on": "https://brewery.com/on-tap" } */
 
 const { browserAvailable, fetchRendered } = require('../browser');
+const { decodeEntities } = require('../lib');
 
 const BASE = 'https://business.untappd.com/api/v1';
-
-const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'", '#038': '&' };
-function decodeEntities(s) {
-  return s.replace(/&(#?\w+);/g, (m, e) => ENTITIES[e.toLowerCase()] ?? m);
-}
 
 function parseEmbed(html) {
   const beers = [];

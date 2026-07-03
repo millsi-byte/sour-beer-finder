@@ -25,6 +25,7 @@ function tapInfo(b) {
 
 const SOURCE_LABELS = {
   untappd: 'via Untappd',
+  arryved: 'via Arryved',
   beermenus: 'via BeerMenus',
   taplist: 'via Taplist.io',
   digitalpour: 'via DigitalPour',

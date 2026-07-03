@@ -9,7 +9,7 @@ const SOUR_KEYWORDS = [
   'lambic',
   'gueuze',
   'geuze',
-  'wild',
+  /\bwild\b/, // boundary: "American Wild Ale" yes, "Wildflower honey" no
   'brett',
   'flanders',
   'kettle',
@@ -17,7 +17,9 @@ const SOUR_KEYWORDS = [
 
 function isSourStyle(style) {
   const s = String(style || '').toLowerCase();
-  return SOUR_KEYWORDS.some((k) => s.includes(k));
+  return SOUR_KEYWORDS.some((k) =>
+    k instanceof RegExp ? k.test(s) : s.includes(k)
+  );
 }
 
 module.exports = { SOUR_KEYWORDS, isSourStyle };

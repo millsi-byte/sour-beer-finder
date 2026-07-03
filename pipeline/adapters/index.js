@@ -4,6 +4,7 @@
 
 module.exports = {
   untappd: require('./untappd'),
+  arryved: require('./arryved'),
   beermenus: require('./beermenus'),
   taplist: require('./taplist'),
   digitalpour: require('./digitalpour'),

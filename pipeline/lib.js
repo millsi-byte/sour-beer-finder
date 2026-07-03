@@ -94,4 +94,9 @@ function beersFromEmbeddedJson(html) {
   return beers;
 }
 
-module.exports = { USER_AGENT, fetchText, robotsDisallows, collectBeers, beersFromEmbeddedJson };
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'", '#038': '&' };
+function decodeEntities(s) {
+  return s.replace(/&(#?\w+);/g, (m, e) => ENTITIES[e.toLowerCase()] ?? m);
+}
+
+module.exports = { USER_AGENT, fetchText, robotsDisallows, collectBeers, beersFromEmbeddedJson, decodeEntities };
