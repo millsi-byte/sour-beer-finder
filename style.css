@@ -113,7 +113,9 @@ button.secondary {
 .error { color: var(--danger); font-size: 14px; margin-top: 16px; }
 
 .cities-quick { display: flex; gap: 8px; margin-top: 14px; }
-.drop-btn { width: 100%; text-align: left; padding: 13px 14px; }
+.citysplit { display: flex; gap: 6px; }
+.drop-btn { flex: 1; text-align: left; padding: 13px 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chev-btn { padding: 13px 13px; }
 .gear-btn { white-space: nowrap; }
 .suggest .drop-manage { color: var(--accent-ink); font-weight: 600; }
 

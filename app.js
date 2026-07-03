@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.5';
+const APP_BUILD = '2026.07.03.6';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -333,19 +333,28 @@ function renderList(label) {
   show('list');
 }
 
-// ---------- landing quick-access dropdown ----------
+// ---------- landing quick-access split button ----------
 function renderCityDrop() {
   const cities = loadSavedCities();
   const home = cities.find((c) => c.home);
-  $('btnCityDrop').innerHTML = '';
-  $('btnCityDrop').textContent = cities.length
-    ? `${home ? '★ ' + home.q : 'Your cities'} ▾`
-    : 'Add your cities…';
+  $('btnCityGo').textContent = home
+    ? `★ ${home.q}`
+    : cities.length
+      ? 'Your cities ▾'
+      : 'Add your cities…';
+  $('btnCityDrop').hidden = !cities.length;
+}
+
+function cityGoAction() {
+  const cities = loadSavedCities();
+  const home = cities.find((c) => c.home);
+  if (home) return openCity(home); // the main expectation: tap name, go there
+  if (cities.length) return toggleCityDrop();
+  return citiesFlow();
 }
 
 function toggleCityDrop() {
   const cities = loadSavedCities();
-  if (!cities.length) return citiesFlow(); // nothing saved yet — go manage
   const list = $('cityDrop');
   if (!list.hidden) {
     list.hidden = true;
@@ -581,10 +590,13 @@ $('btnRefresh').addEventListener('click', () => {
 $('btnCities').addEventListener('click', citiesFlow);
 $('btnCitiesBack').addEventListener('click', () => show('locate'));
 $('brandHome').addEventListener('click', () => show('locate'));
+$('btnCityGo').addEventListener('click', cityGoAction);
 $('btnCityDrop').addEventListener('click', toggleCityDrop);
-$('btnCityDrop').addEventListener('blur', () =>
-  setTimeout(() => { $('cityDrop').hidden = true; }, 200)
-);
+for (const id of ['btnCityGo', 'btnCityDrop']) {
+  $(id).addEventListener('blur', () =>
+    setTimeout(() => { $('cityDrop').hidden = true; }, 200)
+  );
+}
 renderCityDrop();
 
 function addSavedCity(c) {
