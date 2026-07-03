@@ -58,13 +58,19 @@ on lowercase substrings (`sour`, `gose`, `berliner`, `lambic`, `gueuze`,
 `wild`, `brett`, `flanders`, `kettle`) and the raw style string is kept so
 users can judge edge cases like "Sour IPA".
 
-### Adding an Untappd API key (everything else is pre-wired)
+### Adding an Untappd API key (if one ever becomes available)
 
-The Untappd adapter tries three modes best-first, and turning a key on
-is **just adding repo secrets** — no code changes, no mapping edits:
+Untappd's old self-serve Consumer API signup (client_id/client_secret)
+is no longer open to new developers — API access now goes through
+**Untappd for Business**, which isn't something a third-party app can
+get for arbitrary breweries; it only covers venues whose *own* account
+holder grants access. So in practice, for this app, there's no key to
+go get. If that ever changes, turning one on is **just adding repo
+secrets** — no code changes, no mapping edits — because both modes are
+already wired into the adapter:
 
-**Consumer API key** (from [untappd.com/api](https://untappd.com/api/docs)
-— a `client_id` + `client_secret` pair):
+**Consumer API key** (`client_id` + `client_secret` pair, if Untappd
+ever reopens this):
 1. GitHub → this repo → **Settings → Secrets and variables → Actions →
    New repository secret**.
 2. Add `UNTAPPD_CLIENT_ID` with the client id, and `UNTAPPD_CLIENT_SECRET`
@@ -75,14 +81,18 @@ is **just adding repo secrets** — no code changes, no mapping edits:
    the API. Rate limit is 100 calls/hr; the 4-hourly refresh stays
    under it and falls back to keyless embed-scraping when throttled.
 
-**Untappd for Business token** (from a business.untappd.com account —
-covers locations that account can read):
+**Untappd for Business token** (only works for locations *that specific
+business account* can read — e.g. if a brewery owner ever handed over
+credentials):
 1. Same place, add secrets `UNTAPPD_EMAIL` (account email) and
    `UNTAPPD_TOKEN` (read-only API token).
 2. Run **"Refresh tap data (fast)"**.
 
-Without any key, the keyless mode keeps working: discovery finds
-Untappd embeds on brewery sites and parses the rendered menus.
+**The real, permanent path is keyless:** discovery finds Untappd's
+public embed widget on brewery sites and parses the rendered menu —
+no account, no key, no approval needed. This is what's actually
+covering the app's live data today (see the throttle-mitigation note
+below).
 
 Manual entries for chalkboard-only taprooms still work via
 `pipeline/sources.json`:
