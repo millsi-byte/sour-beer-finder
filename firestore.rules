@@ -26,7 +26,17 @@ service cloud.firestore {
 
     match /reports/{doc} {
       allow read: if true;
-      allow update: if false;
+      // self-serve edit: the owner of a report/comment can fix its text,
+      // author name, or rating — nothing else (kind/brewery_id/beer_key/
+      // created_at/uid are immutable). Single-owner-doc edit, online-only,
+      // no offline queueing — this doesn't reopen the multi-writer race
+      // the append-only design elsewhere protects against (that risk was
+      // about SHARED aggregate docs with concurrent writers; a review is
+      // only ever written by its own author).
+      allow update: if signedIn() && resource.data.uid == request.auth.uid
+        && resource.data.kind in ['report', 'comment']
+        && d().diff(resource.data).affectedKeys().hasOnly(['review','text','rating','author'])
+        && optStr('review', 600) && optStr('text', 600) && optStr('author', 60) && ratingOk();
       allow create: if uidOk() && isoDate() && (
         (
           d().kind == 'report'

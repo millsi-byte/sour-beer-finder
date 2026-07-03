@@ -439,6 +439,29 @@ async function deleteDoc(collection, docId) {
   marksSnapshotSave();
 }
 
+/* Edit one of MY OWN reports/comments — text, author, or rating only
+   (rules enforce both the uid match and the field allowlist server-
+   side). A real online PATCH, never queued, so no offline-conflict
+   risk. `patch` values of '' / undefined clear that field (Firestore
+   treats a masked-but-absent field as "unset"). */
+async function updateDoc(collection, docId, patch) {
+  requireOnline();
+  const a = authState();
+  if (!a) throw Object.assign(new Error('sign in first'), { code: 'NOT_SIGNED_IN' });
+  const mask = Object.keys(patch)
+    .map((k) => `updateMask.fieldPaths=${encodeURIComponent(k)}`)
+    .join('&');
+  const res = await authedFetch(`${baseUrl()}/${collection}/${docId}?key=${cfg.api_key}&${mask}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: toFields(patch) }),
+  });
+  if (!res.ok) throw new Error(`couldn't save (${res.status})`);
+  const saved = fromDoc(await res.json());
+  if (cache) cache = cache.map((d) => (d._id === docId ? { ...d, ...saved } : d));
+  return saved;
+}
+
 async function createDoc(collection, data) {
   requireOnline();
   // signed-in writes carry a Bearer token so rules can verify the uid
@@ -728,6 +751,7 @@ window.crowd = {
   authedFetch,
   requireOnline,
   deleteDoc,
+  updateDoc,
   // beers
   beerKey,
   crowdBeer,

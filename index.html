@@ -88,11 +88,9 @@
   <section id="viewCities" class="view" hidden>
     <h2 class="section-title">Your locations</h2>
     <p class="explain">
-      S4S re-reads every known tap list <strong>about every 4 hours</strong>,
-      and gives each covered location a full overnight re-scan for brand-new
-      tap-list sources <strong>once a week</strong> &mdash; nothing is fetched
-      on the fly. Add the places you drink in (or plan to visit), and tap
-      &#x2605; to set your home location for one-tap access.
+      Save the places you drink in for quick access. Tap &#x1F3E0; on one
+      to make it home &mdash; one tap to jump straight there, whether
+      that&rsquo;s where you live or just where you&rsquo;re traveling.
     </p>
     <form id="cityAddForm" class="cityform" autocomplete="off">
       <div class="suggest-wrap">
@@ -101,16 +99,8 @@
       <button type="submit" class="secondary">Add</button>
     </form>
     <ul id="cityList" class="citylist"></ul>
-    <h3 class="section-sub">Areas with live tap data</h3>
+    <h3 class="section-sub">Live tap data here</h3>
     <p id="coveredAreas" class="explain"></p>
-    <p id="dataAge" class="explain"></p>
-    <p id="scanStatus" class="explain"></p>
-    <p class="explain">
-      Locations outside these areas still work &mdash; you&rsquo;ll see every
-      brewery nearby, just without the &#x1F34B; live sour data until the
-      area joins the overnight scan. Want yours added? Message
-      <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>.
-    </p>
   </section>
 
   <!-- Breweries (tab root) -->
@@ -121,7 +111,7 @@
       <ul id="brewSuggest" class="suggest" hidden></ul>
     </div>
     <h3 class="section-sub">&#x2B50; Favorites</h3>
-    <ul id="brewFavs" class="cards"></ul>
+    <ul id="brewFavs" class="citylist"></ul>
     <p id="brewFavsNote" class="explain"></p>
     <h3 class="section-sub">&#x1F37B; Checked in</h3>
     <ul id="brewCheckins" class="citylist"></ul>
@@ -158,12 +148,12 @@
       <ul id="beerSuggest" class="suggest" hidden></ul>
     </div>
     <h3 class="section-sub">&#x2B50; Favorites</h3>
-    <ul id="beerFavs" class="cards"></ul>
+    <ul id="beerFavs" class="citylist"></ul>
     <p id="beerFavsNote" class="explain"></p>
     <h3 class="section-sub">&#x2714; I&rsquo;ve had these</h3>
-    <ul id="beerHad" class="cards"></ul>
+    <ul id="beerHad" class="citylist"></ul>
     <p id="beerHadNote" class="explain"></p>
-    <h3 class="section-sub">Add a beer</h3>
+    <h3 class="section-sub">Add a sour beer</h3>
     <p class="explain">
       Know a sour S4S hasn&rsquo;t heard of? Add it under its brewery so
       others can find and review it.
@@ -280,7 +270,7 @@
       <ul id="crowdList" class="crowd-list"></ul>
     </div>
   </div>
-  <button type="button" id="btnCrowdReport" class="secondary block" hidden>&#x1F37A; Report a new beer here</button>
+  <button type="button" id="btnCrowdReport" class="secondary block" hidden>&#x1F37A; Add a Sour Beer Here</button>
   <form id="crowdForm" class="missingform crowd-form" autocomplete="off" hidden>
     <input id="crBeer" type="text" placeholder="Sour beer name" required>
     <div id="crStars" class="stars" role="radiogroup" aria-label="Your rating"></div>
@@ -330,6 +320,7 @@
       <textarea id="bsText" placeholder="Your review or comment" rows="2" maxlength="400" required></textarea>
       <input id="bsAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
       <button type="submit" class="secondary block">Post it</button>
+      <button type="button" id="bsReviewCancel" class="linkbtn mb-alt">Cancel</button>
     </form>
     <p id="bsError" class="error" hidden></p>
   </div>

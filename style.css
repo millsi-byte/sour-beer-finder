@@ -120,6 +120,7 @@ button.secondary {
 }
 
 .error { color: var(--danger); font-size: 14px; margin-top: 16px; }
+.dupe-warn { color: var(--danger); font-weight: 700; font-size: 16px; line-height: 1.4; }
 
 .cities-quick { display: flex; gap: 8px; margin-top: 14px; }
 .citysplit { display: flex; gap: 6px; }
@@ -216,11 +217,12 @@ button.secondary {
 }
 .city-name { flex: 1; font-size: 18px; font-weight: 600; cursor: pointer; padding: 8px 0; }
 .city-covered { font-size: 13px; font-weight: 600; color: var(--accent-ink); white-space: nowrap; }
-.city-star, .city-remove {
+.city-home, .city-remove {
   background: none; border: none; cursor: pointer;
   font-size: 20px; padding: 8px 10px;
 }
-.city-star { color: var(--accent-ink); }
+.city-home { opacity: .35; }
+.city-home.is-home { opacity: 1; }
 .status-area { cursor: default; }
 .status-when { color: var(--text-dim); font-weight: 500; padding-right: 8px; }
 .city-remove { color: var(--text-dim); font-size: 17px; }
@@ -368,4 +370,5 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
 .mark-del { font-size: 18px; padding: 4px 8px; color: var(--text-dim); }
 .mark-del-inline { font-size: 13px; margin-top: 4px; color: var(--danger); }
 
-.fav-row-label { font-size: 13px; font-weight: 700; color: var(--text-dim); margin: 14px 0 4px 2px; letter-spacing: .2px; }
+.fav-row-label { text-align: left; font-size: 13px; font-weight: 700; color: var(--text-dim); margin: 24px 0 6px 2px; letter-spacing: .2px; }
+.fav-row-label + .cities-quick { margin-top: 0; }
