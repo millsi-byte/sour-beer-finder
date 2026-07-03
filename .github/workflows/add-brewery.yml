@@ -64,4 +64,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh issue comment ${{ github.event.issue.number }} --body \
-            "Couldn't add this automatically — check the body has \`Name:\` and \`City:\` lines (city as \"City, ST\") and that the city geocodes in the US. Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "Couldn't add this automatically — the body needs \`Name:\`, \`City:\` (as \"City, ST\", must geocode in the US), and \`Website:\` lines. The website is required: it's what the nightly tap-list scan reads. Fix the issue body and re-add the \`approved\` label, or file a fresh report. Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

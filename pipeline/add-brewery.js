@@ -73,11 +73,14 @@ async function main() {
   } else {
     [name, cityRaw, website] = process.argv.slice(2);
   }
-  if (!name || !cityRaw) {
-    console.error('need a brewery name and a "City, State"');
+  if (!name || !cityRaw || !website) {
+    console.error(
+      'need a brewery name, a "City, State", AND a website — ' +
+        'the website is what the nightly tap-list scan reads'
+    );
     process.exit(1);
   }
-  if (website && !/^https?:\/\//i.test(website)) website = `https://${website}`;
+  if (!/^https?:\/\//i.test(website)) website = `https://${website}`;
 
   const geo = await geocode(cityRaw);
   const entry = {
@@ -87,7 +90,7 @@ async function main() {
     state: geo.state,
     lat: Math.round(geo.lat * 1e4) / 1e4,
     lng: Math.round(geo.lng * 1e4) / 1e4,
-    ...(website && { website_url: website }),
+    website_url: website,
   };
 
   const extras = JSON.parse(fs.readFileSync(EXTRAS, 'utf8'));

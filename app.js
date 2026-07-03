@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.27';
+const APP_BUILD = '2026.07.03.28';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -881,7 +881,7 @@ $('missingForm').addEventListener('submit', async (e) => {
   const name = $('mbName').value.trim();
   const city = $('mbCity').value.trim();
   const site = $('mbSite').value.trim();
-  if (!name || !city) return;
+  if (!name || !city || !site) return; // website is required — it's what the tap-list scan reads
   const report = `Missing brewery for S4S:\nName: ${name}\nCity: ${city}\nWebsite: ${site}`;
   const title = `Add brewery: ${name} (${city})`;
   const body =
