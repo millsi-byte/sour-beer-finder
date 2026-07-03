@@ -1,0 +1,24 @@
+name: Diagnose area coverage
+
+on:
+  workflow_dispatch:
+    inputs:
+      center:
+        description: 'Area center as "lat,lng"'
+        required: true
+        type: string
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install headless browser
+        run: |
+          npm install -g playwright
+          npx playwright install --with-deps chromium
+      - name: Diagnose
+        run: NODE_PATH=$(npm root -g) node pipeline/diagnose.js "${{ inputs.center }}"
