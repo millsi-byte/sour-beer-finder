@@ -94,11 +94,11 @@ function fetchPage(url, timeoutMs) {
 async function scanSite(websiteUrl) {
   const html = await fetchPage(websiteUrl, 10000);
   let hit = detect(html);
-  if (hit) return hit;
+  if (hit) return { ...hit, found_on: websiteUrl };
   for (const link of menuLinks(html, websiteUrl)) {
     try {
       hit = detect(await fetchPage(link, 8000));
-      if (hit) return hit;
+      if (hit) return { ...hit, found_on: link }; // extraction re-renders this page
     } catch {
       /* subpage unreachable — keep trying the rest */
     }
