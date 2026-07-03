@@ -47,6 +47,8 @@ html, body {
   letter-spacing: 1px; color: var(--accent-ink); cursor: pointer;
 }
 .back-btn { display: block; padding: 14px 0 0; font-size: 16px; }
+.back-row { display: flex; gap: 22px; }
+.back-row .back-btn { display: inline-block; }
 .brand-4 { font-size: .68em; }
 .topbar-actions { display: flex; gap: 2px; }
 .iconbtn {

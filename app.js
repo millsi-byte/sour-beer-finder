@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.21';
+const APP_BUILD = '2026.07.03.22';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -790,7 +790,8 @@ $('btnSettings').addEventListener('click', () => {
 });
 $('btnSettingsBack').addEventListener('click', () => show('locate'));
 $('btnDataStatus').addEventListener('click', statusFlow);
-$('btnStatusBack').addEventListener('click', () => show('locate'));
+$('btnStatusBack').addEventListener('click', citiesFlow);
+$('btnStatusHome').addEventListener('click', () => show('locate'));
 
 // app-first Untappd: try the app scheme, fall back to the web page if
 // nothing grabbed the navigation (i.e. the app isn't installed)
