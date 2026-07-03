@@ -1,0 +1,29 @@
+name: Refresh tap lists
+
+on:
+  schedule:
+    - cron: '17 9 * * *' # nightly, ~4-5am US East
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build tap data
+        run: node pipeline/build.js
+        env:
+          UNTAPPD_EMAIL: ${{ secrets.UNTAPPD_EMAIL }}
+          UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/taps.json
+          git diff --cached --quiet || { git commit -m "Refresh tap data"; git push; }

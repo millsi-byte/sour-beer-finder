@@ -50,7 +50,7 @@
       <button id="btnNewSearch" class="linkbtn">New search</button>
     </div>
     <ul id="breweryList" class="cards"></ul>
-    <p class="footnote">Brewery data: Open Brewery DB &middot; Tap lists coming in v1</p>
+    <p class="footnote">Brewery data: Open Brewery DB &middot; &#x1F34B; = sours on tap</p>
   </section>
 
   <!-- Loading -->
@@ -64,8 +64,9 @@
   <h3 id="sheetName"></h3>
   <p id="sheetSub" class="sheet-sub"></p>
   <div class="sour-placeholder">
-    <span class="sour-badge">&#x1F34B; Tap list</span>
-    <p>Live sour-on-tap data lands in v1. For now, jump straight to their Untappd menu:</p>
+    <span id="sourBadge" class="sour-badge">&#x1F34B; Tap list</span>
+    <p id="sourBody"></p>
+    <ul id="sourList" class="sour-list" hidden></ul>
   </div>
   <div class="sheet-actions">
     <a id="actUntappd" class="action" target="_blank" rel="noopener">&#x1F37A; Untappd</a>

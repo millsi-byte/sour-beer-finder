@@ -144,6 +144,10 @@ button.secondary {
 }
 .sour-badge { font-size: 13px; font-weight: 700; color: var(--accent-ink); }
 .sour-placeholder p { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+.sour-list { list-style: none; margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.sour-list li { font-size: 14px; }
+.sour-list .style { color: var(--text-dim); font-size: 12px; }
+.sour-chip { font-size: 12px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
 .sheet-actions { display: flex; gap: 8px; }
 .action {
   flex: 1; text-align: center; padding: 12px 4px;

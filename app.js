@@ -1,11 +1,32 @@
-/* SourSeeker v0 — nearby breweries via Open Brewery DB, deep links to tap lists.
-   v1 will layer live sour-on-tap data on top (see README roadmap). */
+/* SourSeeker v1 — nearby breweries via Open Brewery DB, plus live
+   sour-on-tap data from data/taps.json (built nightly by pipeline/build.js,
+   one adapter per tap-list source — see README roadmap). */
 
 const API = 'https://api.openbrewerydb.org/v1/breweries';
 const HIDDEN_TYPES = new Set(['closed', 'planning']);
 
 const $ = (id) => document.getElementById(id);
-const state = { origin: null, breweries: [] };
+const state = { origin: null, breweries: [], taps: null };
+
+// ---------- tap data ----------
+const tapsReady = fetch('data/taps.json', { cache: 'no-cache' })
+  .then((r) => (r.ok ? r.json() : null))
+  .then((d) => { state.taps = d; })
+  .catch(() => {});
+
+function tapInfo(b) {
+  return state.taps?.breweries?.[b.id] ?? null;
+}
+
+const SOURCE_LABELS = { untappd: 'via Untappd', manual: 'reported manually' };
+
+function fmtAgo(iso) {
+  const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+  if (!Number.isFinite(mins) || mins < 0) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  if (mins < 48 * 60) return `${Math.round(mins / 60)}h ago`;
+  return `${Math.round(mins / 1440)}d ago`;
+}
 
 // ---------- geo helpers ----------
 function haversineMiles(a, b) {
@@ -75,9 +96,16 @@ function renderList(title) {
         <div class="name"></div>
         <div class="sub"><span class="type-badge"></span><span class="loc"></span></div>
       </div>
+      <span class="sour-chip" hidden></span>
       <span class="dist"></span>
       <span class="chev">&#x203A;</span>`;
     li.querySelector('.name').textContent = b.name;
+    const info = tapInfo(b);
+    if (info?.sours.length) {
+      const chip = li.querySelector('.sour-chip');
+      chip.hidden = false;
+      chip.textContent = `\u{1F34B} ${info.sours.length}`;
+    }
     li.querySelector('.type-badge').textContent = b.brewery_type || 'brewery';
     li.querySelector('.loc').textContent = [b.city, b.state_province].filter(Boolean).join(', ');
     li.querySelector('.dist').textContent = fmtMiles(b.miles);
@@ -93,6 +121,38 @@ function openSheet(i) {
   $('sheetName').textContent = b.name;
   const addr = [b.address_1, b.city, b.state_province].filter(Boolean).join(' · ');
   $('sheetSub').textContent = [addr, fmtMiles(b.miles)].filter(Boolean).join(' — ');
+
+  const info = tapInfo(b);
+  const badge = $('sourBadge');
+  const body = $('sourBody');
+  const list = $('sourList');
+  list.hidden = true;
+  list.innerHTML = '';
+  if (!info) {
+    badge.textContent = '\u{1F34B} Tap list';
+    body.textContent = 'No live tap data for this brewery yet — check its Untappd menu:';
+  } else if (!info.sours.length) {
+    badge.textContent = '\u{1F34B} No sours right now';
+    body.textContent = `Nothing sour among ${info.beer_count} beers on the current list · updated ${fmtAgo(info.fetched_at)}`;
+  } else {
+    const n = info.sours.length;
+    badge.textContent = `\u{1F34B} ${n} sour${n > 1 ? 's' : ''} on tap`;
+    body.textContent = `Updated ${fmtAgo(info.fetched_at)} · ${SOURCE_LABELS[info.source] ?? `via ${info.source}`}`;
+    list.hidden = false;
+    info.sours.forEach((s) => {
+      const li = document.createElement('li');
+      const name = document.createElement('span');
+      name.textContent = s.name;
+      li.appendChild(name);
+      if (s.style && s.style !== s.name) {
+        const style = document.createElement('span');
+        style.className = 'style';
+        style.textContent = ` — ${s.style}`;
+        li.appendChild(style);
+      }
+      list.appendChild(li);
+    });
+  }
 
   $('actUntappd').href =
     `https://untappd.com/search?q=${encodeURIComponent(b.name)}&type=venues`;
@@ -130,6 +190,7 @@ async function locateFlow() {
       try {
         state.origin = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         const raw = await fetchByDist(state.origin.lat, state.origin.lng);
+        await tapsReady;
         state.breweries = prepare(raw, state.origin);
         renderList(`${state.breweries.length} breweries near you`);
       } catch (e) {
@@ -155,6 +216,7 @@ async function cityFlow(q) {
     if (!city) return fail('Enter a city name.');
     state.origin = null;
     const raw = await fetchByCity(city, st);
+    await tapsReady;
     state.breweries = prepare(raw, null);
     renderList(`${state.breweries.length} breweries in ${city}`);
   } catch (e) {
