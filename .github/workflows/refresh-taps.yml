@@ -64,14 +64,7 @@ jobs:
             echo "===== $LABEL ====="
             if timeout 1500 env NODE_PATH=$(npm root -g) node pipeline/discover.js "$CENTER" "$LABEL"; then
               PREV="$LABEL"
-              git add pipeline/sources.json pipeline/areas.json
-              if ! git diff --cached --quiet; then
-                git commit -m "Discover tap-list sources: $LABEL"
-                for i in 1 2 3; do
-                  git pull --rebase origin main && git push && break
-                  sleep 5
-                done
-              fi
+              python3 pipeline/safe-push.py "Discover tap-list sources: $LABEL"
             else
               echo "::warning::$LABEL scan failed or timed out — skipping, next nightly run retries it"
               git checkout -- pipeline/sources.json pipeline/areas.json 2>/dev/null || true
@@ -87,15 +80,7 @@ jobs:
           UNTAPPD_EMAIL: ${{ secrets.UNTAPPD_EMAIL }}
           UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
       - name: Commit updated data
-        run: |
-          git add data/taps.json pipeline/sources.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Refresh tap data"
-          # main may have moved during a long crawl — rebase and retry
-          for i in 1 2 3; do
-            git pull --rebase origin main && git push && break
-            sleep 5
-          done
+        run: python3 pipeline/safe-push.py "Refresh tap data"
       - name: Publish idle status
         if: always()
         run: bash pipeline/push-status.sh idle "" "[]" || true

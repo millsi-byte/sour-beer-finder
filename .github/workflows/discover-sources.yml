@@ -46,13 +46,7 @@ jobs:
           UNTAPPD_TOKEN: ${{ secrets.UNTAPPD_TOKEN }}
       - name: Commit discovered sources and data
         run: |
-          git add pipeline/sources.json pipeline/areas.json data/taps.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Discover tap-list sources: ${{ inputs.label || inputs.center }}"
-          for i in 1 2 3; do
-            git pull --rebase origin main && git push && break
-            sleep 5
-          done
+          python3 pipeline/safe-push.py "Discover tap-list sources: ${{ inputs.label || inputs.center }}"
       - name: Publish idle status
         if: always()
         run: bash pipeline/push-status.sh idle "" "[]" "${{ inputs.label || inputs.center }}" || true
