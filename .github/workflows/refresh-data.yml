@@ -42,7 +42,7 @@ jobs:
           UNTAPPD_CLIENT_ID: ${{ secrets.UNTAPPD_CLIENT_ID }}
           UNTAPPD_CLIENT_SECRET: ${{ secrets.UNTAPPD_CLIENT_SECRET }}
       - name: Commit updated data
-        run: python3 pipeline/safe-push.py "Refresh tap data" --replace pipeline/extra-breweries.json
+        run: python3 pipeline/safe-push.py "Refresh tap data" --replace pipeline/extra-breweries.json pipeline/brewery-overrides.json data/crowd.json
       - name: Publish idle status
         if: always()
         run: bash pipeline/push-status.sh idle "" "[]" || true

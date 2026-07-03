@@ -372,24 +372,53 @@ function requireOnline() {
   }
 }
 
-/* One query per session: every document. At this app's community size
-   that is a small pile of JSON, and it powers both the list badges and
-   every sheet without further roundtrips. */
-async function fetchRecent() {
-  if (cache) return cache;
+/* Quota-proof read path: the pipeline publishes a static snapshot of
+   the reports collection (data/crowd.json, free to serve, SW-cacheable,
+   works offline); the session then delta-queries Firestore only for
+   docs newer than the snapshot — read cost stays flat as data grows.
+   Falls back to one full query when no snapshot exists yet. */
+async function runReportsQuery(extra = {}) {
   const res = await fetch(`${baseUrl()}:runQuery?key=${cfg.api_key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      structuredQuery: {
-        from: [{ collectionId: 'reports' }],
-        limit: 1000,
-      },
+      structuredQuery: { from: [{ collectionId: 'reports' }], limit: 1000, ...extra },
     }),
   });
   if (!res.ok) throw new Error(`crowd fetch ${res.status}`);
   const rows = await res.json();
-  cache = rows.filter((r) => r.document).map((r) => fromDoc(r.document));
+  return rows.filter((r) => r.document).map((r) => fromDoc(r.document));
+}
+
+async function fetchRecent() {
+  if (cache) return cache;
+  let snap = null;
+  try {
+    const r = await fetch('data/crowd.json', { cache: 'reload' });
+    if (r.ok) snap = await r.json();
+  } catch {
+    /* offline or missing — fall through */
+  }
+  if (snap?.generated_at && Array.isArray(snap.docs)) {
+    cache = snap.docs;
+    try {
+      const fresh = await runReportsQuery({
+        where: {
+          fieldFilter: {
+            field: { fieldPath: 'created_at' },
+            op: 'GREATER_THAN',
+            value: { stringValue: snap.generated_at },
+          },
+        },
+      });
+      const known = new Set(cache.map((d) => d._id));
+      cache = cache.concat(fresh.filter((d) => !known.has(d._id)));
+    } catch {
+      /* snapshot alone still works (e.g. offline) */
+    }
+    return cache;
+  }
+  cache = await runReportsQuery();
   return cache;
 }
 

@@ -28,6 +28,8 @@ FILES = [
     'pipeline/sources.json',
     'pipeline/areas.json',
     'pipeline/extra-breweries.json',
+    'pipeline/brewery-overrides.json',
+    'data/crowd.json',
     'data/taps.json',
 ]
 
@@ -67,6 +69,12 @@ for attempt in range(4):
             by = {e['id']: e for e in theirs.get('pipeline/extra-breweries.json', [])}
             by.update({e['id']: e for e in ours['pipeline/extra-breweries.json']})
             merged['pipeline/extra-breweries.json'] = list(by.values())
+    # fully regenerated files: authoritative only from the run that
+    # regenerated them (--replace); every other caller keeps whatever is
+    # newest on origin so a stale checkout can't clobber a fresh sync
+    for f in ('pipeline/brewery-overrides.json', 'data/crowd.json'):
+        if f in ours:
+            merged[f] = ours[f] if f in REPLACE else theirs.get(f, ours[f])
     if 'data/taps.json' in ours:
         o = ours['data/taps.json']
         t = theirs.get('data/taps.json', {})
@@ -77,10 +85,14 @@ for attempt in range(4):
                   or o.get('extra_breweries')
                   or t.get('extra_breweries')
                   or [])
+        overrides = (merged.get('pipeline/brewery-overrides.json')
+                     if merged.get('pipeline/brewery-overrides.json') is not None
+                     else o.get('brewery_overrides') or t.get('brewery_overrides') or {})
         merged['data/taps.json'] = {
             'generated_at': max(o.get('generated_at') or '', t.get('generated_at') or '') or None,
             'areas': [{'label': a['label'], 'center': a['center']} for a in areas],
             'extra_breweries': extras,
+            'brewery_overrides': overrides,
             'breweries': brew,
         }
 

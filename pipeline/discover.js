@@ -157,8 +157,10 @@ async function fetchBreweries(center) {
   return res.json();
 }
 
-async function discoverArea(center, sources, known) {
-  const breweries = (await fetchBreweries(center)).filter((b) => b.website_url);
+async function discoverArea(center, sources, known, overrides = {}) {
+  const breweries = (await fetchBreweries(center))
+    .map((b) => (overrides[b.id] ? { ...b, website_url: overrides[b.id].website_url } : b))
+    .filter((b) => b.website_url);
   console.log(`${breweries.length} breweries with websites near "${center}"`);
   let found = 0;
   const queue = [...breweries];
@@ -191,6 +193,12 @@ async function main() {
   const sources = JSON.parse(fs.readFileSync(SOURCES, 'utf8'));
   const known = new Set(sources.map((s) => s.obdb_id));
   const areas = JSON.parse(fs.readFileSync(AREAS, 'utf8'));
+  let overrides = {};
+  try {
+    overrides = JSON.parse(fs.readFileSync(path.join(__dirname, 'brewery-overrides.json'), 'utf8'));
+  } catch {
+    /* none yet */
+  }
 
   // hand-added breweries (missing from Open Brewery DB) get their
   // websites scanned on every run — the list is tiny
@@ -215,7 +223,7 @@ async function main() {
 
   let found = 0;
   if (arg === '--all') {
-    for (const a of areas) found += await discoverArea(a.center, sources, known);
+    for (const a of areas) found += await discoverArea(a.center, sources, known, overrides);
   } else {
     // ad-hoc area: persist it so nightly scans keep covering it
     if (!areas.some((a) => a.center === arg)) {
@@ -223,7 +231,7 @@ async function main() {
       fs.writeFileSync(AREAS, JSON.stringify(areas, null, 2) + '\n');
       console.log(`added "${process.argv[3] || arg}" to areas.json`);
     }
-    found = await discoverArea(arg, sources, known);
+    found = await discoverArea(arg, sources, known, overrides);
   }
 
   fs.writeFileSync(SOURCES, JSON.stringify(sources, null, 2) + '\n');

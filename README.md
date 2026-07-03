@@ -210,8 +210,11 @@ They flow everywhere automatically:
 
 Three ways an entry gets in:
 
-1. **The app's "Missing a brewery?" form** (results page, and Your
-   Cities) — no login, posts straight to Firestore. Before submitting,
+1. **The app's "Missing a brewery?" form** (results page, and the
+   Breweries tab) — sign-in required (name+email+PIN profile), posts
+   straight to Firestore. Website is OPTIONAL (it enables the automated
+   tap-list scan; without one the brewery still lists and drinker
+   reports cover it). Before submitting,
    it checks nearby currently-listed breweries for a close name+location
    match and nudges ("looks like X is already listed — add anyway?")
    rather than blocking, since real multi-location breweries (Tree
@@ -240,6 +243,27 @@ redundant `extra-breweries.json` row just sits there unused until the
 next sync run, when its distance+name match against the (still-present)
 Firestore doc means it keeps getting silently regenerated — harmless,
 easy to spot in the sync log if it ever matters.
+
+## v3 — profiles, bottom nav, Location → Brewery → Beer (shipped)
+
+Five-tab bottom navigation (Search / Locations / Breweries / Beers /
+Settings). PIN profiles (see "Turning on PIN profiles") unlock cloud
+favorites for all three levels of the hierarchy, brewery check-ins,
+"I've had this" beer tracking, auto-signed posts, adding
+breweries/beers, and website corrections; everything else stays
+anonymous-capable. Beers are first-class (beer_key = brewery id +
+slugged name unifies scanned/reported/added beers), each with a detail
+sheet: reviews, comments, ratings, Mark On Tap / Mark as Gone with
+who-said-it-when attribution. Brewery sheets group drinker data
+per-beer under a collapsible Tap List with separate "From the
+brewery's menu" and "Reported by drinkers" sections. Data flow
+additions: `data/crowd.json` (static snapshot of the reports
+collection published every 4h; the app delta-queries Firestore only
+for newer docs — Spark quota stays flat), `pipeline/brewery-overrides.json`
+(latest drinker website corrections for OBDB breweries, applied by the
+app and by discovery), and website-optional brewery requests. Offline:
+reads come from cached snapshots; writes require connectivity and
+never queue, so sync conflicts are structurally impossible.
 
 ## v1.1 — all pipelines (shipped)
 

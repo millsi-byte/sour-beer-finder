@@ -21,6 +21,8 @@ const { slug, geocode, haversineMiles, namesLikelyMatch } = require('./brewery-l
 const CONFIG = path.join(__dirname, '..', 'data', 'crowd-config.json');
 const SEED = path.join(__dirname, 'extra-breweries.seed.json');
 const OUT = path.join(__dirname, 'extra-breweries.json');
+const OVERRIDES = path.join(__dirname, 'brewery-overrides.json');
+const CROWD_SNAP = path.join(__dirname, '..', 'data', 'crowd.json');
 
 const DUPE_MILES = 1; // tight on purpose — see brewery-lib.js namesLikelyMatch
 
@@ -32,7 +34,7 @@ function isDuplicate(candidate, corpus) {
   );
 }
 
-async function fetchRequests(cfg) {
+async function queryAll(cfg, collectionId) {
   const url =
     `https://firestore.googleapis.com/v1/projects/${cfg.project_id}` +
     `/databases/(default)/documents:runQuery?key=${cfg.api_key}`;
@@ -41,24 +43,22 @@ async function fetchRequests(cfg) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       structuredQuery: {
-        from: [{ collectionId: 'brewery_requests' }],
+        from: [{ collectionId }],
         orderBy: [{ field: { fieldPath: 'created_at' }, direction: 'ASCENDING' }],
         limit: 1000,
       },
     }),
   });
-  if (!res.ok) throw new Error(`Firestore query ${res.status}`);
+  if (!res.ok) throw new Error(`Firestore ${collectionId} query ${res.status}`);
   const rows = await res.json();
   return rows
     .filter((r) => r.document)
     .map((r) => {
-      const f = r.document.fields ?? {};
-      return {
-        docId: r.document.name.split('/').pop(),
-        name: f.name?.stringValue ?? '',
-        city: f.city?.stringValue ?? '',
-        website_url: f.website_url?.stringValue ?? '',
-      };
+      const out = { docId: r.document.name.split('/').pop() };
+      for (const [k, v] of Object.entries(r.document.fields ?? {})) {
+        out[k] = v.integerValue != null ? Number(v.integerValue) : v.stringValue;
+      }
+      return out;
     });
 }
 
@@ -76,14 +76,16 @@ async function main() {
   }
 
   const corpus = JSON.parse(fs.readFileSync(SEED, 'utf8'));
-  const requests = await fetchRequests(cfg);
+  const requests = await queryAll(cfg, 'brewery_requests');
   console.log(`${requests.length} brewery request(s) in Firestore`);
 
   let added = 0;
   let skipped = 0;
   for (const req of requests) {
-    if (!req.name || !req.city || !req.website_url) {
-      console.warn(`  skip ${req.docId}: missing name/city/website (bad submission)`);
+    // website is OPTIONAL — it enables the tap-list scan but a brewery
+    // without one is still worth listing (drinker reports cover it)
+    if (!req.name || !req.city) {
+      console.warn(`  skip ${req.docId}: missing name/city (bad submission)`);
       skipped++;
       continue;
     }
@@ -102,7 +104,7 @@ async function main() {
       state: geo.state,
       lat: Math.round(geo.lat * 1e4) / 1e4,
       lng: Math.round(geo.lng * 1e4) / 1e4,
-      website_url: req.website_url,
+      ...(req.website_url && { website_url: req.website_url }),
     };
     const dupe = isDuplicate(candidate, corpus);
     if (dupe) {
@@ -119,6 +121,49 @@ async function main() {
     added++;
     console.log(`  added: ${candidate.name} (${candidate.city}, ${candidate.state})`);
   }
+
+  // ---- brewery_edits: latest website correction per brewery ----
+  // append-only in Firestore; applied here every run. x-… ids override
+  // the extras entry directly; OBDB ids land in brewery-overrides.json
+  // (published into taps.json by build.js, applied by the app +
+  // discover.js). Empty value = clear the website.
+  const edits = await queryAll(cfg, 'brewery_edits');
+  const latest = new Map(); // brewery_id -> value (query is ASC, later wins)
+  for (const e of edits) {
+    if (e.field !== 'website_url') continue;
+    let v = String(e.value ?? '').trim();
+    if (v && !/^https?:\/\//i.test(v)) v = `https://${v}`;
+    if (v && !/^https?:\/\/[\w.-]+\.[a-z]{2,}/i.test(v)) {
+      console.warn(`  ignoring malformed website edit for ${e.brewery_id}: "${e.value}"`);
+      continue;
+    }
+    latest.set(e.brewery_id, v);
+  }
+  const overrides = {};
+  for (const [bid, v] of latest) {
+    const extra = corpus.find((c) => c.id === bid);
+    if (extra) {
+      if (v) extra.website_url = v;
+      else delete extra.website_url;
+      console.log(`  website edit applied to extra ${bid}: ${v || '(cleared)'}`);
+    } else {
+      overrides[bid] = { website_url: v || null };
+      console.log(`  website override recorded for ${bid}: ${v || '(cleared)'}`);
+    }
+  }
+  fs.writeFileSync(OVERRIDES, JSON.stringify(overrides, null, 2) + '\n');
+
+  // ---- crowd snapshot: static copy of the reports collection ----
+  // The app loads this for free (GitHub Pages, SW-cacheable, offline-
+  // friendly) and only delta-queries Firestore for anything newer —
+  // keeps Firestore reads flat forever (Spark quota-proofing).
+  const reports = await queryAll(cfg, 'reports');
+  const snapDocs = reports.map(({ docId, ...f }) => ({ _id: docId, ...f }));
+  fs.writeFileSync(
+    CROWD_SNAP,
+    JSON.stringify({ generated_at: new Date().toISOString(), docs: snapDocs }) + '\n'
+  );
+  console.log(`wrote data/crowd.json — ${snapDocs.length} docs`);
 
   fs.writeFileSync(OUT, JSON.stringify(corpus, null, 2) + '\n');
   console.log(`wrote extra-breweries.json — ${corpus.length} entries (${added} new, ${skipped} skipped)`);

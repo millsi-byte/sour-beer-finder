@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.37';
+const APP_BUILD = '2026.07.03.38';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1021,7 +1021,8 @@ function openSheet(b) {
   $('actUntappd').href =
     `https://untappd.com/search?q=${encodeURIComponent(b.name)}&type=venues`;
 
-  const site = b.website_url;
+  const override = state.taps?.brewery_overrides?.[b.id];
+  const site = override !== undefined ? override.website_url : b.website_url;
   $('actWebsite').hidden = !site;
   if (site) $('actWebsite').href = site;
 

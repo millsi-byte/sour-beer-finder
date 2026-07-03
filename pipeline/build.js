@@ -19,10 +19,19 @@ async function main() {
   const extras = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'extra-breweries.json'), 'utf8')
   );
+  // drinker-submitted website corrections for OBDB breweries (x-… ids
+  // are corrected directly inside extras by the sync script)
+  let overrides = {};
+  try {
+    overrides = JSON.parse(fs.readFileSync(path.join(__dirname, 'brewery-overrides.json'), 'utf8'));
+  } catch {
+    /* none yet */
+  }
   const out = {
     generated_at: new Date().toISOString(),
     areas: areas.map(({ label, center }) => ({ label, center })),
     extra_breweries: extras,
+    brewery_overrides: overrides,
     breweries: {},
   };
 
