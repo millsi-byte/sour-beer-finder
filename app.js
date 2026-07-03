@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.38';
+const APP_BUILD = '2026.07.03.39';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -802,6 +802,8 @@ function renderCityDrop() {
       ? 'Your locations ▾'
       : 'Add your locations…';
   $('btnCityDrop').hidden = !cities.length;
+  // label makes it obvious this row is your saved list, not a search box
+  $('favLocLabel').hidden = !cities.length;
 }
 
 function cityGoAction() {
@@ -1068,6 +1070,15 @@ async function renderSheetPills(b) {
   }
 }
 
+/* A sheet can be opened on top of the Breweries/Beers tab without
+   navigating away from it — so a favorite/had-it/check-in toggle must
+   refresh that tab's own lists too, not just the sheet's pill, or the
+   change only shows up after leaving and re-entering the tab. */
+function refreshCurrentTabMarks() {
+  if (state.view === 'breweries') breweriesFlow();
+  else if (state.view === 'beers') beersFlow();
+}
+
 $('btnFavBrewery').addEventListener('click', async () => {
   const b = sheetBrewery;
   if (!b) return;
@@ -1085,6 +1096,7 @@ $('btnFavBrewery').addEventListener('click', async () => {
     });
     showToast(on ? `⭐ ${b.name} favorited` : `Removed ${b.name} from favorites`);
     renderSheetPills(b);
+    refreshCurrentTabMarks();
   } catch (e) {
     showToast(e.message);
   } finally {
@@ -1103,6 +1115,7 @@ $('btnCheckIn').addEventListener('click', async () => {
   try {
     await crowd.checkIn(b);
     showToast(`🍻 Checked in at ${b.name}`);
+    refreshCurrentTabMarks();
   } catch (e) {
     showToast(e.message);
   } finally {
@@ -1415,6 +1428,24 @@ function renderBeerReviews(beer) {
     body.className = 'crowd-review';
     body.textContent = n.review || n.text || '';
     if (body.textContent) li.appendChild(body);
+    // self-serve delete on your own review/comment (uid-stamped only —
+    // anonymous notes have nothing to check identity against)
+    if (n.uid && crowd.authState()?.uid === n.uid) {
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'linkbtn mark-del-inline';
+      del.textContent = '✕ Remove';
+      del.addEventListener('click', async () => {
+        if (!confirm('Remove this review/comment?')) return;
+        try {
+          await crowd.deleteDoc('reports', n._id);
+          openBeerSheet(beer, { fromBrewery: bsCameFromBrewery });
+        } catch (err) {
+          showToast(err.message);
+        }
+      });
+      li.appendChild(del);
+    }
     ul.appendChild(li);
   }
 }
@@ -1450,6 +1481,7 @@ $('btnFavBeer').addEventListener('click', async () => {
     const on = await crowd.toggleFav('beer', beer.beer_key, beerDenorm(beer));
     showToast(on ? `⭐ ${beer.beer_name} favorited` : 'Removed from favorites');
     renderBeerPills(beer);
+    refreshCurrentTabMarks();
   } catch (e) {
     showToast(e.message);
   }
@@ -1463,6 +1495,7 @@ $('btnHadBeer').addEventListener('click', async () => {
     const on = await crowd.toggleHad(beer.beer_key, beerDenorm(beer));
     showToast(on ? `✅ Marked as had — cheers!` : 'Unmarked.');
     renderBeerPills(beer);
+    refreshCurrentTabMarks();
   } catch (e) {
     showToast(e.message);
   }
@@ -1802,11 +1835,21 @@ async function breweriesFlow() {
   checkins.slice(0, 25).forEach((e) => {
     const li = document.createElement('li');
     li.className = 'city-row';
-    li.innerHTML = '<span class="city-name"></span><span class="city-covered"></span>';
+    li.innerHTML = '<span class="city-name"></span><span class="city-covered"></span><button type="button" class="linkbtn mark-del" title="Remove this check-in">&#x2715;</button>';
     li.querySelector('.city-name').textContent = e.brewery_name || '(brewery)';
     li.querySelector('.city-covered').textContent = fmtWhen(e.created_at);
     li.style.cursor = 'pointer';
     li.addEventListener('click', () => openBreweryById(e.brewery_id, null));
+    li.querySelector('.mark-del').addEventListener('click', async (ev) => {
+      ev.stopPropagation();
+      if (!confirm(`Remove your check-in at ${e.brewery_name || 'this brewery'}?`)) return;
+      try {
+        await crowd.deleteDoc('user_marks', e._id);
+        breweriesFlow();
+      } catch (err) {
+        showToast(err.message);
+      }
+    });
     chkUl.appendChild(li);
   });
 }

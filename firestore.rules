@@ -26,7 +26,7 @@ service cloud.firestore {
 
     match /reports/{doc} {
       allow read: if true;
-      allow update, delete: if false;
+      allow update: if false;
       allow create: if uidOk() && isoDate() && (
         (
           d().kind == 'report'
@@ -57,6 +57,11 @@ service cloud.firestore {
           && str(d().beer_key, 250) && optStr('style', 80) && optStr('author', 60)
         )
       );
+      // self-serve takedown: a signed-in user can remove their own
+      // report/comment/vote/beer doc; no admin involvement needed.
+      // Anonymous docs (no uid) can never be self-deleted — only via
+      // the console — since there's no identity to check against.
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
     match /brewery_requests/{doc} {
@@ -81,7 +86,10 @@ service cloud.firestore {
 
     match /user_marks/{doc} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
-      allow update, delete: if false;
+      allow update: if false;
+      // check-ins are a pure timeline (no unfav-style toggle) — this is
+      // the only way to remove an errant one, self-serve
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
       allow create: if ownUid() && isoDate()
         && d().keys().hasOnly(['uid','kind','target_type','target_key','label',
              'lat','lng','brewery_id','brewery_name','beer_name','beer_key',

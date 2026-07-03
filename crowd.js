@@ -422,6 +422,23 @@ async function fetchRecent() {
   return cache;
 }
 
+/* Delete one of MY OWN docs (own uid only; rules enforce it server-side
+   too). A real online delete — never queued, so no offline-conflict
+   risk — used for self-serve takedown of a check-in/review/comment
+   without any admin involvement. */
+async function deleteDoc(collection, docId) {
+  requireOnline();
+  const a = authState();
+  if (!a) throw Object.assign(new Error('sign in first'), { code: 'NOT_SIGNED_IN' });
+  const res = await authedFetch(`${baseUrl()}/${collection}/${docId}?key=${cfg.api_key}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error(`couldn't delete (${res.status})`);
+  if (cache) cache = cache.filter((d) => d._id !== docId);
+  if (marksCache) marksCache = marksCache.filter((d) => d._id !== docId);
+  marksSnapshotSave();
+}
+
 async function createDoc(collection, data) {
   requireOnline();
   // signed-in writes carry a Bearer token so rules can verify the uid
@@ -710,6 +727,7 @@ window.crowd = {
   sendPinReset,
   authedFetch,
   requireOnline,
+  deleteDoc,
   // beers
   beerKey,
   crowdBeer,

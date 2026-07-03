@@ -363,3 +363,9 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
 .block-wrap .list-filter { margin-bottom: 0; }
 .mb-alt-row { text-align: center; margin-top: 10px; }
 .bs-back { padding: 0 0 8px; }
+
+/* Self-serve delete on check-ins and reviews/comments */
+.mark-del { font-size: 18px; padding: 4px 8px; color: var(--text-dim); }
+.mark-del-inline { font-size: 13px; margin-top: 4px; color: var(--danger); }
+
+.fav-row-label { font-size: 13px; font-weight: 700; color: var(--text-dim); margin: 14px 0 4px 2px; letter-spacing: .2px; }
