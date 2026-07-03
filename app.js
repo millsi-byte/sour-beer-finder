@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.22';
+const APP_BUILD = '2026.07.03.23';
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -228,6 +228,7 @@ function prepare(list, origin) {
 // ---------- views ----------
 function show(view) {
   state.view = view;
+  $('btnRefresh').hidden = view !== 'status'; // refresh lives on the Data Status page only
   $('viewLocate').hidden = view !== 'locate';
   $('viewList').hidden = view !== 'list';
   $('viewCities').hidden = view !== 'cities';
@@ -771,16 +772,9 @@ $('cityForm').addEventListener('submit', async (e) => {
 $('btnNewSearch').addEventListener('click', () => show('locate'));
 $('btnListHome').addEventListener('click', () => show('locate'));
 $('btnFavCity').addEventListener('click', toggleFavCity);
-// refresh whatever page you're on, never navigate away from it
-$('btnRefresh').addEventListener('click', () => {
-  if (state.view === 'status') return statusFlow();
-  if (state.view === 'cities') return citiesFlow();
-  if (state.view === 'settings') return renderSettings();
-  if (state.lastSearch) coordsFlow(state.lastSearch.label, state.lastSearch.lat, state.lastSearch.lng);
-  else if (state.origin) locateFlow();
-  else if (state.lastCity) cityFlow(state.lastCity);
-  else show('locate');
-});
+// visible only on the Data Status page — re-fetches the live statuses
+$('btnRefresh').addEventListener('click', statusFlow);
+$('btnRefresh').hidden = true;
 $('btnCities').addEventListener('click', citiesFlow);
 $('btnCitiesBack').addEventListener('click', () => show('locate'));
 $('brandHome').addEventListener('click', () => show('locate'));
