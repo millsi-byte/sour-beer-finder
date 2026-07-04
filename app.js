@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {}, crowdAliasReal: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.14';
+const APP_BUILD = '2026.07.04.15';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -38,6 +38,29 @@ crowd.crowdEnabled().then((enabled) => {
   $('profilePill').hidden = !enabled;
   renderProfilePill();
 });
+
+/* Collapsible sections (Breweries/Beers tabs). State persists per section
+   in localStorage so a collapse survives re-renders and app reloads. */
+function initCollapsibles() {
+  document.querySelectorAll('.sec-toggle').forEach((btn, i) => {
+    if (btn.dataset.wired) return;
+    btn.dataset.wired = '1';
+    const body = btn.nextElementSibling;
+    const key = `s4s.sec.${body?.querySelector('ul')?.id || i}`;
+    const setOpen = (open) => {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.classList.toggle('collapsed', !open);
+      if (body) body.hidden = !open;
+    };
+    setOpen(localStorage.getItem(key) !== '0'); // default expanded
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      setOpen(open);
+      localStorage.setItem(key, open ? '1' : '0');
+    });
+  });
+}
+initCollapsibles();
 
 // ---------- tap data ----------
 // cache:'reload' = always hit the network; the service worker still keeps
@@ -689,7 +712,9 @@ const RADII = [10, 25, 50, 100, 'All'];
 const RADIUS_KEY = 's4s.radius';
 const SORT_KEY = 's4s.sort'; // 'sours' (default) | 'dist'
 const ONLY_KEY = 's4s.crowdOnly'; // replaced the old sours-only toggle
-let radius = Number(localStorage.getItem(RADIUS_KEY)) || 'All';
+// default 25 mi for a first-time user; '' means the user explicitly chose "Any distance"
+const storedRadius = localStorage.getItem(RADIUS_KEY);
+let radius = storedRadius === null ? 25 : storedRadius === '' ? 'All' : Number(storedRadius);
 let sortMode = localStorage.getItem(SORT_KEY) || 'sours';
 let crowdOnly = localStorage.getItem(ONLY_KEY) === '1';
 
@@ -1365,6 +1390,7 @@ function closeSheet() {
 let sheetBeer = null; // assembled beer (crowd.js shape) currently shown
 let bsStars = 0;
 let bsCameFromBrewery = false;
+let bsUndoVoteId = null; // the user's latest own vote on sheetBeer, if undoable
 
 /* Scanned beers for one brewery, as beer-shaped seeds. */
 function scannedBeersFor(breweryId) {
@@ -1432,6 +1458,14 @@ async function openBeerSheet(seed, { fromBrewery = false } = {}) {
   const card = $('bsStatusCard');
   chip.hidden = false;
   card.classList.remove('on');
+  // offer to undo the LATEST mark if it's the current user's own vote —
+  // for the "I never meant to mark this anything" case, deleting the vote
+  // reverts the beer to its prior status (no need to force a 'gone')
+  const myUid = crowd.authState()?.uid;
+  const lastVote = beer.trail.at(-1);
+  const undoable = myUid && lastVote?.uid === myUid ? lastVote : null;
+  $('bsUndoMark').closest('.undo-row').hidden = !undoable;
+  bsUndoVoteId = undoable?._id || null;
   if (beer.reports.length || beer.trail.length) {
     const kind = beerStatusKind(beer);
     chip.className = 'chip ' + (kind === 'gone' ? 'chip-gone' : kind === 'new' ? 'chip-new' : 'chip-on');
@@ -1642,6 +1676,22 @@ for (const [id, vote] of [['bsMarkOn', 'still'], ['bsMarkGone', 'gone']]) {
     markBeer(beer, vote, $(id), $('bsVForm'), () => openBeerSheet(beer, { fromBrewery: bsCameFromBrewery }));
   });
 }
+
+// undo a mark you didn't mean to make — deletes your own latest vote
+$('bsUndoMark').addEventListener('click', async () => {
+  const beer = sheetBeer;
+  if (!beer || !bsUndoVoteId) return;
+  $('bsUndoMark').disabled = true;
+  try {
+    await crowd.deleteDoc('reports', bsUndoVoteId);
+    refreshCrowdCounts();
+    openBeerSheet(beer, { fromBrewery: bsCameFromBrewery });
+  } catch (e) {
+    showToast(e.message);
+  } finally {
+    $('bsUndoMark').disabled = false;
+  }
+});
 
 $('bsAddReview').addEventListener('click', () => {
   const f = $('bsReviewForm');
@@ -1943,6 +1993,11 @@ function attachSuggest(inputId, listId, searchFn, renderLabel, onPick) {
   input.addEventListener('blur', () => setTimeout(close, 200));
 }
 
+/* section-header count, e.g. "⭐ Favorites · 3" (blank when empty) */
+function secCount(id, n) {
+  $(id).textContent = n ? ` · ${n}` : '';
+}
+
 async function breweriesFlow() {
   await tapsReady;
   show('breweries');
@@ -1952,12 +2007,16 @@ async function breweriesFlow() {
   favUl.innerHTML = '';
   chkUl.innerHTML = '';
   if (!crowd.authState()) {
+    secCount('brewFavsCount', 0);
+    secCount('brewCheckinsCount', 0);
     $('brewFavsNote').textContent = 'Sign in (Settings → Profile) to keep favorites.';
     $('brewCheckinsNote').textContent = 'Sign in to start a check-in history.';
     return;
   }
   const { favs, checkins } = await crowd.myMarks();
   const brewFavs = [...favs.values()].filter((e) => e.target_type === 'brewery');
+  secCount('brewFavsCount', brewFavs.length);
+  secCount('brewCheckinsCount', checkins.length);
   $('brewFavsNote').textContent = brewFavs.length
     ? ''
     : 'No favorites yet — tap ⭐ Favorite on any brewery.';
@@ -2056,6 +2115,8 @@ async function beersFlow() {
   favUl.innerHTML = '';
   hadUl.innerHTML = '';
   if (!signedIn) {
+    secCount('beerFavsCount', 0);
+    secCount('beerHadCount', 0);
     $('beerFavsNote').textContent = 'Sign in (Settings → Profile) to keep favorites.';
     $('beerHadNote').textContent = 'Sign in to track beers you’ve had.';
     return;
@@ -2063,6 +2124,8 @@ async function beersFlow() {
   const { favs, had } = await crowd.myMarks();
   const beerFavs = [...favs.values()].filter((e) => e.target_type === 'beer');
   const hadBeers = [...had.values()];
+  secCount('beerFavsCount', beerFavs.length);
+  secCount('beerHadCount', hadBeers.length);
   $('beerFavsNote').textContent = beerFavs.length ? '' : 'No favorites yet — tap ⭐ on any beer.';
   $('beerHadNote').textContent = hadBeers.length
     ? ''

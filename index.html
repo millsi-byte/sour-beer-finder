@@ -112,16 +112,30 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
       <h2 class="section-title">Breweries</h2>
       <button type="button" id="btnAddBrewery" class="pillbtn">&#x2795; Add Brewery</button>
     </div>
-    <div class="suggest-wrap block-wrap">
+    <div class="suggest-wrap block-wrap tab-search">
       <input id="brewSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any brewery&hellip;" autocomplete="off">
       <ul id="brewSuggest" class="suggest" hidden></ul>
     </div>
-    <h3 class="section-sub">&#x2B50; Favorites</h3>
-    <ul id="brewFavs" class="citylist"></ul>
-    <p id="brewFavsNote" class="explain"></p>
-    <h3 class="section-sub">&#x1F37B; Checked in</h3>
-    <ul id="brewCheckins" class="citylist"></ul>
-    <p id="brewCheckinsNote" class="explain"></p>
+    <div class="tab-section">
+      <button type="button" class="sec-toggle" aria-expanded="true">
+        <span class="sec-title">&#x2B50; Favorites<span class="sec-count" id="brewFavsCount"></span></span>
+        <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="sec-body">
+        <ul id="brewFavs" class="citylist"></ul>
+        <p id="brewFavsNote" class="explain"></p>
+      </div>
+    </div>
+    <div class="tab-section">
+      <button type="button" class="sec-toggle" aria-expanded="true">
+        <span class="sec-title">&#x1F37B; Checked in<span class="sec-count" id="brewCheckinsCount"></span></span>
+        <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="sec-body">
+        <ul id="brewCheckins" class="citylist"></ul>
+        <p id="brewCheckinsNote" class="explain"></p>
+      </div>
+    </div>
   </section>
 
   <!-- Beers (tab root) -->
@@ -130,16 +144,30 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
       <h2 class="section-title">Beers</h2>
       <button type="button" id="btnAddBeer" class="pillbtn">&#x2795; Add Beer</button>
     </div>
-    <div class="suggest-wrap block-wrap">
+    <div class="suggest-wrap block-wrap tab-search">
       <input id="beerSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any beer S4S knows&hellip;" autocomplete="off">
       <ul id="beerSuggest" class="suggest" hidden></ul>
     </div>
-    <h3 class="section-sub">&#x2B50; Favorites</h3>
-    <ul id="beerFavs" class="citylist"></ul>
-    <p id="beerFavsNote" class="explain"></p>
-    <h3 class="section-sub">&#x2714; I&rsquo;ve had these</h3>
-    <ul id="beerHad" class="citylist"></ul>
-    <p id="beerHadNote" class="explain"></p>
+    <div class="tab-section">
+      <button type="button" class="sec-toggle" aria-expanded="true">
+        <span class="sec-title">&#x2B50; Favorites<span class="sec-count" id="beerFavsCount"></span></span>
+        <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="sec-body">
+        <ul id="beerFavs" class="citylist"></ul>
+        <p id="beerFavsNote" class="explain"></p>
+      </div>
+    </div>
+    <div class="tab-section">
+      <button type="button" class="sec-toggle" aria-expanded="true">
+        <span class="sec-title">&#x2714; I&rsquo;ve had these<span class="sec-count" id="beerHadCount"></span></span>
+        <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="sec-body">
+        <ul id="beerHad" class="citylist"></ul>
+        <p id="beerHadNote" class="explain"></p>
+      </div>
+    </div>
   </section>
 
   <!-- Data status -->
@@ -293,6 +321,7 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
       <button type="button" id="bsMarkOn" class="pillbtn crowd-pill">&#x1F44D; Mark On Tap</button>
       <button type="button" id="bsMarkGone" class="pillbtn crowd-pill">&#x1F44E; Mark as Gone</button>
     </div>
+    <p class="undo-row" hidden><button type="button" id="bsUndoMark" class="linkbtn">&#x21A9;&#xFE0E; Undo my last mark</button></p>
     <div id="bsVForm"></div>
   </div>
   <div class="crowd-wrap sheet-box">

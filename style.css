@@ -268,6 +268,28 @@ button.secondary {
 .section-title { font-family: var(--serif); font-size: 24px; font-weight: 600; padding: 18px 0 8px; }
 .title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .title-row .pillbtn { flex-shrink: 0; margin-top: 10px; }
+/* give the search box room to breathe below the title + Add button */
+.tab-search { margin-top: 16px; }
+
+/* Collapsible, boxed tab sections (Breweries / Beers) */
+.tab-section {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border-radius: 14px; padding: 4px 12px; margin-top: 12px;
+}
+.sec-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: none; border: none; cursor: pointer;
+  color: var(--text); padding: 12px 2px;
+}
+.sec-title { font-family: var(--serif); font-size: 17px; font-weight: 600; }
+.sec-count { color: var(--text-dim); font-weight: 600; }
+.sec-toggle .tl-chev { color: var(--text-dim); transition: transform .18s; }
+.sec-toggle.collapsed .tl-chev { transform: rotate(-90deg); }
+.sec-body { padding-bottom: 10px; }
+.sec-body .citylist { margin-top: 0; }
+.sec-body .cards { margin-top: 4px; }
+.sec-body .explain { margin-bottom: 4px; }
 .section-sub { font-family: var(--serif); font-size: 17px; font-weight: 600; margin: 26px 0 6px; }
 .explain { color: var(--text-dim); font-size: 16px; line-height: 1.45; margin-bottom: 14px; }
 .explain strong { color: var(--text); font-weight: 650; }
@@ -469,6 +491,8 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
   border-radius: 12px; padding: 12px 14px; margin: 2px 0 12px;
 }
 .status-card.on { border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.undo-row { text-align: center; margin-top: 8px; }
+.undo-row .linkbtn { font-size: 13px; color: var(--text-dim); }
 .status-line { display: flex; align-items: center; gap: 9px; }
 .status-line .crowd-status { margin-top: 0; }
 .tl-sec-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
