@@ -317,9 +317,9 @@ button.block { display: block; width: 100%; margin-top: 8px; }
 .sour-list li { font-size: 17px; }
 .sour-list .style { color: var(--text-dim); font-size: 14px; }
 .sour-chip { font-size: 15px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
-/* second action row: outbound links — grey fill, plain text, like before */
+/* second action row: outbound links — same grey as the tap-list rows */
 .sheet-links .pillbtn {
-  background: var(--card-press); color: var(--text);
+  background: var(--bg); color: var(--text);
   border-color: transparent; text-decoration: none;
 }
 
