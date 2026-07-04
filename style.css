@@ -203,6 +203,7 @@ button.secondary {
 .card .info { flex: 1; min-width: 0; }
 .card .name { font-size: 19px; font-weight: 650; margin-bottom: 3px; }
 .card .sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip-stack { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .card .dist { font-size: 17px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
 .card .chev { color: var(--text-dim); font-size: 16px; }
 .type-badge {

@@ -10,10 +10,10 @@ const API = 'https://api.openbrewerydb.org/v1/breweries';
 const HIDDEN_TYPES = new Set(['closed']);
 
 const $ = (id) => document.getElementById(id);
-const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
+const state = { origin: null, breweries: [], taps: null, crowdCounts: {}, crowdAliasReal: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.11';
+const APP_BUILD = '2026.07.04.12';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -22,7 +22,7 @@ crowd.crowdCounts().then((c) => {
   if (state.view === 'list') renderList();
 });
 
-/* Re-derive the 👥-on-tap counts after any vote/report — crowd.js's own
+/* Re-derive the 👍-on-tap counts after any vote/report — crowd.js's own
    cache already has the new doc (createDoc pushes it there), so this is
    a local recompute, not a network round trip. Without this, a beer
    marked gone stays counted "on tap" in the results filter/badges until
@@ -360,7 +360,18 @@ function relevantExtras(list, origin, cityName) {
       && namesLikelyMatch(e.name, b.name);
   };
   return extras
-    .filter((e) => !list.some((b) => isSameBrewery(e, b)))
+    .filter((e) => {
+      // an extra a crowd report was once filed against (its x-… id) can
+      // get superseded by a real OBDB id later (e.g. OBDB starts covering
+      // it, or a hidden brewery_type becomes visible) — remember the
+      // mapping so that old crowd data isn't orphaned under the dead id
+      const match = list.find((b) => isSameBrewery(e, b));
+      if (match) {
+        state.crowdAliasReal[e.id] = match.id;
+        return false;
+      }
+      return true;
+    })
     .filter((e) =>
       origin
         ? haversineMiles(origin, { lat: e.lat, lng: e.lng }) <= 150
@@ -376,6 +387,17 @@ function relevantExtras(list, origin, cityName) {
       longitude: String(e.lng),
       website_url: e.website_url || null,
     }));
+}
+
+/* On-tap count for a brewery card: its own crowd count, plus any count
+   still filed under an extra (x-…) id that's since been superseded by
+   this same real id — see relevantExtras' alias tracking above. */
+function crowdCountFor(b) {
+  let n = state.crowdCounts[b.id] || 0;
+  for (const [extraId, realId] of Object.entries(state.crowdAliasReal)) {
+    if (realId === b.id) n += state.crowdCounts[extraId] || 0;
+  }
+  return n;
 }
 
 function prepare(list, origin, cityName) {
@@ -739,11 +761,11 @@ function visibleBreweries() {
   if (radius !== 'All' && state.origin) {
     list = list.filter((b) => b.miles != null && b.miles <= radius);
   }
-  // drinker reports count as live sour info, badged 👥 instead of 🍋
-  const hasSours = (b) => (tapInfo(b)?.sours.length || 0) + (state.crowdCounts[b.id] || 0);
+  // drinker reports count as live sour info, badged 👍 instead of 🍋
+  const hasSours = (b) => (tapInfo(b)?.sours.length || 0) + crowdCountFor(b);
   if (crowdOnly) {
     // only breweries with a drinker-reported beer currently marked On Tap
-    list = list.filter((b) => state.crowdCounts[b.id]);
+    list = list.filter((b) => crowdCountFor(b));
   }
   if (sortMode === 'sours') {
     // stable sort: sours float to the top, distance order kept within groups
@@ -770,7 +792,7 @@ function renderList(label) {
           nameFilter
             ? 'No brewery names match — check the spelling or clear the search.'
             : crowdOnly
-              ? 'No drinker-reported taps here yet — turn off \u{1F465} on tap, or be the first to report one.'
+              ? 'No drinker-reported taps here yet — turn off \u{1F44D} on tap, or be the first to report one.'
               : `Nothing within ${radius} mi — widen the radius.`
         }</li>`
       : '<li class="footnote">No breweries found here. Try a nearby city.</li>';
@@ -783,23 +805,26 @@ function renderList(label) {
         <div class="name"></div>
         <div class="sub"><span class="type-badge"></span><span class="loc"></span></div>
       </div>
-      <span class="sour-chip" hidden></span>
+      <span class="chip-stack">
+        <span class="sour-chip" hidden></span>
+        <span class="sour-chip crowd-chip" hidden></span>
+      </span>
       <span class="dist"></span>
       <span class="chev">&#x203A;</span>`;
     li.querySelector('.name').textContent = b.name;
     const info = tapInfo(b);
-    const crowdN = state.crowdCounts[b.id] || 0;
+    const crowdN = crowdCountFor(b);
+    // both counts show side by side — auto-scanned menu and drinker
+    // reports are different sources of truth, not interchangeable
     if (info?.sours.length) {
-      const chip = li.querySelector('.sour-chip');
+      const chip = li.querySelector('.sour-chip:not(.crowd-chip)');
       chip.hidden = false;
       chip.textContent = `\u{1F34B} ${info.sours.length}`;
-    } else if (crowdN) {
-      // drinker-reported, not scraped — different icon so staleness
-      // expectations stay honest
-      const chip = li.querySelector('.sour-chip');
+    }
+    if (crowdN) {
+      const chip = li.querySelector('.crowd-chip');
       chip.hidden = false;
-      chip.classList.add('crowd-chip');
-      chip.textContent = `\u{1F465} ${crowdN}`;
+      chip.textContent = `\u{1F44D} ${crowdN}`;
     }
     li.querySelector('.type-badge').textContent = b.brewery_type || 'brewery';
     li.querySelector('.loc').textContent = [b.city, b.state_province].filter(Boolean).join(', ');
@@ -1803,14 +1828,14 @@ function breweryRowCard(b, subText, onRemove, removeTitle) {
   const sub = subText ?? [b.city, b.state_province].filter(Boolean).join(', ');
   li.querySelector('.city-name').textContent = [b.name, sub].filter(Boolean).join(' — ');
   const info = state.taps?.breweries?.[b.id];
-  const crowdN = state.crowdCounts[b.id] || 0;
+  const crowdN = crowdCountFor(b);
   const badge = li.querySelector('.city-covered');
   if (info?.sours.length) {
     badge.hidden = false;
     badge.textContent = `\u{1F34B} ${info.sours.length}`;
   } else if (crowdN) {
     badge.hidden = false;
-    badge.textContent = `\u{1F465} ${crowdN}`;
+    badge.textContent = `\u{1F44D} ${crowdN}`;
   }
   li.querySelector('.city-name').addEventListener('click', () => openBreweryById(b.id, b));
   li.querySelector('.mark-del').addEventListener('click', async (ev) => {
