@@ -366,10 +366,14 @@ adapter to `pipeline/adapters/`.
   stacks drinker-reported beers under the scanned list; consider one
   unified tap list (scanned + drinker-added, badged by source) with
   reviews living only on the beer page.
-- **Beer wishlist (owner request 2026-07-04).** A "wishlist" button on
-  the beer sheet alongside Favorite / I've-had-this, plus a Wishlist
-  section on the Beers tab. The user_marks event log already supports
-  this shape — add kinds `wish`/`unwish` (rules change + UI).
+- **Wishlist — SHIPPED 2026-07-04.** A "Wishlist" button on both the
+  brewery sheet (next to Check In) and the beer sheet (alongside
+  Favorite / I've-had-this), plus a Wishlist section on the Breweries
+  and Beers tabs, same pattern as Favorites. Uses the existing
+  `user_marks` shape with new `wish`/`unwish` kinds. **Needs a manual
+  step:** re-paste the updated [`firestore.rules`](firestore.rules)
+  into the Firebase console (rules aren't auto-deployed — see "Turning
+  on drinker reports" below) or wishlist writes will be rejected.
 
 ## Data sources
 

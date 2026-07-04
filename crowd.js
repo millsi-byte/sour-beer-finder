@@ -228,9 +228,9 @@ async function authedFetch(url, opts = {}) {
   return res;
 }
 
-/* ============== user marks: favorites / had-it / check-ins ==============
+/* ============== user marks: favorites / had-it / wishlist / check-ins ====
    One owner-private, append-only event log (collection `user_marks`).
-   {uid, kind: fav|unfav|had|unhad|checkin, target_type, target_key,
+   {uid, kind: fav|unfav|had|unhad|wish|unwish|checkin, target_type, target_key,
     ...denormalized display fields, created_at}
    Current state = latest event per (toggle family, target_key); check-ins
    are a pure timeline. Nothing is ever updated, so a stale device can
@@ -289,21 +289,25 @@ async function fetchMyMarks(force = false) {
   }
 }
 
-/* {favs: Map(type|key -> event), had: Map(key -> event), checkins: [events]} */
+/* {favs: Map(type|key -> event), had: Map(key -> event),
+   wishes: Map(type|key -> event), checkins: [events]} */
 function assembleMarks(events) {
   const favs = new Map();
   const had = new Map();
+  const wishes = new Map();
   const checkins = [];
   for (const e of events) {
     const k = `${e.target_type}|${e.target_key}`;
     if (e.kind === 'fav' || e.kind === 'unfav') favs.set(k, e);
     else if (e.kind === 'had' || e.kind === 'unhad') had.set(k, e);
+    else if (e.kind === 'wish' || e.kind === 'unwish') wishes.set(k, e);
     else if (e.kind === 'checkin') checkins.push(e);
   }
   for (const [k, e] of favs) if (e.kind === 'unfav') favs.delete(k);
   for (const [k, e] of had) if (e.kind === 'unhad') had.delete(k);
+  for (const [k, e] of wishes) if (e.kind === 'unwish') wishes.delete(k);
   checkins.reverse(); // newest first
-  return { favs, had, checkins };
+  return { favs, had, wishes, checkins };
 }
 
 async function myMarks(force) {
@@ -346,6 +350,13 @@ async function toggleHad(target_key, denorm) {
   const { had } = await myMarks();
   const on = had.has(`beer|${target_key}`);
   await submitMark(on ? 'unhad' : 'had', 'beer', target_key, denorm);
+  return !on;
+}
+
+async function toggleWish(target_type, target_key, denorm) {
+  const { wishes } = await myMarks();
+  const on = wishes.has(`${target_type}|${target_key}`);
+  await submitMark(on ? 'unwish' : 'wish', target_type, target_key, denorm);
   return !on;
 }
 
@@ -796,11 +807,12 @@ window.crowd = {
   crowdBeerCatalog,
   submitBeer,
   submitBreweryEdit,
-  // user marks (favorites / had-it / check-ins)
+  // user marks (favorites / had-it / wishlist / check-ins)
   myMarks,
   toggleFav,
   setFav,
   toggleHad,
+  toggleWish,
   checkIn,
   clearMarksCache,
 };

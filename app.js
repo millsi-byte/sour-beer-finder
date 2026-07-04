@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {}, crowdAliasReal: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.18';
+const APP_BUILD = '2026.07.04.19';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1091,14 +1091,17 @@ function fmtWhen(iso) {
 async function renderSheetPills(b) {
   const fav = $('btnFavBrewery');
   const chk = $('btnCheckIn');
+  const wish = $('btnWishBrewery');
   const enabled = await crowd.crowdEnabled();
-  fav.hidden = chk.hidden = !enabled;
+  fav.hidden = chk.hidden = wish.hidden = !enabled;
   if (!enabled || sheetBrewery !== b) return;
   fav.textContent = '⭐ Favorite';
+  wish.textContent = '🎯 Wishlist';
   if (crowd.authState()) {
-    const { favs } = await crowd.myMarks();
+    const { favs, wishes } = await crowd.myMarks();
     if (sheetBrewery !== b) return;
     if (favs.has(`brewery|${b.id}`)) fav.textContent = '★ Favorited';
+    if (wishes.has(`brewery|${b.id}`)) wish.textContent = '🎯 On Wishlist';
   }
 }
 
@@ -1152,6 +1155,31 @@ $('btnCheckIn').addEventListener('click', async () => {
     showToast(e.message);
   } finally {
     $('btnCheckIn').disabled = false;
+  }
+});
+
+$('btnWishBrewery').addEventListener('click', async () => {
+  const b = sheetBrewery;
+  if (!b) return;
+  if (!crowd.authState()) {
+    showToast('Sign in (Settings → Profile) to save a wishlist.');
+    return;
+  }
+  $('btnWishBrewery').disabled = true;
+  try {
+    const on = await crowd.toggleWish('brewery', b.id, {
+      brewery_id: b.id,
+      brewery_name: b.name,
+      city: b.city,
+      state: b.state_province,
+    });
+    showToast(on ? `🎯 ${b.name} added to wishlist` : `Removed ${b.name} from wishlist`);
+    renderSheetPills(b);
+    refreshCurrentTabMarks();
+  } catch (e) {
+    showToast(e.message);
+  } finally {
+    $('btnWishBrewery').disabled = false;
   }
 });
 
@@ -1621,13 +1649,16 @@ function renderBeerReviews(beer) {
 async function renderBeerPills(beer) {
   const fav = $('btnFavBeer');
   const had = $('btnHadBeer');
+  const wish = $('btnWishBeer');
   fav.textContent = '⭐ Favorite';
   had.textContent = '✔ I’ve had this';
+  wish.textContent = '🎯 Wishlist';
   if (crowd.authState()) {
-    const { favs, had: hadMap } = await crowd.myMarks();
+    const { favs, had: hadMap, wishes } = await crowd.myMarks();
     if (sheetBeer?.beer_key !== beer.beer_key) return;
     if (favs.has(`beer|${beer.beer_key}`)) fav.textContent = '★ Favorited';
     if (hadMap.has(`beer|${beer.beer_key}`)) had.textContent = '✅ Had it!';
+    if (wishes.has(`beer|${beer.beer_key}`)) wish.textContent = '🎯 On Wishlist';
   }
 }
 
@@ -1662,6 +1693,20 @@ $('btnHadBeer').addEventListener('click', async () => {
   try {
     const on = await crowd.toggleHad(beer.beer_key, beerDenorm(beer));
     showToast(on ? `✅ Marked as had — cheers!` : 'Unmarked.');
+    renderBeerPills(beer);
+    refreshCurrentTabMarks();
+  } catch (e) {
+    showToast(e.message);
+  }
+});
+
+$('btnWishBeer').addEventListener('click', async () => {
+  const beer = sheetBeer;
+  if (!beer) return;
+  if (!crowd.authState()) return showToast('Sign in (Settings → Profile) to save a wishlist.');
+  try {
+    const on = await crowd.toggleWish('beer', beer.beer_key, beerDenorm(beer));
+    showToast(on ? `🎯 ${beer.beer_name} added to wishlist` : 'Removed from wishlist');
     renderBeerPills(beer);
     refreshCurrentTabMarks();
   } catch (e) {
@@ -2010,22 +2055,28 @@ function signInNote(text) {
 async function breweriesFlow() {
   await tapsReady;
   show('breweries');
-  // favorites + check-ins (signed-in only)
+  // favorites + check-ins + wishlist (signed-in only)
   const favUl = $('brewFavs');
   const chkUl = $('brewCheckins');
+  const wishUl = $('brewWish');
   favUl.innerHTML = '';
   chkUl.innerHTML = '';
+  wishUl.innerHTML = '';
   if (!crowd.authState()) {
     secCount('brewFavsCount', 0);
     secCount('brewCheckinsCount', 0);
+    secCount('brewWishCount', 0);
     $('brewFavsNote').innerHTML = signInNote('⭐ Sign in to keep favorites.');
     $('brewCheckinsNote').innerHTML = signInNote('🍻 Sign in to start a check-in history.');
+    $('brewWishNote').innerHTML = signInNote('🎯 Sign in to keep a wishlist.');
     return;
   }
-  const { favs, checkins } = await crowd.myMarks();
+  const { favs, checkins, wishes } = await crowd.myMarks();
   const brewFavs = [...favs.values()].filter((e) => e.target_type === 'brewery');
+  const brewWish = [...wishes.values()].filter((e) => e.target_type === 'brewery');
   secCount('brewFavsCount', brewFavs.length);
   secCount('brewCheckinsCount', checkins.length);
+  secCount('brewWishCount', brewWish.length);
   $('brewFavsNote').textContent = brewFavs.length
     ? ''
     : 'No favorites yet — tap ⭐ Favorite on any brewery.';
@@ -2045,6 +2096,29 @@ async function breweriesFlow() {
             showToast(err.message);
           }
         }
+      )
+    )
+  );
+  $('brewWishNote').textContent = brewWish.length
+    ? ''
+    : 'No wishlist breweries yet — tap 🎯 Wishlist on any brewery.';
+  brewWish.forEach((e) =>
+    wishUl.appendChild(
+      breweryRowCard(
+        { id: e.target_key, name: e.brewery_name || '(brewery)', city: e.city, state_province: e.state },
+        undefined,
+        async () => {
+          try {
+            await crowd.toggleWish('brewery', e.target_key, {
+              brewery_id: e.target_key, brewery_name: e.brewery_name, city: e.city, state: e.state,
+            });
+            showToast(`Removed ${e.brewery_name || 'brewery'} from wishlist`);
+            breweriesFlow();
+          } catch (err) {
+            showToast(err.message);
+          }
+        },
+        'Remove from wishlist'
       )
     )
   );
@@ -2121,24 +2195,33 @@ async function beersFlow() {
   const signedIn = !!crowd.authState();
   const favUl = $('beerFavs');
   const hadUl = $('beerHad');
+  const wishUl = $('beerWish');
   favUl.innerHTML = '';
   hadUl.innerHTML = '';
+  wishUl.innerHTML = '';
   if (!signedIn) {
     secCount('beerFavsCount', 0);
     secCount('beerHadCount', 0);
+    secCount('beerWishCount', 0);
     $('beerFavsNote').innerHTML = signInNote('⭐ Sign in to keep favorites.');
     $('beerHadNote').innerHTML = signInNote('✔ Sign in to track beers you’ve had.');
+    $('beerWishNote').innerHTML = signInNote('🎯 Sign in to keep a wishlist.');
     return;
   }
-  const { favs, had } = await crowd.myMarks();
+  const { favs, had, wishes } = await crowd.myMarks();
   const beerFavs = [...favs.values()].filter((e) => e.target_type === 'beer');
   const hadBeers = [...had.values()];
+  const beerWish = [...wishes.values()].filter((e) => e.target_type === 'beer');
   secCount('beerFavsCount', beerFavs.length);
   secCount('beerHadCount', hadBeers.length);
+  secCount('beerWishCount', beerWish.length);
   $('beerFavsNote').textContent = beerFavs.length ? '' : 'No favorites yet — tap ⭐ on any beer.';
   $('beerHadNote').textContent = hadBeers.length
     ? ''
     : 'Nothing yet — tap ✔ I’ve had this on a beer you’ve tried.';
+  $('beerWishNote').textContent = beerWish.length
+    ? ''
+    : 'No wishlist beers yet — tap 🎯 Wishlist on any beer.';
   beerFavs.forEach((e) => {
     const seed = {
       beer_key: e.target_key, beer_name: e.beer_name, style: e.style,
@@ -2168,6 +2251,21 @@ async function beersFlow() {
         showToast(err.message);
       }
     }, "Remove from I’ve had these"));
+  });
+  beerWish.forEach((e) => {
+    const seed = {
+      beer_key: e.target_key, beer_name: e.beer_name, style: e.style,
+      brewery_id: e.brewery_id, brewery_name: e.brewery_name,
+    };
+    wishUl.appendChild(beerRowCard(seed, async () => {
+      try {
+        await crowd.toggleWish('beer', e.target_key, beerDenorm(seed));
+        showToast('Removed from wishlist');
+        beersFlow();
+      } catch (err) {
+        showToast(err.message);
+      }
+    }, 'Remove from wishlist'));
   });
 }
 

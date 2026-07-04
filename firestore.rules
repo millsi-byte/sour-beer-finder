@@ -104,7 +104,7 @@ service cloud.firestore {
         && d().keys().hasOnly(['uid','kind','target_type','target_key','label',
              'lat','lng','brewery_id','brewery_name','beer_name','beer_key',
              'style','city','state','created_at'])
-        && d().kind in ['fav','unfav','had','unhad','checkin']
+        && d().kind in ['fav','unfav','had','unhad','checkin','wish','unwish']
         && d().target_type in ['location','brewery','beer']
         && str(d().target_key, 250)
         && optStr('label', 120) && optStr('lat', 12) && optStr('lng', 12)
