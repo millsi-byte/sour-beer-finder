@@ -331,10 +331,11 @@ button.block { display: block; width: 100%; margin-top: 8px; }
 .sour-list li { font-size: 17px; }
 .sour-list .style { color: var(--text-dim); font-size: 14px; }
 .sour-chip { font-size: 15px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
-/* second action row: outbound links — same grey as the tap-list rows */
+/* second action row: outbound links — raised card surface so they stand
+   out from the tinted box (var(--bg) blended into the box in light mode) */
 .sheet-links .pillbtn {
-  background: var(--bg); color: var(--text);
-  border-color: transparent; text-decoration: none;
+  background: var(--card); color: var(--text);
+  border: 0.5px solid var(--hairline); text-decoration: none;
 }
 
 /* Crowd layer: drinker reports (crowd.js) */
@@ -403,7 +404,18 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* Sheet: Favorite/Check In pills + collapsible Tap List */
-.sheet-pills { display: flex; gap: 10px; margin: 0 0 12px; }
+/* Grouping panel — actions and the tap list each sit in their own
+   bordered box so the sheet reads as distinct sections (same idea as
+   the green "New beer details" box, quieter neutral tone). */
+.sheet-box {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border-radius: 14px; padding: 12px; margin-bottom: 12px;
+}
+.sheet-box .sheet-pills:last-child { margin-bottom: 0; }
+.sheet-box #tapListBody { margin-top: 2px; }
+.sheet-box .tl-toggle { padding-bottom: 8px; }
+.sheet-pills { display: flex; gap: 10px; margin: 0 0 10px; }
 .sheet-pills .pillbtn { flex: 1; text-align: center; padding: 11px 8px; white-space: nowrap; }
 .tl-toggle {
   display: flex; align-items: center; justify-content: space-between;
@@ -430,7 +442,7 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
 #bsReviews { gap: 0; }
 .tl-row {
   display: flex; align-items: center; gap: 8px;
-  background: var(--bg); border: 0.5px solid var(--hairline);
+  background: var(--card); border: 0.5px solid var(--hairline);
   border-radius: 11px; padding: 10px 12px; cursor: pointer;
 }
 .tl-row:active { background: var(--card-press); }

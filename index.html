@@ -229,15 +229,17 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
   <div class="grabber"></div>
   <h3 id="sheetName"></h3>
   <p id="sheetSub" class="sheet-sub"></p>
-  <div class="sheet-pills">
-    <button type="button" id="btnFavBrewery" class="pillbtn">&#x2B50; Favorite</button>
-    <button type="button" id="btnCheckIn" class="pillbtn">&#x2705; Check In</button>
-    <button type="button" id="btnCrowdReport" class="pillbtn" hidden>&#x1F37A; Add Sour</button>
-  </div>
-  <div class="sheet-pills sheet-links">
-    <a id="actUntappd" class="pillbtn" target="_blank" rel="noopener">&#x1F37A; Untappd</a>
-    <a id="actWebsite" class="pillbtn" target="_blank" rel="noopener">&#x1F310; Website</a>
-    <a id="actMaps" class="pillbtn" target="_blank" rel="noopener">&#x1F5FA; Directions</a>
+  <div class="sheet-box">
+    <div class="sheet-pills">
+      <button type="button" id="btnFavBrewery" class="pillbtn">&#x2B50; Favorite</button>
+      <button type="button" id="btnCheckIn" class="pillbtn">&#x2705; Check In</button>
+      <button type="button" id="btnCrowdReport" class="pillbtn" hidden>&#x1F37A; Add Sour</button>
+    </div>
+    <div class="sheet-pills sheet-links">
+      <a id="actUntappd" class="pillbtn" target="_blank" rel="noopener">&#x1F37A; Untappd</a>
+      <a id="actWebsite" class="pillbtn" target="_blank" rel="noopener">&#x1F310; Website</a>
+      <a id="actMaps" class="pillbtn" target="_blank" rel="noopener">&#x1F5FA; Directions</a>
+    </div>
   </div>
   <form id="crowdForm" class="missingform crowd-form edit-box" autocomplete="off" hidden>
     <p class="edit-box-label">&#x1F37A; New beer details</p>
@@ -249,14 +251,16 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
     <button type="button" id="crowdFormCancel" class="linkbtn mb-alt">Cancel</button>
     <p id="crNote" class="explain" hidden></p>
   </form>
-  <button type="button" id="tapListToggle" class="tl-toggle tl-section" aria-expanded="true">
-    <span class="tl-title" id="tlTitle">Tap List</span>
-    <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <div id="tapListBody">
-    <p id="tlNote" class="crowd-meta tl-note"></p>
-    <ul id="crowdList" class="crowd-list"></ul>
-    <p id="tlEmpty" class="explain" hidden>No beers known here yet &mdash; add the sour you&rsquo;re drinking.</p>
+  <div class="sheet-box">
+    <button type="button" id="tapListToggle" class="tl-toggle" aria-expanded="true">
+      <span class="tl-title" id="tlTitle">Tap List</span>
+      <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div id="tapListBody">
+      <p id="tlNote" class="crowd-meta tl-note"></p>
+      <ul id="crowdList" class="crowd-list"></ul>
+      <p id="tlEmpty" class="explain" hidden>No beers known here yet &mdash; add the sour you&rsquo;re drinking.</p>
+    </div>
   </div>
   <p class="mb-alt-row"><button type="button" id="btnEditSite" class="linkbtn mb-alt">&#x270F;&#xFE0F; Update Website</button></p>
   <form id="editSiteForm" class="missingform edit-box" autocomplete="off" hidden>
@@ -273,9 +277,11 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
   <button type="button" id="beerBack" class="linkbtn back-btn bs-back" hidden>&#x2039; Back to brewery</button>
   <h3 id="bsName"></h3>
   <p id="bsSub" class="sheet-sub"></p>
-  <div class="sheet-pills">
-    <button type="button" id="btnFavBeer" class="pillbtn">&#x2B50; Favorite</button>
-    <button type="button" id="btnHadBeer" class="pillbtn">&#x2714; I&rsquo;ve had this</button>
+  <div class="sheet-box">
+    <div class="sheet-pills">
+      <button type="button" id="btnFavBeer" class="pillbtn">&#x2B50; Favorite</button>
+      <button type="button" id="btnHadBeer" class="pillbtn">&#x2714; I&rsquo;ve had this</button>
+    </div>
   </div>
   <div id="bsStatusCard" class="status-card">
     <div class="status-line">
@@ -289,7 +295,7 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
     </div>
     <div id="bsVForm"></div>
   </div>
-  <div class="sour-placeholder crowd-wrap tl-section">
+  <div class="crowd-wrap sheet-box">
     <div class="tl-sec-row">
       <div class="tl-sec-head" id="bsRevHead">Reviews</div>
       <button type="button" id="bsAddReview" class="pillbtn">&#x270D;&#xFE0F; Review</button>
