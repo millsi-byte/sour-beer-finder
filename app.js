@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.08';
+const APP_BUILD = '2026.07.04.09';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -680,18 +680,18 @@ function chip(label, active, onTap) {
 }
 
 function renderControls() {
-  const bar = $('radiusBar');
-  bar.hidden = !state.origin; // no distances → nothing to filter
-  if (!bar.hidden) {
-    bar.innerHTML = '';
+  // radius lives in a compact dropdown beside the name filter
+  const wrap = document.querySelector('.radius-wrap');
+  wrap.hidden = !state.origin; // no distances → nothing to filter
+  if (!wrap.hidden) {
+    const sel = $('radiusSel');
+    sel.innerHTML = '';
     RADII.forEach((r) => {
-      bar.appendChild(
-        chip(r === 'All' ? 'All' : `${r} mi`, r === radius, () => {
-          radius = r;
-          localStorage.setItem(RADIUS_KEY, r === 'All' ? '' : r);
-          renderList();
-        })
-      );
+      const o = document.createElement('option');
+      o.value = String(r);
+      o.textContent = r === 'All' ? 'Any distance' : `${r} mi`;
+      o.selected = r === radius;
+      sel.appendChild(o);
     });
   }
   const sort = $('sortBar');
@@ -721,6 +721,13 @@ function renderControls() {
   );
 }
 
+$('radiusSel').addEventListener('change', () => {
+  const v = $('radiusSel').value;
+  radius = v === 'All' ? 'All' : Number(v);
+  localStorage.setItem(RADIUS_KEY, v === 'All' ? '' : v);
+  renderList();
+});
+
 let nameFilter = ''; // live text filter on the results page (not persisted)
 
 function visibleBreweries() {
@@ -745,36 +752,6 @@ function visibleBreweries() {
   return list;
 }
 
-// ---------- save-this-city star on results ----------
-function currentCityCandidate() {
-  if (state.lastSearch) {
-    return { q: state.lastSearch.label, lat: state.lastSearch.lat, lng: state.lastSearch.lng };
-  }
-  if (state.lastCity) return { q: state.lastCity };
-  return null; // geolocation searches have no city to save
-}
-
-function renderFavBtn() {
-  const c = currentCityCandidate();
-  const btn = $('btnFavCity');
-  btn.hidden = !c;
-  if (!c) return;
-  const saved = loadSavedCities().some((x) => x.q.toLowerCase() === c.q.toLowerCase());
-  btn.textContent = saved ? '★ Saved' : '☆ Save';
-}
-
-function toggleFavCity() {
-  const c = currentCityCandidate();
-  if (!c) return;
-  let cities = loadSavedCities();
-  const i = cities.findIndex((x) => x.q.toLowerCase() === c.q.toLowerCase());
-  if (i >= 0) cities.splice(i, 1);
-  else cities.push({ ...c, home: cities.length === 0 }); // first city becomes home
-  saveSavedCities(cities);
-  renderFavBtn();
-  renderCityDrop();
-}
-
 function renderList(label) {
   if (label !== undefined) {
     state.listLabel = label; // fresh search — start with an unfiltered list
@@ -784,7 +761,6 @@ function renderList(label) {
   const shown = visibleBreweries();
   $('listTitle').textContent =
     `${shown.length} ${shown.length === 1 ? 'brewery' : 'breweries'} ${state.listLabel}`;
-  renderFavBtn();
   renderControls();
   const ul = $('breweryList');
   ul.innerHTML = '';
@@ -1796,9 +1772,7 @@ $('listFilter').addEventListener('input', () => {
   renderList();
 });
 
-$('btnNewSearch').addEventListener('click', () => show('locate'));
 $('btnListHome').addEventListener('click', () => show('locate'));
-$('btnFavCity').addEventListener('click', toggleFavCity);
 // visible only on the Data Status page — re-fetches the live statuses
 $('btnRefresh').addEventListener('click', statusFlow);
 $('btnRefresh').hidden = true;

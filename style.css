@@ -176,10 +176,6 @@ button.secondary {
 }
 
 /* List */
-.listmeta {
-  display: flex; align-items: center; gap: 8px; justify-content: space-between;
-  padding: 12px 2px 10px; color: var(--text-dim); font-size: 16px;
-}
 .linkbtn { background: none; border: none; color: var(--accent-ink); font-size: 15px; font-weight: 600; cursor: pointer; }
 .pillbtn {
   background: var(--card); border: 0.5px solid var(--hairline);
@@ -188,7 +184,6 @@ button.secondary {
   cursor: pointer; white-space: nowrap;
 }
 .pillbtn:active { background: var(--card-press); }
-.listmeta-actions { display: flex; gap: 8px; }
 
 .radius-bar { display: flex; gap: 6px; padding: 0 2px 12px; }
 .radius-chip {
@@ -216,8 +211,8 @@ button.secondary {
   border-radius: 6px; padding: 2px 6px; margin-right: 6px;
 }
 
-.footnote { text-align: center; color: var(--text-dim); font-size: 14px; padding: 22px 0 8px; }
-.missing-note { text-align: center; padding: 2px 0 12px; }
+.footnote { text-align: center; color: var(--text-dim); font-size: 14px; padding: 22px 0 8px; line-height: 1.9; }
+.foot-link { font-size: 14px; }
 
 /* results-page name filter — 16px stops iOS zoom-on-focus */
 .list-filter {
@@ -225,6 +220,22 @@ button.secondary {
   background: var(--card); color: var(--text);
   border: 0.5px solid var(--hairline); border-radius: 12px; outline: none;
   -webkit-appearance: none;
+}
+
+/* results header: count line + name-filter/radius row */
+.list-title { color: var(--text-dim); font-size: 16px; padding: 10px 2px; }
+.filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.filter-row .list-filter { flex: 1; min-width: 0; margin-bottom: 0; }
+.radius-wrap { position: relative; flex-shrink: 0; display: flex; }
+.radius-wrap::after {
+  content: "\25BE"; position: absolute; right: 10px; top: 50%;
+  transform: translateY(-50%); pointer-events: none; color: var(--accent-ink);
+}
+.radius-sel {
+  height: 100%; padding: 0 26px 0 12px; font-size: 15px; font-weight: 600;
+  background: var(--card); color: var(--accent-ink);
+  border: 0.5px solid var(--hairline); border-radius: 12px; outline: none;
+  -webkit-appearance: none; appearance: none;
 }
 
 /* Missing-brewery report form */
