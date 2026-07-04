@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.10';
+const APP_BUILD = '2026.07.04.11';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1284,7 +1284,6 @@ $('btnCrowdReport').addEventListener('click', () => {
   if (!f.hidden) {
     crStars = 0;
     renderStarsInput();
-    $('crBeer').focus();
   }
 });
 
@@ -1617,7 +1616,6 @@ $('bsAddReview').addEventListener('click', () => {
     bsStars = 0;
     renderBsStars();
     $('bsAuthor').hidden = !!crowd.authState();
-    $('bsText').focus();
   }
 });
 
@@ -2095,7 +2093,6 @@ async function openAddBeerSheet() {
   $('addBrewerySheet').hidden = true;
   $('addBeerSheet').hidden = false;
   $('sheetBackdrop').hidden = false;
-  if (!$('beerAddForm').hidden) $('baName').focus();
 }
 
 $('btnAddBeer').addEventListener('click', openAddBeerSheet);
@@ -2157,7 +2154,6 @@ $('btnEditSite').addEventListener('click', () => {
   f.hidden = !f.hidden;
   if (!f.hidden) {
     $('esUrl').value = sheetBrewery?.website_url ?? '';
-    $('esUrl').focus();
   }
 });
 
@@ -2264,7 +2260,6 @@ async function openAddBrewerySheet() {
   $('addBeerSheet').hidden = true;
   $('addBrewerySheet').hidden = false;
   $('sheetBackdrop').hidden = false;
-  if (!$('missingForm').hidden) $('mbName').focus();
 }
 
 $('btnAddBrewery').addEventListener('click', openAddBrewerySheet);
