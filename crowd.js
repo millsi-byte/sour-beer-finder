@@ -372,6 +372,29 @@ function requireOnline() {
   }
 }
 
+/* A PWA waking from the background (or a brief signal drop) sometimes
+   fails a fetch at the network layer — a TypeError, distinct from a
+   real HTTP error — surfaced by browsers as raw, unhelpful text
+   ("Load failed" on Safari, "Failed to fetch" elsewhere). One quick
+   retry clears most of these; anything left gets a friendlier message
+   instead of that raw wording. */
+async function withRetry(fn) {
+  try {
+    return await fn();
+  } catch (e) {
+    if (!(e instanceof TypeError)) throw e;
+    await new Promise((r) => setTimeout(r, 500));
+    try {
+      return await fn();
+    } catch {
+      throw Object.assign(
+        new Error("Couldn't reach the server — check your connection and try again."),
+        { code: 'NETWORK' }
+      );
+    }
+  }
+}
+
 /* Quota-proof read path: the pipeline publishes a static snapshot of
    the reports collection (data/crowd.json, free to serve, SW-cacheable,
    works offline); the session then delta-queries Firestore only for
@@ -430,9 +453,9 @@ async function deleteDoc(collection, docId) {
   requireOnline();
   const a = authState();
   if (!a) throw Object.assign(new Error('sign in first'), { code: 'NOT_SIGNED_IN' });
-  const res = await authedFetch(`${baseUrl()}/${collection}/${docId}?key=${cfg.api_key}`, {
-    method: 'DELETE',
-  });
+  const res = await withRetry(() =>
+    authedFetch(`${baseUrl()}/${collection}/${docId}?key=${cfg.api_key}`, { method: 'DELETE' })
+  );
   if (!res.ok) throw new Error(`couldn't delete (${res.status})`);
   if (cache) cache = cache.filter((d) => d._id !== docId);
   if (marksCache) marksCache = marksCache.filter((d) => d._id !== docId);
@@ -451,11 +474,13 @@ async function updateDoc(collection, docId, patch) {
   const mask = Object.keys(patch)
     .map((k) => `updateMask.fieldPaths=${encodeURIComponent(k)}`)
     .join('&');
-  const res = await authedFetch(`${baseUrl()}/${collection}/${docId}?key=${cfg.api_key}&${mask}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fields: toFields(patch) }),
-  });
+  const res = await withRetry(() =>
+    authedFetch(`${baseUrl()}/${collection}/${docId}?key=${cfg.api_key}&${mask}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: toFields(patch) }),
+    })
+  );
   if (!res.ok) throw new Error(`couldn't save (${res.status})`);
   const saved = fromDoc(await res.json());
   if (cache) cache = cache.map((d) => (d._id === docId ? { ...d, ...saved } : d));
@@ -466,11 +491,13 @@ async function createDoc(collection, data) {
   requireOnline();
   // signed-in writes carry a Bearer token so rules can verify the uid
   const doFetch = authState() ? authedFetch : fetch;
-  const res = await doFetch(`${baseUrl()}/${collection}?key=${cfg.api_key}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fields: toFields(data) }),
-  });
+  const res = await withRetry(() =>
+    doFetch(`${baseUrl()}/${collection}?key=${cfg.api_key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: toFields(data) }),
+    })
+  );
   if (!res.ok) throw new Error(`crowd save ${res.status}`);
   const saved = fromDoc(await res.json());
   // only 'reports' docs are ever read back client-side (brewery_requests

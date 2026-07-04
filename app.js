@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.03.41';
+const APP_BUILD = '2026.07.04.01';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1041,6 +1041,8 @@ function openSheet(b) {
   setTapListOpen(true);
   renderSheetPills(b);
   renderCrowdSection(b);
+  $('editSiteForm').hidden = true;
+  $('editSiteForm').reset();
 
   $('sheet').hidden = false;
   $('sheetBackdrop').hidden = false;

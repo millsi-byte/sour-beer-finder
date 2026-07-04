@@ -197,6 +197,14 @@ button.secondary {
   white-space: pre-wrap; word-break: break-word; user-select: all; -webkit-user-select: all;
 }
 .mb-alt { display: block; margin: 10px auto 0; }
+.edit-box {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1.5px solid var(--accent-ink);
+  border-radius: 12px;
+  padding: 12px 12px 10px;
+}
+.edit-box-label { font-size: 13px; font-weight: 700; color: var(--accent-ink); margin: 0 0 2px 2px; }
+.edit-box input { border-color: var(--accent-ink); }
 .missingform input {
   width: 100%; padding: 13px 14px; font-size: 16px;
   background: var(--card); color: var(--text);
