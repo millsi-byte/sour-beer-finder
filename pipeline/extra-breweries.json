@@ -16,7 +16,7 @@
     "state": "Massachusetts",
     "lat": 42.6106,
     "lng": -71.2342,
-    "website_url": "https://treehousebrew.com",
+    "website_url": "https://www.tacticalbeer.com/",
     "menu_url": "https://treehousebrew.com/draft-list-tewksbury"
   },
   {
@@ -29,11 +29,20 @@
     "website_url": "https://spyglassbrewing.com"
   },
   {
-    "id": "x-tactical-brewing-orlando",
-    "name": "Tactical Brewing",
-    "city": "Orlando",
-    "state": "Florida",
-    "lat": 28.5383,
-    "lng": -81.3792
+    "id": "x-epigram-tyngsboro",
+    "name": "Epigram",
+    "city": "Tyngsboro",
+    "state": "Massachusetts",
+    "lat": 42.6768,
+    "lng": -71.4245
+  },
+  {
+    "id": "x-fireforge-greenville",
+    "name": "Fireforge",
+    "city": "Greenville",
+    "state": "South Carolina",
+    "lat": 34.8526,
+    "lng": -82.394,
+    "website_url": "https://fireforge.beer/location/taproom/#on-tap"
   }
 ]

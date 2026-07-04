@@ -1,1 +1,346 @@
-{ "generated_at": null, "docs": [] }
+{
+  "generated_at": "2026-07-04T04:54:22.085Z",
+  "docs": [
+    {
+      "_id": "SH1affEl3jOBhKdJXYL2",
+      "kind": "comment",
+      "report_id": "__probe__",
+      "brewery_id": "__probe__",
+      "text": "rules probe - safe to delete",
+      "created_at": "2026-07-03T20:00:00Z"
+    },
+    {
+      "_id": "ImfFMpEibS2qkVWhR6UA",
+      "kind": "report",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "brewery_name": "Martha's Exchange Restaurant and Brewery",
+      "beer_name": "Test",
+      "rating": 5,
+      "author": "Scott",
+      "review": "Test",
+      "created_at": "2026-07-03T20:21:13.835Z"
+    },
+    {
+      "_id": "PaYbmBuTOabsY9GQDTb2",
+      "kind": "comment",
+      "report_id": "ImfFMpEibS2qkVWhR6UA",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "author": "Me",
+      "text": "Me",
+      "created_at": "2026-07-03T20:21:38.573Z"
+    },
+    {
+      "_id": "DJuKyO1dkXsTXMtsA9UW",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-03T23:15:36.619Z"
+    },
+    {
+      "_id": "4yGuYw6w1TYx68QJGouC",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-03T23:15:55.496Z"
+    },
+    {
+      "_id": "hyAXjzcMAxyywJYYsRP3",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-03T23:16:03.926Z"
+    },
+    {
+      "_id": "uyoQkLJdXTMij9X4NPSp",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-03T23:16:05.743Z"
+    },
+    {
+      "_id": "F8xHlnN3hkeTafgXAllJ",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-03T23:18:43.548Z"
+    },
+    {
+      "_id": "pKfFPZgqPT3xaFp17z4D",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-03T23:18:48.780Z"
+    },
+    {
+      "_id": "JwiBUoP9O3N106ahpMzC",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:22.240Z"
+    },
+    {
+      "_id": "wEJ7SnQjLWShqA2o3d4p",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:27.957Z"
+    },
+    {
+      "_id": "qsh7H7QbF1PBHtY7JcYX",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:37.580Z"
+    },
+    {
+      "_id": "NMh83CZsy3srh9mCRCfJ",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:39.096Z"
+    },
+    {
+      "_id": "Lh4ptUg4Z9n7D13hfkTU",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:40.014Z"
+    },
+    {
+      "_id": "YB1v2wTIs4xbkeXdbAdJ",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:41.231Z"
+    },
+    {
+      "_id": "VqFV6zdJ8D0mBqyEh5CC",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:41.580Z"
+    },
+    {
+      "_id": "nu0XuCLclEl8CzmgDecK",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:42.309Z"
+    },
+    {
+      "_id": "F4g8vv1O3v3Yl0sDixGm",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:42.760Z"
+    },
+    {
+      "_id": "1GqV5gUGxKeoccaHgUFD",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:43.060Z"
+    },
+    {
+      "_id": "z95DOweD5zKQqMyz9FbN",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:43.371Z"
+    },
+    {
+      "_id": "XdfvRo64YBSDlgb0wBLs",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:44.289Z"
+    },
+    {
+      "_id": "Q0A3jnXyAP62hm5qB0Bc",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:44.705Z"
+    },
+    {
+      "_id": "bl7s2EkwEPPMxl6TLPlV",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:45.856Z"
+    },
+    {
+      "_id": "KAUvG1wJ6A1hc1HPyaUY",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:47.054Z"
+    },
+    {
+      "_id": "Gdi256gS9JaTPC89AJLi",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:56.107Z"
+    },
+    {
+      "_id": "WUoQPLmfDzKrBIhTy7jp",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:06:57.475Z"
+    },
+    {
+      "_id": "HqrgcP6e34qBqnmLpjS5",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:26:37.905Z"
+    },
+    {
+      "_id": "rvDrppACt2avk6rcMz5E",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:26:42.473Z"
+    },
+    {
+      "_id": "XPXByKb4m9JDjy10Q3md",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:26:44.621Z"
+    },
+    {
+      "_id": "y0h3tusU0yWWZaTx4Mai",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:26:45.670Z"
+    },
+    {
+      "_id": "qfuGv0DHrMtIrQupQz7j",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:26:46.189Z"
+    },
+    {
+      "_id": "SBuhYBO4YiLdOSsZ9SPz",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "still",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:26:48.706Z"
+    },
+    {
+      "_id": "WBf0TPP4p0eKwXeDtX9y",
+      "kind": "vote",
+      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
+      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
+      "vote": "gone",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T00:26:50.139Z"
+    },
+    {
+      "_id": "nU9fngW8Ls62PObYqSWQ",
+      "kind": "report",
+      "brewery_id": "x-tactical-brewing-orlando",
+      "brewery_name": "Tactical Brewing",
+      "beer_name": "Meloncholly",
+      "beer_key": "x-tactical-brewing-orlando::meloncholly",
+      "rating": 5,
+      "review": "Best Watermelon Sour on the planet.",
+      "uid": "xra7XErN0nUUptjfmzD93jEqYEH3",
+      "author": "Search4SourBeer",
+      "created_at": "2026-07-04T02:19:04.843Z"
+    }
+  ]
+}
