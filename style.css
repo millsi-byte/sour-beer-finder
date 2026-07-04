@@ -6,7 +6,7 @@
   --text-dim: #9aa39c;
   --accent: #567a5e;      /* S4S sage green — fills only */
   --accent-ink: #a9c6ae;  /* accent used as text/icon color */
-  --hairline: rgba(255,255,255,.08);
+  --hairline: rgba(255,255,255,.16);
   --danger: #ff6b6b;
   --ok: #86c491;                       /* on-tap green (text) */
   --ok-soft: rgba(134, 196, 145, .16); /* on-tap green (chip fill) */
@@ -20,7 +20,7 @@
     --text: #1d211e;
     --text-dim: #6d746e;
     --accent-ink: #46644d; /* darker sage for text on white */
-    --hairline: rgba(0,0,0,.08);
+    --hairline: rgba(0,0,0,.14);
     --ok: #2e7d43;
     --ok-soft: rgba(46, 125, 67, .12);
   }
@@ -34,7 +34,7 @@
   --text: #f2f4f2;
   --text-dim: #9aa39c;
   --accent-ink: #a9c6ae;
-  --hairline: rgba(255,255,255,.08);
+  --hairline: rgba(255,255,255,.16);
   --ok: #86c491;
   --ok-soft: rgba(134, 196, 145, .16);
 }
@@ -45,7 +45,7 @@
   --text: #1d211e;
   --text-dim: #6d746e;
   --accent-ink: #46644d;
-  --hairline: rgba(0,0,0,.08);
+  --hairline: rgba(0,0,0,.14);
   --ok: #2e7d43;
   --ok-soft: rgba(46, 125, 67, .12);
 }
