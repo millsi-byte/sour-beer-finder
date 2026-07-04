@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Search 4 Sour Beer</title>
+<meta name="description" content="S4S — find sour beers on tap near you">
+
+<!-- PWA / iOS standalone -->
+<!-- preview build: no manifest, no service worker -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="S4S">
+<meta name="theme-color" content="#111412" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f7f7f4">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<link rel="icon" type="image/png" href="../icons/icon-180.png">
+
+<script>/* apply the saved Appearance choice before first paint */
+try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div style="position:fixed;top:calc(env(safe-area-inset-top) + 14px);right:-38px;z-index:99;transform:rotate(35deg);background:#b53f3f;color:#fff;font:800 11px/1 -apple-system,sans-serif;letter-spacing:.12em;padding:5px 44px;pointer-events:none;">PREVIEW</div>
+
+<header class="topbar">
+  <h1 id="brandHome" role="button" title="Home">S<span class="brand-4">4</span>S</h1>
+  <div class="topbar-actions">
+    <button id="btnRefresh" class="iconbtn" aria-label="Refresh" title="Refresh">&#x21bb;</button>
+    <button id="profilePill" class="pillbtn profile-pill" hidden>&#x1F464; Sign in</button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Landing / locate -->
+  <section id="viewLocate" class="view">
+    <div class="hero">
+      <div class="logo">
+        <div class="logo-mark">S<span class="brand-4">4</span>S</div>
+        <div class="logo-rule"></div>
+        <div class="logo-sub">Search 4 Sour Beer</div>
+      </div>
+      <h2>Sour beers on tap, near you</h2>
+      <p>Find every brewery around you, then check what&rsquo;s pouring.</p>
+      <button id="btnLocate" class="primary">Use my location</button>
+      <div class="divider"><span>or</span></div>
+      <form id="cityForm" class="cityform" autocomplete="off">
+        <div class="suggest-wrap">
+          <input id="cityInput" type="text" placeholder="Search a city&hellip;" enterkeyhint="search">
+        </div>
+        <button type="submit" class="secondary">Search</button>
+      </form>
+      <p id="favLocLabel" class="fav-row-label" hidden>Your Saved Locations:</p>
+      <div class="cities-quick">
+        <div class="suggest-wrap citysplit">
+          <button type="button" id="btnCityGo" class="secondary drop-btn">Add your locations&hellip;</button>
+          <button type="button" id="btnCityDrop" class="secondary chev-btn" aria-label="Other locations" hidden>
+            <svg width="22" height="14" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul id="cityDrop" class="suggest" hidden></ul>
+        </div>
+      </div>
+      <p id="locateError" class="error" hidden></p>
+      <p class="ig-note">
+        <a class="ig-link" href="https://instagram.com/search4sourbeer" target="_blank" rel="noopener">@search4sourbeer</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section id="viewList" class="view" hidden>
+    <button id="btnListHome" class="linkbtn back-btn">&#x2039; Home</button>
+    <div class="listmeta">
+      <span id="listTitle"></span>
+      <span class="listmeta-actions">
+        <button id="btnFavCity" class="pillbtn" hidden>&#x2606; Save</button>
+        <button id="btnNewSearch" class="pillbtn">&#x1F50D; New search</button>
+      </span>
+    </div>
+    <input id="listFilter" class="list-filter" type="search" placeholder="&#x1F50E; Search brewery names&hellip;" autocomplete="off">
+    <div id="radiusBar" class="radius-bar" hidden></div>
+    <div id="sortBar" class="radius-bar" hidden></div>
+    <p class="missing-note"><button type="button" id="btnMissing" class="pillbtn">&#x2795; Missing a brewery?</button></p>
+    <ul id="breweryList" class="cards"></ul>
+    <p class="footnote">Brewery data: Open Brewery DB &middot; &#x1F34B; = sours on tap</p>
+  </section>
+
+  <!-- Locations (tab root) -->
+  <section id="viewCities" class="view" hidden>
+    <h2 class="section-title">Your locations</h2>
+    <p class="explain">
+      Save the places you drink in for quick access. Tap &#x1F3E0; on one
+      to make it home &mdash; one tap to jump straight there, whether
+      that&rsquo;s where you live or just where you&rsquo;re traveling.
+    </p>
+    <form id="cityAddForm" class="cityform" autocomplete="off">
+      <div class="suggest-wrap">
+        <input id="cityAddInput" type="text" placeholder="Search a location to add&hellip;" enterkeyhint="done">
+      </div>
+      <button type="submit" class="secondary">Add</button>
+    </form>
+    <ul id="cityList" class="citylist"></ul>
+    <h3 class="section-sub">Live tap data here</h3>
+    <p id="coveredAreas" class="explain"></p>
+  </section>
+
+  <!-- Breweries (tab root) -->
+  <section id="viewBreweries" class="view" hidden>
+    <div class="title-row">
+      <h2 class="section-title">Breweries</h2>
+      <button type="button" id="btnAddBrewery" class="pillbtn">&#x2795; Add Brewery</button>
+    </div>
+    <div class="suggest-wrap block-wrap">
+      <input id="brewSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any brewery&hellip;" autocomplete="off">
+      <ul id="brewSuggest" class="suggest" hidden></ul>
+    </div>
+    <h3 class="section-sub">&#x2B50; Favorites</h3>
+    <ul id="brewFavs" class="citylist"></ul>
+    <p id="brewFavsNote" class="explain"></p>
+    <h3 class="section-sub">&#x1F37B; Checked in</h3>
+    <ul id="brewCheckins" class="citylist"></ul>
+    <p id="brewCheckinsNote" class="explain"></p>
+  </section>
+
+  <!-- Beers (tab root) -->
+  <section id="viewBeers" class="view" hidden>
+    <div class="title-row">
+      <h2 class="section-title">Beers</h2>
+      <button type="button" id="btnAddBeer" class="pillbtn">&#x2795; Add Beer</button>
+    </div>
+    <div class="suggest-wrap block-wrap">
+      <input id="beerSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any beer S4S knows&hellip;" autocomplete="off">
+      <ul id="beerSuggest" class="suggest" hidden></ul>
+    </div>
+    <h3 class="section-sub">&#x2B50; Favorites</h3>
+    <ul id="beerFavs" class="citylist"></ul>
+    <p id="beerFavsNote" class="explain"></p>
+    <h3 class="section-sub">&#x2714; I&rsquo;ve had these</h3>
+    <ul id="beerHad" class="citylist"></ul>
+    <p id="beerHadNote" class="explain"></p>
+  </section>
+
+  <!-- Data status -->
+  <section id="viewStatus" class="view" hidden>
+    <button id="btnStatusBack" class="linkbtn back-btn">&#x2039; Settings</button>
+    <h2 class="section-title">Data status</h2>
+    <p id="statusLive" class="explain">Checking&hellip;</p>
+    <h3 class="section-sub">Covered areas</h3>
+    <ul id="areaSchedule" class="citylist"></ul>
+    <p class="explain">
+      Menus of known breweries refresh about every 4 hours. Each area gets a
+      full overnight scan for brand-new tap-list sources once a week, on the
+      night shown. A newly added area is scanned right away, then joins the
+      weekly rotation.
+    </p>
+  </section>
+
+  <!-- Settings (tab root) -->
+  <section id="viewSettings" class="view" hidden>
+    <h2 class="section-title">Settings</h2>
+    <button type="button" id="btnProfilePage" class="secondary block">&#x1F464; Profile</button>
+    <h3 class="section-sub">Appearance</h3>
+    <div id="themeBar" class="radius-bar"></div>
+    <p class="explain">Auto follows your device&rsquo;s light/dark setting.</p>
+    <h3 class="section-sub">Data</h3>
+    <button id="btnDataStatus" class="secondary block">&#x1F4E1; Full data status</button>
+    <h3 class="section-sub">App</h3>
+    <button id="btnUpdate" class="secondary block">Check for updates</button>
+    <p id="buildInfo" class="build-info"></p>
+  </section>
+
+  <!-- Profile (reached from Settings) -->
+  <section id="viewProfile" class="view" hidden>
+    <button id="btnProfileBack" class="linkbtn back-btn">&#x2039; Settings</button>
+    <h2 class="section-title" id="profileHead">Profile</h2>
+    <div id="profileSignedIn" hidden>
+      <p class="explain" id="profileWho"></p>
+      <button type="button" id="btnSignOut" class="secondary block">Sign out</button>
+    </div>
+    <div id="profileAuthUI" hidden>
+      <p class="explain">
+        A free profile keeps your favorites and check-ins saved in the
+        cloud and signs your posts with your name. No profile needed to
+        browse or post anonymously.
+      </p>
+      <div id="authModeBar" class="radius-bar"></div>
+      <form id="authForm" class="missingform" autocomplete="off">
+        <input id="auName" type="text" placeholder="Display name" maxlength="40" hidden>
+        <input id="auEmail" type="email" placeholder="Email" autocomplete="email">
+        <input id="auPin" type="password" inputmode="numeric" placeholder="PIN (6+ digits)" minlength="6" maxlength="12">
+        <button type="submit" class="secondary block" id="authSubmit">Sign in</button>
+      </form>
+      <div id="authConfirm" hidden>
+        <p class="explain" id="authConfirmText"></p>
+        <button type="button" id="authConfirmYes" class="secondary block">Yes &mdash; create my profile</button>
+        <button type="button" id="authConfirmNo" class="linkbtn mb-alt">Go back and fix it</button>
+      </div>
+      <button type="button" id="btnForgotPin" class="linkbtn mb-alt">Forgot your PIN?</button>
+      <p id="authNote" class="explain" hidden></p>
+      <p id="authError" class="error" hidden></p>
+    </div>
+    <p id="profileGate" class="explain" hidden>Profiles aren&rsquo;t turned on yet.</p>
+    <h3 class="section-sub">Open directions in</h3>
+    <div id="mapsBar" class="radius-bar"></div>
+    <p class="explain">Used by the Directions button on every brewery. Saved on this device.</p>
+    <h3 class="section-sub">Untappd button opens</h3>
+    <div id="untappdBar" class="radius-bar"></div>
+    <p class="explain">"App" launches the Untappd app when installed (its home screen &mdash; Untappd doesn&rsquo;t allow deep links to a venue), falling back to the web. "Web" goes straight to the brewery&rsquo;s page on untappd.com.</p>
+  </section>
+
+  <!-- Loading -->
+  <div id="spinner" class="spinner" hidden><div class="ring"></div></div>
+</main>
+
+<!-- Bottom navigation -->
+<nav class="bottomnav" aria-label="Main">
+  <button type="button" id="navSearch" class="nav-item" data-tab="locate"><span class="nav-icon">&#x1F50D;</span><span class="nav-label">Search</span></button>
+  <button type="button" id="navLocations" class="nav-item" data-tab="cities"><span class="nav-icon">&#x1F4CD;</span><span class="nav-label">Locations</span></button>
+  <button type="button" id="navBreweries" class="nav-item" data-tab="breweries"><span class="nav-icon">&#x1F3ED;</span><span class="nav-label">Breweries</span></button>
+  <button type="button" id="navBeers" class="nav-item" data-tab="beers"><span class="nav-icon">&#x1F37A;</span><span class="nav-label">Beers</span></button>
+  <button type="button" id="navSettings" class="nav-item" data-tab="settings"><span class="nav-icon">&#x2699;&#xfe0e;</span><span class="nav-label">Settings</span></button>
+</nav>
+
+<!-- Detail bottom sheet -->
+<div id="sheetBackdrop" class="sheet-backdrop" hidden></div>
+<div id="sheet" class="sheet" hidden>
+  <div class="grabber"></div>
+  <h3 id="sheetName"></h3>
+  <p id="sheetSub" class="sheet-sub"></p>
+  <div class="sheet-pills">
+    <button type="button" id="btnFavBrewery" class="pillbtn">&#x2B50; Favorite</button>
+    <button type="button" id="btnCheckIn" class="pillbtn">&#x2705; Check In</button>
+  </div>
+  <div class="sheet-actions">
+    <a id="actUntappd" class="action" target="_blank" rel="noopener">&#x1F37A; Untappd</a>
+    <a id="actWebsite" class="action" target="_blank" rel="noopener">&#x1F310; Website</a>
+    <a id="actMaps" class="action" target="_blank" rel="noopener">&#x1F5FA; Directions</a>
+  </div>
+  <button type="button" id="btnCrowdReport" class="secondary block" hidden>&#x1F37A; Add a Sour Beer Here</button>
+  <form id="crowdForm" class="missingform crowd-form edit-box" autocomplete="off" hidden>
+    <p class="edit-box-label">&#x1F37A; New beer details</p>
+    <input id="crBeer" type="text" placeholder="Sour beer name" required>
+    <div id="crStars" class="stars" role="radiogroup" aria-label="Your rating"></div>
+    <input id="crAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
+    <textarea id="crReview" placeholder="Quick review (optional)" rows="2" maxlength="400"></textarea>
+    <button type="submit" class="secondary block">Post it</button>
+    <button type="button" id="crowdFormCancel" class="linkbtn mb-alt">Cancel</button>
+    <p id="crNote" class="explain" hidden></p>
+  </form>
+  <p class="mb-alt-row"><button type="button" id="btnEditSite" class="linkbtn mb-alt">&#x270F;&#xFE0F; Fix this brewery&rsquo;s website</button></p>
+  <form id="editSiteForm" class="missingform edit-box" autocomplete="off" hidden>
+    <p class="edit-box-label">&#x270F;&#xFE0F; Editing website</p>
+    <input id="esUrl" type="text" placeholder="Correct website (blank to clear)" inputmode="url">
+    <button type="submit" class="secondary block">Save website</button>
+    <button type="button" id="editSiteCancel" class="linkbtn mb-alt">Cancel</button>
+  </form>
+  <button type="button" id="tapListToggle" class="tl-toggle" aria-expanded="true">
+    <span class="tl-title" id="tlTitle">Tap List</span>
+    <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div id="tapListBody">
+    <p id="tlNote" class="crowd-meta tl-note"></p>
+    <ul id="crowdList" class="crowd-list"></ul>
+    <p id="tlEmpty" class="explain" hidden>No beers known here yet &mdash; add the sour you&rsquo;re drinking.</p>
+  </div>
+</div>
+
+<!-- Beer detail sheet -->
+<div id="beerSheet" class="sheet" hidden>
+  <div class="grabber"></div>
+  <button type="button" id="beerBack" class="linkbtn back-btn bs-back" hidden>&#x2039; Back to brewery</button>
+  <h3 id="bsName"></h3>
+  <p id="bsSub" class="sheet-sub"></p>
+  <div class="sheet-pills">
+    <button type="button" id="btnFavBeer" class="pillbtn">&#x2B50; Favorite</button>
+    <button type="button" id="btnHadBeer" class="pillbtn">&#x2714; I&rsquo;ve had this</button>
+  </div>
+  <div id="bsStatusCard" class="status-card">
+    <div class="status-line">
+      <span id="bsChip" class="chip chip-on" hidden></span>
+      <div id="bsStatus" class="crowd-status"></div>
+    </div>
+    <p id="bsStatusNote" class="crowd-meta"></p>
+    <div class="crowd-actions">
+      <button type="button" id="bsMarkOn" class="pillbtn crowd-pill">&#x1F44D; Mark On Tap</button>
+      <button type="button" id="bsMarkGone" class="pillbtn crowd-pill">&#x1F44E; Mark as Gone</button>
+    </div>
+    <div id="bsVForm"></div>
+  </div>
+  <div class="sour-placeholder crowd-wrap">
+    <div class="tl-sec-row">
+      <div class="tl-sec-head" id="bsRevHead">Reviews</div>
+      <button type="button" id="bsAddReview" class="pillbtn">&#x270D;&#xFE0F; Review</button>
+    </div>
+    <p id="bsRating" class="crowd-meta"></p>
+    <ul id="bsReviews" class="crowd-list"></ul>
+    <form id="bsReviewForm" class="missingform crowd-form" autocomplete="off" hidden>
+      <div id="bsStars" class="stars" role="radiogroup" aria-label="Your rating"></div>
+      <textarea id="bsText" placeholder="Your review or comment" rows="2" maxlength="400" required></textarea>
+      <input id="bsAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
+      <button type="submit" class="secondary block">Post it</button>
+      <button type="button" id="bsReviewCancel" class="linkbtn mb-alt">Cancel</button>
+    </form>
+    <p id="bsError" class="error" hidden></p>
+  </div>
+</div>
+
+<!-- Add-a-brewery sheet -->
+<div id="addBrewerySheet" class="sheet" hidden>
+  <div class="grabber"></div>
+  <h3>&#x1F3ED; Add a brewery</h3>
+  <p class="explain">
+    The brewery list comes from a public database that misses some spots
+    (even famous ones). Add one and it joins the app and the scans.
+  </p>
+  <form id="missingForm" class="missingform edit-box" autocomplete="off" hidden>
+    <p class="edit-box-label">&#x1F3ED; New brewery details</p>
+    <input id="mbName" type="text" placeholder="Brewery name" required>
+    <div class="suggest-wrap">
+      <input id="mbCity" type="text" placeholder="Closest city, state" required autocomplete="off">
+    </div>
+    <input id="mbSite" type="text" placeholder="Website (optional &mdash; lets S4S auto-scan its tap list)" inputmode="url">
+    <input id="mbAuthor" type="text" placeholder="Your name (optional)" maxlength="40" hidden>
+    <button type="submit" class="secondary block">Send it in</button>
+    <button type="button" id="missingFormCancel" class="linkbtn mb-alt">Cancel</button>
+  </form>
+  <p id="mbGate" class="explain" hidden>Brewery submissions aren&rsquo;t turned on yet.</p>
+  <div id="mbDupe" class="crowd-wrap" hidden>
+    <p id="mbDupeNote" class="dupe-warn"></p>
+    <button type="button" id="mbDupeYes" class="secondary block">It&rsquo;s different &mdash; send it anyway</button>
+    <button type="button" id="mbDupeNo" class="linkbtn mb-alt">Never mind</button>
+  </div>
+  <p id="mbSuccess" class="explain" hidden>Thanks &mdash; it&rsquo;s in! It&rsquo;ll show up once it&rsquo;s checked against nearby entries.</p>
+  <p id="mbError" class="error" hidden></p>
+</div>
+
+<!-- Add-a-beer sheet -->
+<div id="addBeerSheet" class="sheet" hidden>
+  <div class="grabber"></div>
+  <h3>&#x1F37A; Add a sour beer</h3>
+  <p class="explain">
+    Know a sour S4S hasn&rsquo;t heard of? Add it under its brewery so
+    others can find and review it.
+  </p>
+  <form id="beerAddForm" class="missingform edit-box" autocomplete="off" hidden>
+    <p class="edit-box-label">&#x1F37A; New beer details</p>
+    <input id="baName" type="text" placeholder="Beer name" required>
+    <input id="baStyle" type="text" placeholder="Style (e.g. Fruited Gose &mdash; optional)" maxlength="80">
+    <div class="suggest-wrap">
+      <input id="baBrewery" type="text" placeholder="Brewery (start typing to pick&hellip;)" required autocomplete="off">
+      <ul id="baSuggest" class="suggest" hidden></ul>
+    </div>
+    <button type="submit" class="secondary block">Add it</button>
+    <button type="button" id="beerAddCancel" class="linkbtn mb-alt">Cancel</button>
+  </form>
+  <p id="beerAddGate" class="explain" hidden></p>
+  <p id="baError" class="error" hidden></p>
+</div>
+
+<script src="crowd.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
