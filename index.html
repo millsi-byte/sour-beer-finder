@@ -72,7 +72,10 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
   <!-- Results -->
   <section id="viewList" class="view" hidden>
     <button id="btnListHome" class="linkbtn back-btn">&#x2039; Home</button>
-    <p id="listTitle" class="list-title"></p>
+    <div class="list-title-row">
+      <p id="listTitle" class="list-title"></p>
+      <button type="button" id="btnMissingTop" class="linkbtn foot-link">&#x2795; Missing brewery</button>
+    </div>
     <div class="filter-row">
       <input id="listFilter" class="list-filter" type="search" placeholder="&#x1F50E; Filter names&hellip;" autocomplete="off">
       <span class="radius-wrap" hidden><select id="radiusSel" class="radius-sel" aria-label="Distance"></select></span>
@@ -80,7 +83,7 @@ try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dar
     <div id="sortBar" class="radius-bar" hidden></div>
     <ul id="breweryList" class="cards"></ul>
     <p class="footnote">Brewery data: Open Brewery DB &middot; &#x1F34B; = sours on tap<br>
-      <button type="button" id="btnMissing" class="linkbtn foot-link">&#x2795; Missing a brewery?</button>
+      <button type="button" id="btnMissing" class="linkbtn foot-link">&#x2795; Missing brewery</button>
     </p>
   </section>
 

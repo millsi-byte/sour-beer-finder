@@ -185,15 +185,15 @@ button.secondary {
 }
 .pillbtn:active { background: var(--card-press); }
 
-.radius-bar { display: flex; gap: 6px; padding: 0 2px 12px; }
+.radius-bar { display: flex; gap: 8px; padding: 0 2px 18px; }
 .radius-chip {
-  flex: 1; padding: 8px 0; font-size: 15px; font-weight: 600;
+  flex: 1; padding: 9px 0; font-size: 15px; font-weight: 600;
   background: var(--card); color: var(--text-dim);
-  border: 0.5px solid var(--hairline); border-radius: 999px; cursor: pointer;
+  border: 0.5px solid var(--hairline); border-radius: 12px; cursor: pointer;
 }
 .radius-chip.active { background: var(--accent); color: #ffffff; border-color: transparent; }
 
-.cards { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.cards { list-style: none; display: flex; flex-direction: column; gap: 12px; }
 .card {
   display: flex; align-items: center; gap: 12px;
   background: var(--card); border-radius: 14px; padding: 14px 14px;
@@ -223,8 +223,10 @@ button.secondary {
 }
 
 /* results header: count line + name-filter/radius row */
-.list-title { color: var(--text-dim); font-size: 16px; padding: 10px 2px; }
-.filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.list-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 12px 2px 6px; }
+.list-title { color: var(--text-dim); font-size: 16px; }
+.list-title-row .foot-link { flex-shrink: 0; white-space: nowrap; }
+.filter-row { display: flex; gap: 8px; margin-bottom: 16px; }
 .filter-row .list-filter { flex: 1; min-width: 0; margin-bottom: 0; }
 .radius-wrap { position: relative; flex-shrink: 0; display: flex; }
 .radius-wrap::after {

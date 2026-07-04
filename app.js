@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.09';
+const APP_BUILD = '2026.07.04.10';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -760,7 +760,7 @@ function renderList(label) {
   }
   const shown = visibleBreweries();
   $('listTitle').textContent =
-    `${shown.length} ${shown.length === 1 ? 'brewery' : 'breweries'} ${state.listLabel}`;
+    `${state.listLabel} · ${shown.length} ${shown.length === 1 ? 'Result' : 'Results'}`;
   renderControls();
   const ul = $('breweryList');
   ul.innerHTML = '';
@@ -1696,7 +1696,7 @@ async function locateFlow() {
         const raw = await fetchByDist(state.origin.lat, state.origin.lng);
         await tapsReady;
         state.breweries = prepare(raw, state.origin);
-        renderList('near you');
+        renderList('Near you');
       } catch (e) {
         fail(`Couldn't load breweries: ${e.message}`);
       }
@@ -1722,7 +1722,7 @@ async function coordsFlow(label, lat, lng) {
     const raw = await fetchByDist(lat, lng);
     await tapsReady;
     state.breweries = prepare(raw, state.origin);
-    renderList(`near ${label}`);
+    renderList(label);
   } catch (e) {
     fail(`Couldn't load breweries: ${e.message}`);
   }
@@ -1746,7 +1746,7 @@ async function cityFlow(q) {
     const raw = await fetchByCity(city, st);
     await tapsReady;
     state.breweries = prepare(raw, null, city);
-    renderList(`in ${city}`);
+    renderList(q);
   } catch (e) {
     fail(`Couldn't load breweries: ${e.message}`);
   }
@@ -2269,6 +2269,7 @@ async function openAddBrewerySheet() {
 
 $('btnAddBrewery').addEventListener('click', openAddBrewerySheet);
 $('btnMissing').addEventListener('click', openAddBrewerySheet);
+$('btnMissingTop').addEventListener('click', openAddBrewerySheet);
 $('missingFormCancel').addEventListener('click', closeSheet);
 
 async function findPossibleDuplicate(name, cityRaw) {
