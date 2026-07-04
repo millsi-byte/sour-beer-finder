@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {}, crowdAliasReal: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.17';
+const APP_BUILD = '2026.07.04.18';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1866,6 +1866,9 @@ $('btnProfilePage').addEventListener('click', () => {
   show('profile');
 });
 $('btnProfileBack').addEventListener('click', () => { renderSettingsPage(); show('settings'); });
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('signin-note-btn')) { renderProfilePage(); show('profile'); }
+});
 
 // bottom navigation — each tab runs its view's setup flow
 $('navSearch').addEventListener('click', () => show('locate'));
@@ -1993,9 +1996,15 @@ function attachSuggest(inputId, listId, searchFn, renderLabel, onPick) {
   input.addEventListener('blur', () => setTimeout(close, 200));
 }
 
-/* section-header count, e.g. "⭐ Favorites · 3" (blank when empty) */
+/* section-header count, e.g. "⭐ Favorites · 3" (shown even at 0 — an
+   empty count is itself information, not a gap to hide) */
 function secCount(id, n) {
-  $(id).textContent = n ? ` · ${n}` : '';
+  $(id).textContent = ` · ${n}`;
+}
+
+/* signed-out empty-state note: icon + one line + the one button that fixes it */
+function signInNote(text) {
+  return `${text} <button type="button" class="linkbtn signin-note-btn">Sign in</button>`;
 }
 
 async function breweriesFlow() {
@@ -2009,8 +2018,8 @@ async function breweriesFlow() {
   if (!crowd.authState()) {
     secCount('brewFavsCount', 0);
     secCount('brewCheckinsCount', 0);
-    $('brewFavsNote').textContent = 'Sign in (Settings → Profile) to keep favorites.';
-    $('brewCheckinsNote').textContent = 'Sign in to start a check-in history.';
+    $('brewFavsNote').innerHTML = signInNote('⭐ Sign in to keep favorites.');
+    $('brewCheckinsNote').innerHTML = signInNote('🍻 Sign in to start a check-in history.');
     return;
   }
   const { favs, checkins } = await crowd.myMarks();
@@ -2117,8 +2126,8 @@ async function beersFlow() {
   if (!signedIn) {
     secCount('beerFavsCount', 0);
     secCount('beerHadCount', 0);
-    $('beerFavsNote').textContent = 'Sign in (Settings → Profile) to keep favorites.';
-    $('beerHadNote').textContent = 'Sign in to track beers you’ve had.';
+    $('beerFavsNote').innerHTML = signInNote('⭐ Sign in to keep favorites.');
+    $('beerHadNote').innerHTML = signInNote('✔ Sign in to track beers you’ve had.');
     return;
   }
   const { favs, had } = await crowd.myMarks();
