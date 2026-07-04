@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {}, crowdAliasReal: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.19';
+const APP_BUILD = '2026.07.04.20';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1101,7 +1101,7 @@ async function renderSheetPills(b) {
     const { favs, wishes } = await crowd.myMarks();
     if (sheetBrewery !== b) return;
     if (favs.has(`brewery|${b.id}`)) fav.textContent = '★ Favorited';
-    if (wishes.has(`brewery|${b.id}`)) wish.textContent = '🎯 On Wishlist';
+    if (wishes.has(`brewery|${b.id}`)) wish.textContent = '🎯 On List';
   }
 }
 
@@ -1651,14 +1651,14 @@ async function renderBeerPills(beer) {
   const had = $('btnHadBeer');
   const wish = $('btnWishBeer');
   fav.textContent = '⭐ Favorite';
-  had.textContent = '✔ I’ve had this';
+  had.textContent = '✔ Had';
   wish.textContent = '🎯 Wishlist';
   if (crowd.authState()) {
     const { favs, had: hadMap, wishes } = await crowd.myMarks();
     if (sheetBeer?.beer_key !== beer.beer_key) return;
     if (favs.has(`beer|${beer.beer_key}`)) fav.textContent = '★ Favorited';
     if (hadMap.has(`beer|${beer.beer_key}`)) had.textContent = '✅ Had it!';
-    if (wishes.has(`beer|${beer.beer_key}`)) wish.textContent = '🎯 On Wishlist';
+    if (wishes.has(`beer|${beer.beer_key}`)) wish.textContent = '🎯 On List';
   }
 }
 
@@ -2218,7 +2218,7 @@ async function beersFlow() {
   $('beerFavsNote').textContent = beerFavs.length ? '' : 'No favorites yet — tap ⭐ on any beer.';
   $('beerHadNote').textContent = hadBeers.length
     ? ''
-    : 'Nothing yet — tap ✔ I’ve had this on a beer you’ve tried.';
+    : 'Nothing yet — tap ✔ Had on a beer you’ve tried.';
   $('beerWishNote').textContent = beerWish.length
     ? ''
     : 'No wishlist beers yet — tap 🎯 Wishlist on any beer.';

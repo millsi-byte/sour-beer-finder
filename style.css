@@ -440,7 +440,10 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
 .sheet-box #tapListBody { margin-top: 2px; }
 .sheet-box .tl-toggle { padding-bottom: 8px; }
 .sheet-pills { display: flex; gap: 10px; margin: 0 0 10px; }
-.sheet-pills .pillbtn { flex: 1; text-align: center; padding: 11px 8px; white-space: nowrap; }
+.sheet-pills .pillbtn {
+  flex: 1; min-width: 0; text-align: center; padding: 11px 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .tl-toggle {
   display: flex; align-items: center; justify-content: space-between;
   width: 100%; background: none; border: none; cursor: pointer;
