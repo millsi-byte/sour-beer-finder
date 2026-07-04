@@ -943,5 +943,55 @@
     "craftpeak_locations": [
       "https://oxbowbeer.com/location/newcastle"
     ]
+  },
+  {
+    "obdb_id": "x-fireforge-greenville",
+    "name": "Fireforge",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://fireforge.beer/location/taproom/",
+      "https://fireforge.beer/location/taproom",
+      "https://commerce.arryved.com/location/BaZR_RvQ"
+    ],
+    "found_on": "https://fireforge.beer/location/taproom/#on-tap"
+  },
+  {
+    "obdb_id": "995b3da6-99ed-4cf4-9562-05286f4430f8",
+    "name": "Wicked Weed Funk House",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://www.wickedweedbrewing.com/location/wicked-weed-west/",
+      "https://www.wickedweedbrewing.com/location/brewpub/",
+      "https://www.wickedweedbrewing.com/location/funkatorium/",
+      "http://www.wickedweedbrewing.com/location/brewpub"
+    ],
+    "found_on": "http://www.wickedweedbrewing.com"
+  },
+  {
+    "obdb_id": "c9815e98-046a-4e4e-bbd2-80d265b62747",
+    "name": "Resident Culture Brewing Company LLC",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "http://www.residentculturebrewing.com/location/plaza-midwood/",
+      "https://residentculturebrewing.com/location/plaza-midwood/",
+      "https://residentculturebrewing.com/location/7th-street/"
+    ],
+    "found_on": "http://www.residentculturebrewing.com"
+  },
+  {
+    "obdb_id": "22ef447a-0379-4be5-ab93-72d95e4a778a",
+    "name": "Blowing Rock Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 842556,
+    "untappd_venue_url": "https://untappd.com/v/blowing-rock-brewing-company/842556",
+    "found_on": "http://www.blowingrockbrewing.com"
+  },
+  {
+    "obdb_id": "2df305d1-54c9-4414-aa77-cb4cd99044bd",
+    "name": "Chattanooga Brewing Co",
+    "source": "untappd",
+    "untappd_venue_id": 1576695,
+    "untappd_venue_url": "https://untappd.com/v/chattanooga-brewing-company/1576695",
+    "found_on": "http://www.chattabrew.com"
   }
 ]
