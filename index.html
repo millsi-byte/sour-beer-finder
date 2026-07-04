@@ -17,6 +17,9 @@
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" type="image/png" href="icons/icon-180.png">
 
+<script>/* apply the saved Appearance choice before first paint */
+try { var t = localStorage.getItem('s4s.theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -158,6 +161,9 @@
   <section id="viewSettings" class="view" hidden>
     <h2 class="section-title">Settings</h2>
     <button type="button" id="btnProfilePage" class="secondary block">&#x1F464; Profile</button>
+    <h3 class="section-sub">Appearance</h3>
+    <div id="themeBar" class="radius-bar"></div>
+    <p class="explain">Auto follows your device&rsquo;s light/dark setting.</p>
     <h3 class="section-sub">Data</h3>
     <button id="btnDataStatus" class="secondary block">&#x1F4E1; Full data status</button>
     <h3 class="section-sub">App</h3>
@@ -251,21 +257,13 @@
     <button type="button" id="editSiteCancel" class="linkbtn mb-alt">Cancel</button>
   </form>
   <button type="button" id="tapListToggle" class="tl-toggle" aria-expanded="true">
-    <span class="tl-title">Tap List</span>
+    <span class="tl-title" id="tlTitle">Tap List</span>
     <svg class="tl-chev" width="18" height="12" viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3l8 8 8-8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
   <div id="tapListBody">
-    <div class="sour-placeholder">
-      <div class="tl-sec-head">From the brewery&rsquo;s menu</div>
-      <span id="sourBadge" class="sour-badge">&#x1F34B; Tap list</span>
-      <p id="sourBody"></p>
-      <ul id="sourList" class="sour-list" hidden></ul>
-    </div>
-    <div id="crowdWrap" class="sour-placeholder crowd-wrap" hidden>
-      <div class="tl-sec-head">Reported by drinkers &#x1F465;</div>
-      <p class="crowd-note">Drinker reports show who said what, and when &mdash; check the dates.</p>
-      <ul id="crowdList" class="crowd-list"></ul>
-    </div>
+    <p id="tlNote" class="crowd-meta tl-note"></p>
+    <ul id="crowdList" class="crowd-list"></ul>
+    <p id="tlEmpty" class="explain" hidden>No beers known here yet &mdash; add the sour you&rsquo;re drinking.</p>
   </div>
 </div>
 
@@ -279,8 +277,11 @@
     <button type="button" id="btnFavBeer" class="pillbtn">&#x2B50; Favorite</button>
     <button type="button" id="btnHadBeer" class="pillbtn">&#x2714; I&rsquo;ve had this</button>
   </div>
-  <div class="sour-placeholder">
-    <div id="bsStatus" class="crowd-status"></div>
+  <div id="bsStatusCard" class="status-card">
+    <div class="status-line">
+      <span id="bsChip" class="chip chip-on" hidden></span>
+      <div id="bsStatus" class="crowd-status"></div>
+    </div>
     <p id="bsStatusNote" class="crowd-meta"></p>
     <div class="crowd-actions">
       <button type="button" id="bsMarkOn" class="pillbtn crowd-pill">&#x1F44D; Mark On Tap</button>
@@ -289,10 +290,12 @@
     <div id="bsVForm"></div>
   </div>
   <div class="sour-placeholder crowd-wrap">
-    <div class="tl-sec-head">Reviews &amp; comments</div>
+    <div class="tl-sec-row">
+      <div class="tl-sec-head" id="bsRevHead">Reviews</div>
+      <button type="button" id="bsAddReview" class="pillbtn">&#x270D;&#xFE0F; Review</button>
+    </div>
     <p id="bsRating" class="crowd-meta"></p>
     <ul id="bsReviews" class="crowd-list"></ul>
-    <button type="button" id="bsAddReview" class="secondary block">&#x270D;&#xFE0F; Review this sour</button>
     <form id="bsReviewForm" class="missingform crowd-form" autocomplete="off" hidden>
       <div id="bsStars" class="stars" role="radiogroup" aria-label="Your rating"></div>
       <textarea id="bsText" placeholder="Your review or comment" rows="2" maxlength="400" required></textarea>

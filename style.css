@@ -8,6 +8,8 @@
   --accent-ink: #a9c6ae;  /* accent used as text/icon color */
   --hairline: rgba(255,255,255,.08);
   --danger: #ff6b6b;
+  --ok: #86c491;                       /* on-tap green (text) */
+  --ok-soft: rgba(134, 196, 145, .16); /* on-tap green (chip fill) */
   --serif: Georgia, "Times New Roman", "New York", serif; /* brand face */
 }
 @media (prefers-color-scheme: light) {
@@ -19,7 +21,33 @@
     --text-dim: #6d746e;
     --accent-ink: #46644d; /* darker sage for text on white */
     --hairline: rgba(0,0,0,.08);
+    --ok: #2e7d43;
+    --ok-soft: rgba(46, 125, 67, .12);
   }
+}
+/* Appearance setting (Settings → Appearance): a forced choice stamps
+   data-theme on <html> and must beat the OS media query both ways. */
+:root[data-theme="dark"] {
+  --bg: #111412;
+  --card: #1c211d;
+  --card-press: #272d28;
+  --text: #f2f4f2;
+  --text-dim: #9aa39c;
+  --accent-ink: #a9c6ae;
+  --hairline: rgba(255,255,255,.08);
+  --ok: #86c491;
+  --ok-soft: rgba(134, 196, 145, .16);
+}
+:root[data-theme="light"] {
+  --bg: #f7f7f4;
+  --card: #ffffff;
+  --card-press: #edefec;
+  --text: #1d211e;
+  --text-dim: #6d746e;
+  --accent-ink: #46644d;
+  --hairline: rgba(0,0,0,.08);
+  --ok: #2e7d43;
+  --ok-soft: rgba(46, 125, 67, .12);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -379,6 +407,53 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
   text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px;
 }
 .crowd-status { font-size: 15px; font-weight: 650; margin-top: 6px; }
+
+/* Unified tap list: one row per beer, scanned or drinker-reported */
+.tl-note { margin: 0 0 8px; }
+#tapListBody .crowd-list { gap: 8px; }
+#bsReviews { gap: 0; }
+.tl-row {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border: 0.5px solid var(--hairline);
+  border-radius: 11px; padding: 10px 12px; cursor: pointer;
+}
+.tl-row:active { background: var(--card-press); }
+.tl-row.tl-gone { opacity: .55; }
+.tl-who { flex: 1; min-width: 0; }
+.tl-beer { font-size: 16px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tl-meta { color: var(--text-dim); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip {
+  font-size: 11px; font-weight: 800; letter-spacing: .05em;
+  border-radius: 5px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0;
+}
+.chip-on { background: var(--ok-soft); color: var(--ok); }
+.chip-gone { background: var(--hairline); color: var(--text-dim); }
+.chip-new { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent-ink); }
+.chip-src {
+  background: var(--hairline); color: var(--text-dim);
+  font-weight: 650; letter-spacing: 0; max-width: 96px;
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Beer sheet: status card + review rows */
+.status-card {
+  background: var(--bg); border: 1px solid var(--hairline);
+  border-radius: 12px; padding: 12px 14px; margin: 2px 0 12px;
+}
+.status-card.on { border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.status-line { display: flex; align-items: center; gap: 9px; }
+.status-line .crowd-status { margin-top: 0; }
+.tl-sec-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.tl-sec-row .tl-sec-head { margin-bottom: 0; }
+.review-row { display: flex; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid var(--hairline); }
+.review-row:last-child { border-bottom: 0; }
+.avatar {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent-ink);
+  font-weight: 800; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.review-body { flex: 1; min-width: 0; }
 
 /* Breweries/Beers tabs + beer sheet */
 .block-wrap { display: block; margin-bottom: 12px; }

@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.04';
+const APP_BUILD = '2026.07.04.05';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -455,7 +455,7 @@ function directionsUrl(b) {
 
 const UNTAPPD_KEY = 's4s.untappd'; // 'web' (default) | 'app'
 
-function renderChoiceBar(barId, key, options, fallback) {
+function renderChoiceBar(barId, key, options, fallback, onChange) {
   const bar = $(barId);
   bar.innerHTML = '';
   const cur = localStorage.getItem(key) || fallback;
@@ -465,10 +465,36 @@ function renderChoiceBar(barId, key, options, fallback) {
     btn.textContent = label;
     btn.addEventListener('click', () => {
       localStorage.setItem(key, id);
-      renderChoiceBar(barId, key, options, fallback);
+      onChange?.(id);
+      renderChoiceBar(barId, key, options, fallback, onChange);
     });
     bar.appendChild(btn);
   }
+}
+
+// ---------- appearance (Auto / Light / Dark) ----------
+const THEME_KEY = 's4s.theme';
+
+/* Forced themes stamp data-theme on <html> (CSS tokens follow); the
+   theme-color metas are synced too so the PWA chrome matches. A tiny
+   inline script in <head> applies the saved choice before first paint. */
+function applyTheme(v) {
+  const root = document.documentElement;
+  if (v === 'light' || v === 'dark') root.dataset.theme = v;
+  else delete root.dataset.theme;
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+    const own = (m.media || '').includes('dark') ? '#111412' : '#f7f7f4';
+    m.content = v === 'dark' ? '#111412' : v === 'light' ? '#f7f7f4' : own;
+  });
+}
+applyTheme(localStorage.getItem(THEME_KEY) || 'auto');
+
+function renderSettingsPage() {
+  renderChoiceBar(
+    'themeBar', THEME_KEY,
+    [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']],
+    'auto', applyTheme
+  );
 }
 
 function renderProfilePage() {
@@ -996,38 +1022,6 @@ function openSheet(b) {
   const addr = [b.address_1, b.city, b.state_province].filter(Boolean).join(' · ');
   $('sheetSub').textContent = [addr, fmtMiles(b.miles)].filter(Boolean).join(' — ');
 
-  const info = tapInfo(b);
-  const badge = $('sourBadge');
-  const body = $('sourBody');
-  const list = $('sourList');
-  list.hidden = true;
-  list.innerHTML = '';
-  if (!info) {
-    badge.textContent = '\u{1F34B} Tap list';
-    body.textContent = 'No live tap data for this brewery yet — check its Untappd menu:';
-  } else if (!info.sours.length) {
-    badge.textContent = '\u{1F34B} No sours right now';
-    body.textContent = `Nothing sour among ${info.beer_count} beers on the current list · updated ${fmtAgo(info.fetched_at)}`;
-  } else {
-    const n = info.sours.length;
-    badge.textContent = `\u{1F34B} ${n} sour${n > 1 ? 's' : ''} on tap`;
-    body.textContent = `Updated ${fmtAgo(info.fetched_at)} · ${SOURCE_LABELS[info.source] ?? `via ${info.source}`}`;
-    list.hidden = false;
-    info.sours.forEach((s) => {
-      const li = document.createElement('li');
-      const name = document.createElement('span');
-      name.textContent = s.name;
-      li.appendChild(name);
-      if (s.style && s.style !== s.name) {
-        const style = document.createElement('span');
-        style.className = 'style';
-        style.textContent = ` — ${s.style}`;
-        li.appendChild(style);
-      }
-      list.appendChild(li);
-    });
-  }
-
   $('actUntappd').href =
     `https://untappd.com/search?q=${encodeURIComponent(b.name)}&type=venues`;
 
@@ -1041,7 +1035,7 @@ function openSheet(b) {
   // Tap List starts expanded on every open
   setTapListOpen(true);
   renderSheetPills(b);
-  renderCrowdSection(b);
+  renderTapList(b);
   $('editSiteForm').hidden = true;
   $('editSiteForm').reset();
 
@@ -1143,76 +1137,100 @@ function starRow(n) {
   return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
 }
 
-async function renderCrowdSection(b) {
+/* One tap list: scanned beers and drinker-reported beers are the same
+   kind of thing, merged by beer_key — where a beer came from is a badge
+   on its row, not a section boundary. Everything conversational (reviews,
+   marking on tap/gone) lives on the beer's own sheet, one tap away. */
+async function renderTapList(b) {
   sheetBrewery = b;
-  $('crowdWrap').hidden = true;
   $('crowdForm').hidden = true;
-  $('btnCrowdReport').hidden = true;
   $('crNote').hidden = true;
-  if (!(await crowd.crowdEnabled()) || sheetBrewery !== b) return;
-  $('btnCrowdReport').hidden = false;
-  const beers = await crowd.crowdBeersFor(b.id);
-  if (sheetBrewery !== b || !beers.length) return;
+  $('tlEmpty').hidden = true;
   const ul = $('crowdList');
   ul.innerHTML = '';
-  beers.forEach((beer) => ul.appendChild(crowdBeerRow(beer)));
-  $('crowdWrap').hidden = false;
+  const enabled = await crowd.crowdEnabled();
+  if (sheetBrewery !== b) return;
+  $('btnCrowdReport').hidden = !enabled;
+  const drinkers = enabled ? await crowd.crowdBeersFor(b.id) : [];
+  if (sheetBrewery !== b) return;
+
+  const byKey = new Map();
+  for (const s of scannedBeersFor(b.id)) byKey.set(s.beer_key, s);
+  for (const d of drinkers) {
+    const s = byKey.get(d.beer_key);
+    byKey.set(d.beer_key, s ? { ...d, scanned: true, scanned_at: s.scanned_at } : d);
+  }
+  // gone beers sink to the bottom; menu order / report order kept otherwise
+  const beers = [...byKey.values()].sort(
+    (x, y) => (x.currentlyGone ? 1 : 0) - (y.currentlyGone ? 1 : 0)
+  );
+
+  $('tlTitle').textContent = beers.length ? `Tap List · ${beers.length}` : 'Tap List';
+  const info = tapInfo(b);
+  const bits = [];
+  if (info) {
+    bits.push(info.sours.length
+      ? `🍋 Menu scanned ${fmtAgo(info.fetched_at)} · ${SOURCE_LABELS[info.source] ?? `via ${info.source}`}`
+      : `🍋 Nothing sour among ${info.beer_count} beers on the menu · scanned ${fmtAgo(info.fetched_at)}`);
+  } else {
+    bits.push('No auto-scanned menu for this brewery');
+  }
+  if (beers.some((x) => x.trail?.length || x.reports?.length)) bits.push('👤 = reported by a drinker');
+  $('tlNote').textContent = bits.join(' · ');
+  $('tlEmpty').hidden = !!beers.length;
+  beers.forEach((beer) => ul.appendChild(tapListRow(beer)));
 }
 
-/* One row per drinker-known beer: last status (who/when), Mark buttons,
-   tap anywhere else -> the beer sheet with its reviews. */
+/* who/when line for the beer sheet's status card */
 function lastStatusText(beer) {
   const last = beer.trail.at(-1);
-  if (last) {
-    return `${last.vote === 'gone' ? '👎 Gone' : '👍 On tap'} — ${last.author || 'a drinker'} · ${fmtWhen(last.created_at)}`;
-  }
+  if (last) return `${last.author || 'a drinker'} · ${fmtWhen(last.created_at)}`;
   const src = beer.reports.at(-1); // oldest report = first record
   if (src?.kind === 'beer') return `added by ${src.author || 'a drinker'} · ${fmtWhen(src.created_at)}`;
-  return `👍 On tap — ${src?.author || 'a drinker'} · ${fmtWhen(src?.created_at)}`;
+  return `${src?.author || 'a drinker'} · ${fmtWhen(src?.created_at)}`;
 }
 
-function crowdBeerRow(beer) {
+/* NEW = user-added to the catalog, no on-tap claim yet */
+function beerStatusKind(beer) {
+  if (beer.currentlyGone) return 'gone';
+  if (beer.trail?.length) return 'on';
+  const newest = beer.reports?.[0]; // reports are sorted newest-first
+  if (newest?.kind === 'beer') return 'new';
+  return 'on'; // scanned, or a drinker report (an on-tap claim)
+}
+
+function tapListRow(beer) {
   const li = document.createElement('li');
-  li.className = 'crowd-item' + (beer.currentlyGone ? ' crowd-gone' : '');
+  const kind = beerStatusKind(beer);
+  li.className = 'tl-row' + (kind === 'gone' ? ' tl-gone' : '');
 
-  const head = document.createElement('div');
-  head.className = 'crowd-head';
-  head.textContent = beer.beer_name + (beer.style ? ` — ${beer.style}` : '');
-  if (beer.avgRating) {
-    const stars = document.createElement('span');
-    stars.className = 'crowd-stars';
-    stars.textContent = ` ${starRow(Math.round(beer.avgRating))} (${beer.ratingCount})`;
-    head.appendChild(stars);
-  }
-  li.appendChild(head);
-
-  const status = document.createElement('div');
-  status.className = 'crowd-status';
-  status.textContent = lastStatusText(beer);
-  li.appendChild(status);
-
+  const who = document.createElement('div');
+  who.className = 'tl-who';
+  const name = document.createElement('div');
+  name.className = 'tl-beer';
+  name.textContent = beer.beer_name;
   const meta = document.createElement('div');
-  meta.className = 'crowd-meta';
-  const nNotes = beer.reports.filter((r) => r.review).length + beer.comments.length;
-  meta.textContent = nNotes
-    ? `💬 ${nNotes} review${nNotes > 1 ? 's' : ''} — tap to read & review`
-    : 'tap to review this beer';
-  li.appendChild(meta);
+  meta.className = 'tl-meta';
+  const bits = [];
+  if (beer.style && beer.style !== beer.beer_name) bits.push(beer.style);
+  if (beer.avgRating) bits.push(`★ ${beer.avgRating}`);
+  const nNotes = (beer.reports?.filter((r) => r.review).length || 0) + (beer.comments?.length || 0);
+  if (nNotes) bits.push(`💬 ${nNotes}`);
+  meta.textContent = bits.join(' · ');
+  who.append(name, meta);
+  li.appendChild(who);
 
-  const row = document.createElement('div');
-  row.className = 'crowd-actions';
-  for (const [vote, label] of [['still', '👍 Mark On Tap'], ['gone', '👎 Mark as Gone']]) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'pillbtn crowd-pill';
-    btn.textContent = label;
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      markBeer(beer, vote, btn, li, () => renderCrowdSection(sheetBrewery));
-    });
-    row.appendChild(btn);
-  }
-  li.appendChild(row);
+  const lastSig = beer.trail?.at(-1) ?? beer.reports?.[0];
+  const src = document.createElement('span');
+  src.className = 'chip chip-src';
+  src.textContent = lastSig ? `👤 ${lastSig.author || 'drinker'}` : '🍋 menu';
+  src.title = lastSig ? `Reported ${fmtWhen(lastSig.created_at)}` : 'On the scanned menu';
+  li.appendChild(src);
+
+  const status = document.createElement('span');
+  status.className = 'chip ' + (kind === 'gone' ? 'chip-gone' : kind === 'new' ? 'chip-new' : 'chip-on');
+  status.textContent = kind === 'gone' ? 'GONE' : kind === 'new' ? 'NEW' : 'ON TAP';
+  li.appendChild(status);
 
   li.addEventListener('click', () => openBeerSheet(beer, { fromBrewery: true }));
   return li;
@@ -1259,32 +1277,7 @@ function crowdStatusForm(rep, vote, onDone) {
     try {
       await crowd.submitVote(rep, vote, form.querySelector('.cv-author').value.trim());
       refreshCrowdCounts();
-      (onDone ?? (() => renderCrowdSection(sheetBrewery)))();
-    } catch {
-      form.querySelector('button').disabled = false;
-    }
-  });
-  return form;
-}
-
-function crowdCommentForm(rep) {
-  const form = document.createElement('form');
-  form.className = 'missingform crowd-cform';
-  form.innerHTML = `
-    <input type="text" class="cc-text" placeholder="Your comment" required maxlength="300">
-    <input type="text" class="cc-author" placeholder="Your name (optional)" maxlength="40">
-    <button type="submit" class="secondary block">Post comment</button>`;
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const text = form.querySelector('.cc-text').value.trim();
-    if (!text) return;
-    form.querySelector('button').disabled = true;
-    try {
-      await crowd.submitComment(rep, {
-        text,
-        author: form.querySelector('.cc-author').value.trim(),
-      });
-      renderCrowdSection(sheetBrewery);
+      (onDone ?? (() => renderTapList(sheetBrewery)))();
     } catch {
       form.querySelector('button').disabled = false;
     }
@@ -1341,7 +1334,7 @@ $('crowdForm').addEventListener('submit', async (e) => {
     $('crowdForm').reset();
     $('crowdForm').hidden = true;
     refreshCrowdCounts();
-    renderCrowdSection(sheetBrewery);
+    renderTapList(sheetBrewery);
   } catch {
     const note = $('crNote');
     note.hidden = false;
@@ -1394,7 +1387,9 @@ async function beerCatalog() {
 }
 
 async function openBeerSheet(seed, { fromBrewery = false } = {}) {
-  bsCameFromBrewery = fromBrewery && !$('sheet').hidden;
+  // sticky across re-renders: a mark/review refresh happens while the
+  // brewery sheet is hidden, but the way back to it still exists
+  bsCameFromBrewery = fromBrewery && (!$('sheet').hidden || bsCameFromBrewery);
   $('sheet').hidden = true;
   $('addBrewerySheet').hidden = true;
   $('addBeerSheet').hidden = true; // a just-added beer opens on top of the add sheet
@@ -1423,14 +1418,26 @@ async function openBeerSheet(seed, { fromBrewery = false } = {}) {
   $('bsName').textContent = beer.beer_name || '(unnamed beer)';
   $('bsSub').textContent = [beer.style, beer.brewery_name].filter(Boolean).join(' · ');
 
-  // status: prefer drinker record; scanned-only beers show the scan
+  // status card: chip carries the state, the line under it says who/when
+  const chip = $('bsChip');
+  const card = $('bsStatusCard');
+  chip.hidden = false;
+  card.classList.remove('on');
   if (beer.reports.length || beer.trail.length) {
+    const kind = beerStatusKind(beer);
+    chip.className = 'chip ' + (kind === 'gone' ? 'chip-gone' : kind === 'new' ? 'chip-new' : 'chip-on');
+    chip.textContent = kind === 'gone' ? 'GONE' : kind === 'new' ? 'NEW' : '● ON TAP';
+    if (kind === 'on') card.classList.add('on');
     $('bsStatus').textContent = lastStatusText(beer);
     $('bsStatusNote').textContent = '';
   } else if (beer.scanned) {
+    chip.className = 'chip chip-on';
+    chip.textContent = '● ON TAP';
+    card.classList.add('on');
     $('bsStatus').textContent = '🍋 On the scanned tap list';
     $('bsStatusNote').textContent = `from the brewery's own menu · updated ${fmtAgo(beer.scanned_at)}`;
   } else {
+    chip.hidden = true;
     $('bsStatus').textContent = 'No tap status yet';
     $('bsStatusNote').textContent = 'Be the first to mark it On Tap.';
   }
@@ -1512,26 +1519,35 @@ function renderBeerReviews(beer) {
     ...beer.reports.filter((r) => r.review || r.rating),
     ...beer.comments,
   ].sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''));
+  $('bsRevHead').textContent = notes.length ? `Reviews · ${notes.length}` : 'Reviews';
   for (const n of notes) {
     const li = document.createElement('li');
-    li.className = 'crowd-item';
+    li.className = 'review-row';
+    const av = document.createElement('div');
+    av.className = 'avatar';
+    av.textContent = (n.author || '?').trim().charAt(0).toUpperCase() || '?';
+    li.appendChild(av);
+    const bodyWrap = document.createElement('div');
+    bodyWrap.className = 'review-body';
+    li.appendChild(bodyWrap);
     const head = document.createElement('div');
     head.className = 'crowd-meta';
     head.textContent = `${n.author || 'a drinker'} · ${fmtAgo(n.created_at)}${n.rating ? ' · ' + starRow(n.rating) : ''}`;
-    li.appendChild(head);
+    bodyWrap.appendChild(head);
     const body = document.createElement('div');
     body.className = 'crowd-review';
     body.textContent = n.review || n.text || '';
-    if (body.textContent) li.appendChild(body);
+    if (body.textContent) bodyWrap.appendChild(body);
     // self-serve edit/delete on your own review/comment (uid-stamped only
     // — anonymous notes have nothing to check identity against)
+    const li0 = li; // the row being replaced on edit
     if (n.uid && crowd.authState()?.uid === n.uid) {
       const edit = document.createElement('button');
       edit.type = 'button';
       edit.className = 'linkbtn mark-del-inline';
       edit.textContent = '✎ Edit';
-      edit.addEventListener('click', () => li.replaceWith(editNoteRow(n, beer)));
-      li.appendChild(edit);
+      edit.addEventListener('click', () => li0.replaceWith(editNoteRow(n, beer)));
+      bodyWrap.appendChild(edit);
 
       const del = document.createElement('button');
       del.type = 'button';
@@ -1546,14 +1562,14 @@ function renderBeerReviews(beer) {
           showToast(err.message);
         }
       });
-      li.appendChild(del);
+      bodyWrap.appendChild(del);
     } else if (!n.uid && n.author && crowd.authState()?.display_name === n.author) {
       // likely their own note, posted before they had a profile — nothing
       // to check identity against, so editing/deleting it isn't possible
       const note = document.createElement('div');
       note.className = 'crowd-meta';
       note.textContent = "Posted before you had a profile — can't be edited or removed.";
-      li.appendChild(note);
+      bodyWrap.appendChild(note);
     }
     ul.appendChild(li);
   }
@@ -1679,7 +1695,7 @@ $('beerBack').addEventListener('click', () => {
   $('beerSheet').hidden = true;
   if (bsCameFromBrewery && sheetBrewery) {
     $('sheet').hidden = false;
-    renderCrowdSection(sheetBrewery); // fresh marks/status after edits
+    renderTapList(sheetBrewery); // fresh marks/status after edits
   } else {
     $('sheetBackdrop').hidden = true;
   }
@@ -1788,19 +1804,19 @@ $('btnRefresh').addEventListener('click', statusFlow);
 $('btnRefresh').hidden = true;
 $('brandHome').addEventListener('click', () => show('locate'));
 $('btnDataStatus').addEventListener('click', statusFlow);
-$('btnStatusBack').addEventListener('click', () => show('settings'));
+$('btnStatusBack').addEventListener('click', () => { renderSettingsPage(); show('settings'); });
 $('btnProfilePage').addEventListener('click', () => {
   renderProfilePage();
   show('profile');
 });
-$('btnProfileBack').addEventListener('click', () => show('settings'));
+$('btnProfileBack').addEventListener('click', () => { renderSettingsPage(); show('settings'); });
 
 // bottom navigation — each tab runs its view's setup flow
 $('navSearch').addEventListener('click', () => show('locate'));
 $('navLocations').addEventListener('click', citiesFlow);
 $('navBreweries').addEventListener('click', breweriesFlow);
 $('navBeers').addEventListener('click', beersFlow);
-$('navSettings').addEventListener('click', () => show('settings'));
+$('navSettings').addEventListener('click', () => { renderSettingsPage(); show('settings'); });
 
 // ---------- Breweries tab ----------
 /* Favorites rows use the same icon+X style as the Locations list —
