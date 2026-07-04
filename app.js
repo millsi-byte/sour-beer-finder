@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.06';
+const APP_BUILD = '2026.07.04.07';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1175,7 +1175,7 @@ async function renderTapList(b) {
   } else {
     bits.push('No auto-scanned menu for this brewery');
   }
-  if (beers.some((x) => x.trail?.length || x.reports?.length)) bits.push('👤 = reported by a drinker');
+  if (beers.some((x) => x.trail?.length || x.reports?.length)) bits.push('👤 = reported');
   $('tlNote').textContent = bits.join(' · ');
   $('tlEmpty').hidden = !!beers.length;
   beers.forEach((beer) => ul.appendChild(tapListRow(beer)));

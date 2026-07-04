@@ -183,7 +183,7 @@ button.secondary {
 .linkbtn { background: none; border: none; color: var(--accent-ink); font-size: 15px; font-weight: 600; cursor: pointer; }
 .pillbtn {
   background: var(--card); border: 0.5px solid var(--hairline);
-  border-radius: 999px; color: var(--accent-ink);
+  border-radius: 12px; color: var(--accent-ink);
   font-size: 15px; font-weight: 700; padding: 10px 14px;
   cursor: pointer; white-space: nowrap;
 }
@@ -317,8 +317,11 @@ button.block { display: block; width: 100%; margin-top: 8px; }
 .sour-list li { font-size: 17px; }
 .sour-list .style { color: var(--text-dim); font-size: 14px; }
 .sour-chip { font-size: 15px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
-/* second action row: outbound links — same pill geometry, quieter color */
-.sheet-links .pillbtn { color: var(--text-dim); text-decoration: none; }
+/* second action row: outbound links — grey fill, plain text, like before */
+.sheet-links .pillbtn {
+  background: var(--card-press); color: var(--text);
+  border-color: transparent; text-decoration: none;
+}
 
 /* Crowd layer: drinker reports (crowd.js) */
 .crowd-wrap { margin-top: 10px; }
