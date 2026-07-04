@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-04T14:46:49.079Z",
+  "generated_at": "2026-07-04T18:14:30.892Z",
   "docs": [
     {
       "_id": "SH1affEl3jOBhKdJXYL2",
@@ -310,26 +310,6 @@
       "created_at": "2026-07-04T00:26:46.189Z"
     },
     {
-      "_id": "SBuhYBO4YiLdOSsZ9SPz",
-      "kind": "vote",
-      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
-      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
-      "vote": "still",
-      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
-      "author": "Scott",
-      "created_at": "2026-07-04T00:26:48.706Z"
-    },
-    {
-      "_id": "WBf0TPP4p0eKwXeDtX9y",
-      "kind": "vote",
-      "beer_key": "40add606-afd1-430a-b274-2af693e0e5aa::test",
-      "brewery_id": "40add606-afd1-430a-b274-2af693e0e5aa",
-      "vote": "gone",
-      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
-      "author": "Scott",
-      "created_at": "2026-07-04T00:26:50.139Z"
-    },
-    {
       "_id": "nU9fngW8Ls62PObYqSWQ",
       "kind": "report",
       "brewery_id": "x-tactical-brewing-orlando",
@@ -511,6 +491,138 @@
       "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
       "author": "Scott",
       "created_at": "2026-07-04T14:38:35.949Z"
+    },
+    {
+      "_id": "SZQWuXcvyRA3YdOEKhgV",
+      "kind": "report",
+      "brewery_id": "a8882009-9fd1-4cab-a8e8-c19bf22d6dea",
+      "brewery_name": "Peak Organic Brewing Co",
+      "beer_name": "Sweet Tarts: Maine Blueberry",
+      "beer_key": "a8882009-9fd1-4cab-a8e8-c19bf22d6dea::sweet-tarts-maine-blueberry",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:25:40.827Z"
+    },
+    {
+      "_id": "9fi4gTAPEXNBOTvorEVW",
+      "kind": "report",
+      "brewery_id": "52639e4f-8a95-4c65-b241-a3cc1b3afb3c",
+      "brewery_name": "Rising Tide Brewing Co",
+      "beer_name": "Blueberry Squadron",
+      "beer_key": "52639e4f-8a95-4c65-b241-a3cc1b3afb3c::blueberry-squadron",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:26:33.172Z"
+    },
+    {
+      "_id": "nEWFfYJfZ12wP4G5bELM",
+      "kind": "report",
+      "brewery_id": "136e3e55-0345-4951-96b6-de63339426b5",
+      "brewery_name": "Shipyard Brewing Co",
+      "beer_name": "Smashed Blueberry",
+      "beer_key": "136e3e55-0345-4951-96b6-de63339426b5::smashed-blueberry",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:28:44.578Z"
+    },
+    {
+      "_id": "1YTvXpzaQ6mSZDEK4wSc",
+      "kind": "report",
+      "brewery_id": "136e3e55-0345-4951-96b6-de63339426b5",
+      "brewery_name": "Shipyard Brewing Co",
+      "beer_name": "Melon",
+      "beer_key": "136e3e55-0345-4951-96b6-de63339426b5::melon",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:29:15.493Z"
+    },
+    {
+      "_id": "jd6255iEEHRRmo8N0nlw",
+      "kind": "report",
+      "brewery_id": "5aea39a2-d404-4548-81ab-c4d6645f6699",
+      "brewery_name": "Lone Pine Brewing Company",
+      "beer_name": "Holy Donut Blueberry Glaze",
+      "beer_key": "5aea39a2-d404-4548-81ab-c4d6645f6699::holy-donut-blueberry-glaze",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:30:22.972Z"
+    },
+    {
+      "_id": "9UhHBHsotG32VETAyeHm",
+      "kind": "report",
+      "brewery_id": "5aea39a2-d404-4548-81ab-c4d6645f6699",
+      "brewery_name": "Lone Pine Brewing Company",
+      "beer_name": "Blueberry Sparkler",
+      "beer_key": "5aea39a2-d404-4548-81ab-c4d6645f6699::blueberry-sparkler",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:30:37.943Z"
+    },
+    {
+      "_id": "zkchrKXfnX2JrMnTsJTW",
+      "kind": "report",
+      "brewery_id": "5aea39a2-d404-4548-81ab-c4d6645f6699",
+      "brewery_name": "Lone Pine Brewing Company",
+      "beer_name": "Raspberry Sparkler",
+      "beer_key": "5aea39a2-d404-4548-81ab-c4d6645f6699::raspberry-sparkler",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:30:52.483Z"
+    },
+    {
+      "_id": "sGDxi8MgIINiAMJH4rqf",
+      "kind": "report",
+      "brewery_id": "5aea39a2-d404-4548-81ab-c4d6645f6699",
+      "brewery_name": "Lone Pine Brewing Company",
+      "beer_name": "Slush Punch",
+      "beer_key": "5aea39a2-d404-4548-81ab-c4d6645f6699::slush-punch",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:31:15.631Z"
+    },
+    {
+      "_id": "zpCdQ2jekjdjNlQ1ieZZ",
+      "kind": "report",
+      "brewery_id": "1ce06580-ed70-4d32-bc01-5bd23e5aa388",
+      "brewery_name": "Foulmouthed Brewing",
+      "beer_name": "Tears of Gold",
+      "beer_key": "1ce06580-ed70-4d32-bc01-5bd23e5aa388::tears-of-gold",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:31:50.649Z"
+    },
+    {
+      "_id": "VPcZryh2lWYgDR8Dk76M",
+      "kind": "report",
+      "brewery_id": "1ce06580-ed70-4d32-bc01-5bd23e5aa388",
+      "brewery_name": "Foulmouthed Brewing",
+      "beer_name": "Yuzu Kosh\u014d Gose",
+      "beer_key": "1ce06580-ed70-4d32-bc01-5bd23e5aa388::yuzu-kosh-gose",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:32:12.747Z"
+    },
+    {
+      "_id": "zJxjr1jvU5ynuhvzlgit",
+      "kind": "report",
+      "brewery_id": "1ce06580-ed70-4d32-bc01-5bd23e5aa388",
+      "brewery_name": "Foulmouthed Brewing",
+      "beer_name": "Ume Gose",
+      "beer_key": "1ce06580-ed70-4d32-bc01-5bd23e5aa388::ume-gose",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:32:41.640Z"
+    },
+    {
+      "_id": "4lZgDWWqmOOaeElQHloB",
+      "kind": "report",
+      "brewery_id": "1ce06580-ed70-4d32-bc01-5bd23e5aa388",
+      "brewery_name": "Foulmouthed Brewing",
+      "beer_name": "Frobscottle",
+      "beer_key": "1ce06580-ed70-4d32-bc01-5bd23e5aa388::frobscottle",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-07-04T15:33:05.183Z"
     }
   ]
 }
