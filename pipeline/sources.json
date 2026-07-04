@@ -993,5 +993,21 @@
     "untappd_venue_id": 1576695,
     "untappd_venue_url": "https://untappd.com/v/chattanooga-brewing-company/1576695",
     "found_on": "http://www.chattabrew.com"
+  },
+  {
+    "obdb_id": "dcc25aca-8440-4542-a8b4-120d13f83527",
+    "name": "Lawless Brewing",
+    "source": "untappd",
+    "untappd_venue_id": 9557023,
+    "untappd_venue_url": "https://untappd.com/v/lawless-brewing-co/9557023",
+    "found_on": "http://www.lawlessbeer.com"
+  },
+  {
+    "obdb_id": "804be063-5e93-4657-a2ee-b89d73f11a00",
+    "name": "Santa Monica Brew Works",
+    "source": "untappd",
+    "untappd_venue_id": 1932952,
+    "untappd_venue_url": "https://untappd.com/v/santa-monica-brew-works/1932952",
+    "found_on": "http://www.santamonicabrewworks.com"
   }
 ]
