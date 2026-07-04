@@ -251,12 +251,12 @@ button.secondary {
 .mb-alt { display: block; margin: 10px auto 0; }
 .edit-box {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
-  border: 1.5px solid var(--accent-ink);
+  border: 1.5px solid var(--ok);
   border-radius: 12px;
   padding: 12px 12px 10px;
 }
 .edit-box-label { font-size: 13px; font-weight: 700; color: var(--accent-ink); margin: 0 0 2px 2px; }
-.edit-box input { border-color: var(--accent-ink); }
+.edit-box input { border-color: var(--ok); }
 .missingform input {
   width: 100%; padding: 13px 14px; font-size: 16px;
   background: var(--card); color: var(--text);
@@ -271,10 +271,12 @@ button.secondary {
 /* give the search box room to breathe below the title + Add button */
 .tab-search { margin-top: 16px; }
 
-/* Collapsible, boxed tab sections (Breweries / Beers) */
+/* Collapsible, boxed tab sections (Breweries / Beers) — same green
+   outline as the New-beer/New-brewery edit boxes, for one consistent
+   "this is a grouped section" signal across the app. */
 .tab-section {
   background: color-mix(in srgb, var(--accent) 6%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border: 1.5px solid var(--ok);
   border-radius: 14px; padding: 4px 12px; margin-top: 12px;
 }
 .sec-toggle {
@@ -427,11 +429,11 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
 
 /* Sheet: Favorite/Check In pills + collapsible Tap List */
 /* Grouping panel — actions and the tap list each sit in their own
-   bordered box so the sheet reads as distinct sections (same idea as
-   the green "New beer details" box, quieter neutral tone). */
+   bordered box so the sheet reads as distinct sections; same green
+   outline as the "New beer details" box everywhere else. */
 .sheet-box {
   background: color-mix(in srgb, var(--accent) 6%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border: 1.5px solid var(--ok);
   border-radius: 14px; padding: 12px; margin-bottom: 12px;
 }
 .sheet-box .sheet-pills:last-child { margin-bottom: 0; }
@@ -485,12 +487,12 @@ main { padding-bottom: calc(env(safe-area-inset-bottom) + 88px); }
   overflow: hidden; text-overflow: ellipsis;
 }
 
-/* Beer sheet: status card + review rows */
+/* Beer sheet: status card + review rows — same green outline as every
+   other grouped box, regardless of on-tap state */
 .status-card {
-  background: var(--bg); border: 1px solid var(--hairline);
+  background: var(--bg); border: 1.5px solid var(--ok);
   border-radius: 12px; padding: 12px 14px; margin: 2px 0 12px;
 }
-.status-card.on { border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
 .undo-row { text-align: center; margin-top: 8px; }
 .undo-row .linkbtn { font-size: 13px; color: var(--text-dim); }
 .status-line { display: flex; align-items: center; gap: 9px; }
