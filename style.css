@@ -56,7 +56,17 @@ html, body {
   font-size: 22px; padding: 4px 6px; cursor: pointer;
 }
 
-main { padding: 0 16px calc(env(safe-area-inset-bottom) + 24px); max-width: 640px; margin: 0 auto; }
+/* A short page (e.g. Settings) has no scrollable overflow, which lets
+   mobile Safari's address bar pop back to its expanded state — visibly
+   shifting the fixed bottom nav relative to taller, scrollable tabs.
+   Forcing every tab to at least fill the viewport keeps that toolbar
+   state (and the nav's position) consistent across tabs. */
+main {
+  padding: 0 16px calc(env(safe-area-inset-bottom) + 24px);
+  max-width: 640px; margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 
 /* Landing */
 .hero { text-align: center; padding: 9vh 8px 0; }

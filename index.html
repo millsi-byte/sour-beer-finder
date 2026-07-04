@@ -121,7 +121,8 @@
       The brewery list comes from a public database that misses some spots
       (even famous ones). Report one and it joins the app and the scans.
     </p>
-    <form id="missingForm" class="missingform" autocomplete="off" hidden>
+    <form id="missingForm" class="missingform edit-box" autocomplete="off" hidden>
+      <p class="edit-box-label">&#x1F3ED; New brewery details</p>
       <input id="mbName" type="text" placeholder="Brewery name" required>
       <div class="suggest-wrap">
         <input id="mbCity" type="text" placeholder="Closest city, state" required autocomplete="off">
@@ -132,7 +133,7 @@
     </form>
     <p id="mbGate" class="explain" hidden>Brewery submissions aren&rsquo;t turned on yet.</p>
     <div id="mbDupe" class="crowd-wrap" hidden>
-      <p id="mbDupeNote" class="explain"></p>
+      <p id="mbDupeNote" class="dupe-warn"></p>
       <button type="button" id="mbDupeYes" class="secondary block">It&rsquo;s different &mdash; send it anyway</button>
       <button type="button" id="mbDupeNo" class="linkbtn mb-alt">Never mind</button>
     </div>
@@ -273,6 +274,7 @@
     <input id="crAuthor" type="text" placeholder="Your name (optional)" maxlength="40">
     <textarea id="crReview" placeholder="Quick review (optional)" rows="2" maxlength="400"></textarea>
     <button type="submit" class="secondary block">Post it</button>
+    <button type="button" id="crowdFormCancel" class="linkbtn mb-alt">Cancel</button>
     <p id="crNote" class="explain" hidden></p>
   </form>
   <p class="mb-alt-row"><button type="button" id="btnEditSite" class="linkbtn mb-alt">&#x270F;&#xFE0F; Fix this brewery&rsquo;s website</button></p>
@@ -280,6 +282,7 @@
     <p class="edit-box-label">&#x270F;&#xFE0F; Editing website</p>
     <input id="esUrl" type="text" placeholder="Correct website (blank to clear)" inputmode="url">
     <button type="submit" class="secondary block">Save website</button>
+    <button type="button" id="editSiteCancel" class="linkbtn mb-alt">Cancel</button>
   </form>
   <button type="button" id="tapListToggle" class="tl-toggle" aria-expanded="true">
     <span class="tl-title">Tap List</span>

@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.02';
+const APP_BUILD = '2026.07.04.03';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -687,7 +687,7 @@ function renderControls() {
   );
   sort.appendChild(
     // breweries where a drinker has manually marked a beer On Tap
-    chip('\u{1F465} on tap', crowdOnly, () => {
+    chip('\u{1F44D} on tap', crowdOnly, () => {
       crowdOnly = !crowdOnly;
       localStorage.setItem(ONLY_KEY, crowdOnly ? '1' : '');
       renderList();
@@ -1317,6 +1317,11 @@ $('btnCrowdReport').addEventListener('click', () => {
   }
 });
 
+$('crowdFormCancel').addEventListener('click', () => {
+  $('crowdForm').hidden = true;
+  $('crowdForm').reset();
+});
+
 $('crowdForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const beer = $('crBeer').value.trim();
@@ -1536,6 +1541,13 @@ function renderBeerReviews(beer) {
         }
       });
       li.appendChild(del);
+    } else if (!n.uid && n.author && crowd.authState()?.display_name === n.author) {
+      // likely their own note, posted before they had a profile — nothing
+      // to check identity against, so editing/deleting it isn't possible
+      const note = document.createElement('div');
+      note.className = 'crowd-meta';
+      note.textContent = "Posted before you had a profile — can't be edited or removed.";
+      li.appendChild(note);
     }
     ul.appendChild(li);
   }
@@ -2134,6 +2146,11 @@ $('btnEditSite').addEventListener('click', () => {
     $('esUrl').value = sheetBrewery?.website_url ?? '';
     $('esUrl').focus();
   }
+});
+
+$('editSiteCancel').addEventListener('click', () => {
+  $('editSiteForm').hidden = true;
+  $('editSiteForm').reset();
 });
 
 $('editSiteForm').addEventListener('submit', async (e) => {
