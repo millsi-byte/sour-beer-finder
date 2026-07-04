@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.01';
+const APP_BUILD = '2026.07.04.02';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -405,6 +405,7 @@ const TAB_FOR_VIEW = {
   beers: 'beers',
   settings: 'settings',
   status: 'settings',
+  profile: 'settings',
 };
 
 function show(view) {
@@ -417,6 +418,7 @@ function show(view) {
   $('viewBeers').hidden = view !== 'beers';
   $('viewSettings').hidden = view !== 'settings';
   $('viewStatus').hidden = view !== 'status';
+  $('viewProfile').hidden = view !== 'profile';
   $('spinner').hidden = view !== 'loading';
   const tab = TAB_FOR_VIEW[view];
   if (tab) {
@@ -469,7 +471,7 @@ function renderChoiceBar(barId, key, options, fallback) {
   }
 }
 
-function renderSettings() {
+function renderProfilePage() {
   renderChoiceBar('mapsBar', MAPS_KEY, MAP_PROVIDERS, 'apple');
   renderChoiceBar('untappdBar', UNTAPPD_KEY, [['web', 'Web page'], ['app', 'Untappd app']], 'web');
   renderProfile();
@@ -620,14 +622,13 @@ $('btnSignOut').addEventListener('click', () => {
 });
 
 $('profilePill').addEventListener('click', () => {
-  renderSettings();
-  show('settings');
-  $('profileHead').scrollIntoView({ block: 'start' });
+  renderProfilePage();
+  show('profile');
 });
 
 window.addEventListener('s4s:authchange', () => {
   renderProfilePill();
-  if (state.view === 'settings') renderProfile();
+  if (state.view === 'profile') renderProfile();
   if (state.view === 'breweries') breweriesFlow();
   if (state.view === 'beers') beersFlow();
 });
@@ -1769,20 +1770,19 @@ $('btnRefresh').addEventListener('click', statusFlow);
 $('btnRefresh').hidden = true;
 $('brandHome').addEventListener('click', () => show('locate'));
 $('btnDataStatus').addEventListener('click', statusFlow);
-$('btnStatusBack').addEventListener('click', () => {
-  renderSettings();
-  show('settings');
+$('btnStatusBack').addEventListener('click', () => show('settings'));
+$('btnProfilePage').addEventListener('click', () => {
+  renderProfilePage();
+  show('profile');
 });
+$('btnProfileBack').addEventListener('click', () => show('settings'));
 
 // bottom navigation — each tab runs its view's setup flow
 $('navSearch').addEventListener('click', () => show('locate'));
 $('navLocations').addEventListener('click', citiesFlow);
 $('navBreweries').addEventListener('click', breweriesFlow);
 $('navBeers').addEventListener('click', beersFlow);
-$('navSettings').addEventListener('click', () => {
-  renderSettings();
-  show('settings');
-});
+$('navSettings').addEventListener('click', () => show('settings'));
 
 // ---------- Breweries tab ----------
 /* Favorites rows use the same icon+X style as the Locations list —
