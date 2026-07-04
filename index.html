@@ -105,7 +105,10 @@
 
   <!-- Breweries (tab root) -->
   <section id="viewBreweries" class="view" hidden>
-    <h2 class="section-title">Breweries</h2>
+    <div class="title-row">
+      <h2 class="section-title">Breweries</h2>
+      <button type="button" id="btnAddBrewery" class="pillbtn">&#x2795; Add Brewery</button>
+    </div>
     <div class="suggest-wrap block-wrap">
       <input id="brewSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any brewery&hellip;" autocomplete="off">
       <ul id="brewSuggest" class="suggest" hidden></ul>
@@ -116,34 +119,14 @@
     <h3 class="section-sub">&#x1F37B; Checked in</h3>
     <ul id="brewCheckins" class="citylist"></ul>
     <p id="brewCheckinsNote" class="explain"></p>
-    <h3 class="section-sub" id="missingHead">Missing a brewery?</h3>
-    <p class="explain">
-      The brewery list comes from a public database that misses some spots
-      (even famous ones). Report one and it joins the app and the scans.
-    </p>
-    <form id="missingForm" class="missingform edit-box" autocomplete="off" hidden>
-      <p class="edit-box-label">&#x1F3ED; New brewery details</p>
-      <input id="mbName" type="text" placeholder="Brewery name" required>
-      <div class="suggest-wrap">
-        <input id="mbCity" type="text" placeholder="Closest city, state" required autocomplete="off">
-      </div>
-      <input id="mbSite" type="text" placeholder="Website (optional &mdash; lets S4S auto-scan its tap list)" inputmode="url">
-      <input id="mbAuthor" type="text" placeholder="Your name (optional)" maxlength="40" hidden>
-      <button type="submit" class="secondary block">Send it in</button>
-    </form>
-    <p id="mbGate" class="explain" hidden>Brewery submissions aren&rsquo;t turned on yet.</p>
-    <div id="mbDupe" class="crowd-wrap" hidden>
-      <p id="mbDupeNote" class="dupe-warn"></p>
-      <button type="button" id="mbDupeYes" class="secondary block">It&rsquo;s different &mdash; send it anyway</button>
-      <button type="button" id="mbDupeNo" class="linkbtn mb-alt">Never mind</button>
-    </div>
-    <p id="mbSuccess" class="explain" hidden>Thanks &mdash; it&rsquo;s in! It&rsquo;ll show up once it&rsquo;s checked against nearby entries.</p>
-    <p id="mbError" class="error" hidden></p>
   </section>
 
   <!-- Beers (tab root) -->
   <section id="viewBeers" class="view" hidden>
-    <h2 class="section-title">Beers</h2>
+    <div class="title-row">
+      <h2 class="section-title">Beers</h2>
+      <button type="button" id="btnAddBeer" class="pillbtn">&#x2795; Add Beer</button>
+    </div>
     <div class="suggest-wrap block-wrap">
       <input id="beerSearch" type="search" class="list-filter" placeholder="&#x1F50E; Search any beer S4S knows&hellip;" autocomplete="off">
       <ul id="beerSuggest" class="suggest" hidden></ul>
@@ -154,23 +137,6 @@
     <h3 class="section-sub">&#x2714; I&rsquo;ve had these</h3>
     <ul id="beerHad" class="citylist"></ul>
     <p id="beerHadNote" class="explain"></p>
-    <h3 class="section-sub">Add a sour beer</h3>
-    <p class="explain">
-      Know a sour S4S hasn&rsquo;t heard of? Add it under its brewery so
-      others can find and review it.
-    </p>
-    <form id="beerAddForm" class="missingform edit-box" autocomplete="off" hidden>
-      <p class="edit-box-label">&#x1F37A; New beer details</p>
-      <input id="baName" type="text" placeholder="Beer name" required>
-      <input id="baStyle" type="text" placeholder="Style (e.g. Fruited Gose &mdash; optional)" maxlength="80">
-      <div class="suggest-wrap">
-        <input id="baBrewery" type="text" placeholder="Brewery (start typing to pick&hellip;)" required autocomplete="off">
-        <ul id="baSuggest" class="suggest" hidden></ul>
-      </div>
-      <button type="submit" class="secondary block">Add it</button>
-    </form>
-    <p id="beerAddGate" class="explain" hidden></p>
-    <p id="baError" class="error" hidden></p>
   </section>
 
   <!-- Data status -->
@@ -336,6 +302,58 @@
     </form>
     <p id="bsError" class="error" hidden></p>
   </div>
+</div>
+
+<!-- Add-a-brewery sheet -->
+<div id="addBrewerySheet" class="sheet" hidden>
+  <div class="grabber"></div>
+  <h3>&#x1F3ED; Add a brewery</h3>
+  <p class="explain">
+    The brewery list comes from a public database that misses some spots
+    (even famous ones). Add one and it joins the app and the scans.
+  </p>
+  <form id="missingForm" class="missingform edit-box" autocomplete="off" hidden>
+    <p class="edit-box-label">&#x1F3ED; New brewery details</p>
+    <input id="mbName" type="text" placeholder="Brewery name" required>
+    <div class="suggest-wrap">
+      <input id="mbCity" type="text" placeholder="Closest city, state" required autocomplete="off">
+    </div>
+    <input id="mbSite" type="text" placeholder="Website (optional &mdash; lets S4S auto-scan its tap list)" inputmode="url">
+    <input id="mbAuthor" type="text" placeholder="Your name (optional)" maxlength="40" hidden>
+    <button type="submit" class="secondary block">Send it in</button>
+    <button type="button" id="missingFormCancel" class="linkbtn mb-alt">Cancel</button>
+  </form>
+  <p id="mbGate" class="explain" hidden>Brewery submissions aren&rsquo;t turned on yet.</p>
+  <div id="mbDupe" class="crowd-wrap" hidden>
+    <p id="mbDupeNote" class="dupe-warn"></p>
+    <button type="button" id="mbDupeYes" class="secondary block">It&rsquo;s different &mdash; send it anyway</button>
+    <button type="button" id="mbDupeNo" class="linkbtn mb-alt">Never mind</button>
+  </div>
+  <p id="mbSuccess" class="explain" hidden>Thanks &mdash; it&rsquo;s in! It&rsquo;ll show up once it&rsquo;s checked against nearby entries.</p>
+  <p id="mbError" class="error" hidden></p>
+</div>
+
+<!-- Add-a-beer sheet -->
+<div id="addBeerSheet" class="sheet" hidden>
+  <div class="grabber"></div>
+  <h3>&#x1F37A; Add a sour beer</h3>
+  <p class="explain">
+    Know a sour S4S hasn&rsquo;t heard of? Add it under its brewery so
+    others can find and review it.
+  </p>
+  <form id="beerAddForm" class="missingform edit-box" autocomplete="off" hidden>
+    <p class="edit-box-label">&#x1F37A; New beer details</p>
+    <input id="baName" type="text" placeholder="Beer name" required>
+    <input id="baStyle" type="text" placeholder="Style (e.g. Fruited Gose &mdash; optional)" maxlength="80">
+    <div class="suggest-wrap">
+      <input id="baBrewery" type="text" placeholder="Brewery (start typing to pick&hellip;)" required autocomplete="off">
+      <ul id="baSuggest" class="suggest" hidden></ul>
+    </div>
+    <button type="submit" class="secondary block">Add it</button>
+    <button type="button" id="beerAddCancel" class="linkbtn mb-alt">Cancel</button>
+  </form>
+  <p id="beerAddGate" class="explain" hidden></p>
+  <p id="baError" class="error" hidden></p>
 </div>
 
 <script src="crowd.js"></script>

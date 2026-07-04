@@ -360,6 +360,16 @@ adapter to `pipeline/adapters/`.
   Firestore: a "confirm what's pouring" button with a freshness timestamp
   ("reported 2 days ago"), favorites, "new sour at your favorites" alerts.
   (Today the `manual` adapter covers these via `sources.json` edits.)
+- **Reviews layout rethink (owner request 2026-07-04).** Reconsider how
+  reviews are laid out/displayed — possibly their own page instead of a
+  section inside the beer sheet. Related: the brewery sheet currently
+  stacks drinker-reported beers under the scanned list; consider one
+  unified tap list (scanned + drinker-added, badged by source) with
+  reviews living only on the beer page.
+- **Beer wishlist (owner request 2026-07-04).** A "wishlist" button on
+  the beer sheet alongside Favorite / I've-had-this, plus a Wishlist
+  section on the Beers tab. The user_marks event log already supports
+  this shape — add kinds `wish`/`unwish` (rules change + UI).
 
 ## Data sources
 

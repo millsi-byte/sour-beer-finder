@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.03';
+const APP_BUILD = '2026.07.04.04';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1045,6 +1045,8 @@ function openSheet(b) {
   $('editSiteForm').hidden = true;
   $('editSiteForm').reset();
 
+  $('addBrewerySheet').hidden = true;
+  $('addBeerSheet').hidden = true;
   $('sheet').hidden = false;
   $('sheetBackdrop').hidden = false;
 }
@@ -1352,6 +1354,8 @@ $('crowdForm').addEventListener('submit', async (e) => {
 function closeSheet() {
   $('sheet').hidden = true;
   $('beerSheet').hidden = true;
+  $('addBrewerySheet').hidden = true;
+  $('addBeerSheet').hidden = true;
   $('sheetBackdrop').hidden = true;
 }
 
@@ -1392,6 +1396,8 @@ async function beerCatalog() {
 async function openBeerSheet(seed, { fromBrewery = false } = {}) {
   bsCameFromBrewery = fromBrewery && !$('sheet').hidden;
   $('sheet').hidden = true;
+  $('addBrewerySheet').hidden = true;
+  $('addBeerSheet').hidden = true; // a just-added beer opens on top of the add sheet
   $('sheetBackdrop').hidden = false;
   $('beerSheet').hidden = false;
   $('beerBack').hidden = !bsCameFromBrewery;
@@ -1918,7 +1924,6 @@ function attachSuggest(inputId, listId, searchFn, renderLabel, onPick) {
 async function breweriesFlow() {
   await tapsReady;
   show('breweries');
-  renderMissingBreweryGate();
   // favorites + check-ins (signed-in only)
   const favUl = $('brewFavs');
   const chkUl = $('brewCheckins');
@@ -2023,13 +2028,7 @@ function beerRowCard(seed, onRemove, removeTitle) {
 async function beersFlow() {
   await tapsReady;
   show('beers');
-  const enabled = await crowd.crowdEnabled();
   const signedIn = !!crowd.authState();
-  $('beerAddForm').hidden = !enabled || !signedIn;
-  $('beerAddGate').hidden = enabled && signedIn;
-  $('beerAddGate').textContent = !enabled
-    ? 'Beer submissions aren’t turned on yet.'
-    : 'Sign in (Settings → Profile) to add a beer.';
   const favUl = $('beerFavs');
   const hadUl = $('beerHad');
   favUl.innerHTML = '';
@@ -2089,6 +2088,29 @@ attachSuggest(
   }
 );
 
+/* Add-a-beer bottom sheet, opened from the Beers tab header. */
+async function openAddBeerSheet() {
+  const enabled = await crowd.crowdEnabled();
+  const signedIn = !!crowd.authState();
+  $('beerAddForm').hidden = !enabled || !signedIn;
+  $('beerAddGate').hidden = enabled && signedIn;
+  $('beerAddGate').textContent = !enabled
+    ? 'Beer submissions aren’t turned on yet.'
+    : 'Sign in (Settings → Profile) to add a beer.';
+  $('baError').hidden = true;
+  $('beerAddForm').reset();
+  baPickedBrewery = null;
+  $('sheet').hidden = true;
+  $('beerSheet').hidden = true;
+  $('addBrewerySheet').hidden = true;
+  $('addBeerSheet').hidden = false;
+  $('sheetBackdrop').hidden = false;
+  if (!$('beerAddForm').hidden) $('baName').focus();
+}
+
+$('btnAddBeer').addEventListener('click', openAddBeerSheet);
+$('beerAddCancel').addEventListener('click', closeSheet);
+
 // Add a beer: brewery picker uses the same brewery search
 let baPickedBrewery = null;
 attachSuggest(
@@ -2117,15 +2139,16 @@ $('beerAddForm').addEventListener('submit', async (e) => {
   }
   const btn = $('beerAddForm').querySelector('button[type=submit]');
   btn.disabled = true;
+  const style = $('baStyle').value.trim(); // capture before reset() clears it
   try {
     await crowd.submitBeer({
       brewery: baPickedBrewery,
       beer_name: name,
-      style: $('baStyle').value.trim(),
+      style,
     });
     $('beerAddForm').reset();
     const added = { beer_key: crowd.beerKey(baPickedBrewery.id, name), beer_name: name,
-      style: $('baStyle').value.trim(), brewery_id: baPickedBrewery.id, brewery_name: baPickedBrewery.name };
+      style, brewery_id: baPickedBrewery.id, brewery_name: baPickedBrewery.name };
     baPickedBrewery = null;
     showToast(`🍺 ${name} added`);
     openBeerSheet(added);
@@ -2236,11 +2259,27 @@ async function renderMissingBreweryGate() {
   $('mbAuthor').hidden = signedIn; // posts are auto-signed with the profile name
 }
 
-$('btnMissing').addEventListener('click', async () => {
-  await breweriesFlow(); // the add-brewery form lives on the Breweries tab now
-  $('missingHead').scrollIntoView({ block: 'start' });
+/* The add-brewery form lives in a bottom sheet — openable from the
+   Breweries tab header or straight from the results page, no tab
+   switch needed (sheets overlay any view). */
+async function openAddBrewerySheet() {
+  $('mbSuccess').hidden = true;
+  $('mbError').hidden = true;
+  $('mbDupe').hidden = true;
+  mbPending = null;
+  $('missingForm').reset();
+  await renderMissingBreweryGate();
+  $('sheet').hidden = true;
+  $('beerSheet').hidden = true;
+  $('addBeerSheet').hidden = true;
+  $('addBrewerySheet').hidden = false;
+  $('sheetBackdrop').hidden = false;
   if (!$('missingForm').hidden) $('mbName').focus();
-});
+}
+
+$('btnAddBrewery').addEventListener('click', openAddBrewerySheet);
+$('btnMissing').addEventListener('click', openAddBrewerySheet);
+$('missingFormCancel').addEventListener('click', closeSheet);
 
 async function findPossibleDuplicate(name, cityRaw) {
   try {

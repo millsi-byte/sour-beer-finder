@@ -224,6 +224,8 @@ button.secondary {
 
 /* Your cities */
 .section-title { font-family: var(--serif); font-size: 24px; font-weight: 600; padding: 18px 0 8px; }
+.title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.title-row .pillbtn { flex-shrink: 0; margin-top: 10px; }
 .section-sub { font-family: var(--serif); font-size: 17px; font-weight: 600; margin: 26px 0 6px; }
 .explain { color: var(--text-dim); font-size: 16px; line-height: 1.45; margin-bottom: 14px; }
 .explain strong { color: var(--text); font-weight: 650; }
