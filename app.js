@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const state = { origin: null, breweries: [], taps: null, crowdCounts: {}, crowdAliasReal: {} };
 
 // bump on every release — shown under Check for updates on the Cities page
-const APP_BUILD = '2026.07.04.12';
+const APP_BUILD = '2026.07.04.13';
 
 // drinker-report badge counts (crowd.js) — cheap, loads once in the
 // background; re-render whenever they arrive after the list is up
@@ -1159,7 +1159,16 @@ async function renderTapList(b) {
   for (const s of scannedBeersFor(b.id)) byKey.set(s.beer_key, s);
   for (const d of drinkers) {
     const s = byKey.get(d.beer_key);
-    byKey.set(d.beer_key, s ? { ...d, scanned: true, scanned_at: s.scanned_at } : d);
+    // a vote-only drinker beer has no report, so its name/style come back
+    // undefined — keep the scanned seed's identity, take the drinker's
+    // status (trail/currentlyGone/ratings)
+    byKey.set(d.beer_key, s ? {
+      ...d, scanned: true, scanned_at: s.scanned_at,
+      beer_name: d.beer_name || s.beer_name,
+      style: d.style || s.style,
+      brewery_name: d.brewery_name || s.brewery_name,
+      brewery_id: d.brewery_id || s.brewery_id,
+    } : d);
   }
   // gone beers sink to the bottom; menu order / report order kept otherwise
   const beers = [...byKey.values()].sort(

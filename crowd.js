@@ -572,17 +572,21 @@ async function crowdBeersFor(breweryId) {
   if (!(await crowdEnabled())) return [];
   try {
     const docs = await fetchRecent();
+    // include vote keys so a *scanned* beer marked on-tap/gone (vote only,
+    // no report) still surfaces its drinker status on the tap-list row
     const keys = new Set(
       docs
-        .filter((d) => (d.kind === 'report' || d.kind === 'beer') && d.brewery_id === breweryId)
+        .filter((d) => (d.kind === 'report' || d.kind === 'beer' || d.kind === 'vote') && d.brewery_id === breweryId)
         .map(docBeerKey)
         .filter(Boolean)
     );
     return [...keys]
       .map((k) => assembleBeer(docs, k))
-      .sort((a, b) =>
-        (b.reports[0]?.created_at ?? '').localeCompare(a.reports[0]?.created_at ?? '')
-      );
+      .sort((a, b) => {
+        // newest drinker activity first (report, else latest vote)
+        const at = (x) => x.reports[0]?.created_at ?? x.trail.at(-1)?.created_at ?? '';
+        return at(b).localeCompare(at(a));
+      });
   } catch {
     return [];
   }
@@ -675,7 +679,13 @@ async function crowdReportsFor(breweryId) {
   }
 }
 
-/* breweryId -> count of drinker-known beers not currently marked gone */
+/* breweryId -> count of drinker-known beers not currently marked gone.
+   A beer counts if a drinker touched it in ANY way — reported it, added
+   it, or marked it on-tap/gone. That last case matters: marking a
+   *scanned* beer On Tap writes only a `vote` doc (no report), so vote
+   keys must seed the set too, or a brewery whose only drinker signal is
+   an on-tap vote would never show in the 👍 filter. `currentlyGone`
+   then drops the ones whose latest vote is 'gone'. */
 async function crowdCounts() {
   if (!(await crowdEnabled())) return {};
   try {
@@ -684,7 +694,7 @@ async function crowdCounts() {
     for (const id of new Set(docs.map((d) => d.brewery_id).filter(Boolean))) {
       const keys = new Set(
         docs
-          .filter((d) => (d.kind === 'report' || d.kind === 'beer') && d.brewery_id === id)
+          .filter((d) => (d.kind === 'report' || d.kind === 'beer' || d.kind === 'vote') && d.brewery_id === id)
           .map(docBeerKey)
           .filter(Boolean)
       );
