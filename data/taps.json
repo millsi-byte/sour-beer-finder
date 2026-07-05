@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-05T05:10:19.002Z",
+  "generated_at": "2026-07-05T08:20:07.284Z",
   "areas": [
     {
       "label": "Orlando, FL",
@@ -136,7 +136,7 @@
     "dc3e008a-2387-4aea-addd-c05a1049ee89": {
       "name": "Great Chicago Fire Brewery and Tap Room",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:16:37.495Z",
+      "fetched_at": "2026-07-05T08:22:43.704Z",
       "beer_count": 0,
       "sours": []
     },
@@ -163,7 +163,7 @@
     "ee71a877-46d6-45a9-9e2d-6291f4609de6": {
       "name": "Crooked Thumb Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:17:52.976Z",
+      "fetched_at": "2026-07-05T08:24:12.255Z",
       "beer_count": 17,
       "sours": [
         {
@@ -187,7 +187,7 @@
     "2d3c288c-ecb1-47fc-bca3-c277c7728944": {
       "name": "Veterans United Craft Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:18:40.507Z",
+      "fetched_at": "2026-07-05T08:21:12.462Z",
       "beer_count": 42,
       "sours": [
         {
@@ -199,14 +199,14 @@
     "8a7ac609-cceb-47f1-8221-8ac257e3caa1": {
       "name": "Seven Bridges Grille and Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:21:05.381Z",
+      "fetched_at": "2026-07-05T08:21:33.416Z",
       "beer_count": 0,
       "sours": []
     },
     "823d7543-75ef-4ce6-b3f3-6108eea702f8": {
       "name": "Bold City Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:12:42.310Z",
+      "fetched_at": "2026-07-05T08:23:47.862Z",
       "beer_count": 16,
       "sours": [
         {
@@ -222,7 +222,7 @@
     "c6d5739a-7f19-404c-a561-009c384535d5": {
       "name": "Millennial Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:11:12.575Z",
+      "fetched_at": "2026-07-05T08:27:09.103Z",
       "beer_count": 0,
       "sours": []
     },
@@ -248,7 +248,7 @@
     "597c06aa-6c9f-4652-a0b0-7db11364374f": {
       "name": "Munkle Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:12:28.697Z",
+      "fetched_at": "2026-07-05T08:21:15.009Z",
       "beer_count": 20,
       "sours": [
         {
@@ -260,7 +260,7 @@
     "c20499a8-0cd9-4fc4-878d-78067362cafb": {
       "name": "Snafu Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:10:33.735Z",
+      "fetched_at": "2026-07-05T08:24:57.705Z",
       "beer_count": 31,
       "sours": [
         {
@@ -320,14 +320,14 @@
     "ed040add-786c-4758-b42a-1ab876837de7": {
       "name": "Gulf Coast Brewery LLC",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:14:10.472Z",
+      "fetched_at": "2026-07-05T08:29:36.638Z",
       "beer_count": 0,
       "sours": []
     },
     "7499d5f1-3dee-4207-a073-aea0d069ea6b": {
       "name": "Buttonwoods Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:16:26.663Z",
+      "fetched_at": "2026-07-05T08:22:45.692Z",
       "beer_count": 44,
       "sours": [
         {
@@ -343,7 +343,7 @@
     "62e08b27-ce3d-49a3-b579-70819bb13baf": {
       "name": "Tilted Barn Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:18:42.714Z",
+      "fetched_at": "2026-07-05T08:21:35.594Z",
       "beer_count": 24,
       "sours": [
         {
@@ -355,7 +355,7 @@
     "fecd5791-19fe-43ae-b618-3ddf1e3d9761": {
       "name": "Concord Craft Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:19:04.255Z",
+      "fetched_at": "2026-07-05T08:22:57.360Z",
       "beer_count": 25,
       "sours": [
         {
@@ -371,7 +371,7 @@
     "f6a4ecaa-2045-43ed-8563-9d4bf0af345f": {
       "name": "The Outlaw Brewing Company",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:14:12.085Z",
+      "fetched_at": "2026-07-05T08:22:19.503Z",
       "beer_count": 0,
       "sours": []
     },
@@ -385,7 +385,7 @@
     "7818c5b5-3446-4c29-80ac-e0e51cc5bccc": {
       "name": "Kettlehead Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:13:10.741Z",
+      "fetched_at": "2026-07-05T08:26:55.706Z",
       "beer_count": 47,
       "sours": [
         {
@@ -397,14 +397,14 @@
     "9fb357eb-965e-4920-81d0-256910248fc0": {
       "name": "Broad Brook Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:14:56.475Z",
+      "fetched_at": "2026-07-05T08:36:27.734Z",
       "beer_count": 0,
       "sours": []
     },
     "094745e6-3b1e-4549-a2db-76bf222e4561": {
       "name": "Tox Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:17:56.850Z",
+      "fetched_at": "2026-07-05T08:24:36.765Z",
       "beer_count": 50,
       "sours": [
         {
@@ -416,14 +416,14 @@
     "6ea2ecc3-d933-4c8d-852c-f20db3b19976": {
       "name": "Barreled Souls Brewing Company LLC",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:17:28.469Z",
+      "fetched_at": "2026-07-05T08:27:44.541Z",
       "beer_count": 0,
       "sours": []
     },
     "40e3e16f-ba2e-4403-8cbd-b7fe50863cb5": {
       "name": "Grimm Artisanal Ales",
       "source": "beermenus",
-      "fetched_at": "2026-07-05T05:18:36.356Z",
+      "fetched_at": "2026-07-05T08:28:07.648Z",
       "beer_count": 27,
       "sours": [
         {
@@ -459,7 +459,7 @@
     "c51a1926-490d-4558-a569-7664be014334": {
       "name": "New Jersey Beer Co",
       "source": "untappd",
-      "fetched_at": "2026-07-04T18:19:02.741Z",
+      "fetched_at": "2026-07-05T08:28:14.949Z",
       "beer_count": 22,
       "sours": [
         {
@@ -471,28 +471,28 @@
     "e69d7c0d-f29a-4668-9419-f74ffc9e19cf": {
       "name": "District 96 Beer Factory",
       "source": "beermenus",
-      "fetched_at": "2026-07-05T05:16:24.548Z",
+      "fetched_at": "2026-07-05T08:22:46.248Z",
       "beer_count": 6,
       "sours": []
     },
     "1337fe4b-0f7d-411f-9d19-05eba5370567": {
       "name": "Secatogue Brewing Co.",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:22:26.991Z",
+      "fetched_at": "2026-07-05T08:30:29.468Z",
       "beer_count": 0,
       "sours": []
     },
     "ecd253a8-292a-4233-908f-4141491d0d32": {
       "name": "Man Skirt Brewing",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:12:17.306Z",
+      "fetched_at": "2026-07-05T08:23:06.184Z",
       "beer_count": 0,
       "sours": []
     },
     "2c946155-4263-420c-8b11-eca20cdf51ff": {
       "name": "Newburgh Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:13:33.771Z",
+      "fetched_at": "2026-07-05T08:25:11.273Z",
       "beer_count": 22,
       "sours": [
         {
@@ -532,14 +532,14 @@
     "d45b5005-7682-44a6-b852-a5be43daa838": {
       "name": "Elk River Brewing",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:23:26.841Z",
+      "fetched_at": "2026-07-05T08:28:31.667Z",
       "beer_count": 16,
       "sours": []
     },
     "a96df2d5-fc8d-4043-8a30-5c3f29ac3903": {
       "name": "Double Groove Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:12:19.718Z",
+      "fetched_at": "2026-07-05T08:25:36.439Z",
       "beer_count": 15,
       "sours": [
         {
@@ -567,7 +567,7 @@
     "c8e69ab9-60b6-44b9-8188-cf3d719b8d82": {
       "name": "Off Color Brewing",
       "source": "beermenus",
-      "fetched_at": "2026-07-05T05:14:26.405Z",
+      "fetched_at": "2026-07-05T08:28:07.331Z",
       "beer_count": 39,
       "sours": [
         {
@@ -615,14 +615,14 @@
     "524c21c1-3dc5-4e41-9e97-5ff34578e071": {
       "name": "Smylie Brothers Brewing Co",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:25:54.484Z",
+      "fetched_at": "2026-07-05T08:26:31.545Z",
       "beer_count": 0,
       "sours": []
     },
     "2cb07047-36be-45c7-aae3-97c10afa36c4": {
       "name": "Half Day Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:10:59.003Z",
+      "fetched_at": "2026-07-05T08:25:25.458Z",
       "beer_count": 165,
       "sours": [
         {
@@ -665,7 +665,7 @@
     "c0c4af99-eb53-4114-b976-de76d111596f": {
       "name": "Burn'Em Brewing",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:15:11.190Z",
+      "fetched_at": "2026-07-05T08:28:09.059Z",
       "beer_count": 33,
       "sours": [
         {
@@ -681,7 +681,7 @@
     "5c8d8884-ab03-4de2-9370-2cd781eb7b07": {
       "name": "Three Blondes Brewing",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:19:22.113Z",
+      "fetched_at": "2026-07-05T08:28:10.897Z",
       "beer_count": 19,
       "sours": [
         {
@@ -697,14 +697,14 @@
     "5f82df6e-52a9-4143-8ea5-93294d43d645": {
       "name": "Dead Bird Brewing Company",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:25:40.321Z",
+      "fetched_at": "2026-07-05T08:22:17.793Z",
       "beer_count": 0,
       "sours": []
     },
     "1f0405ff-3d96-47e7-90ee-a1bc5764149b": {
       "name": "Our Mutual Friend Brewing",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:16:28.259Z",
+      "fetched_at": "2026-07-05T08:21:19.679Z",
       "beer_count": 0,
       "sours": []
     },
@@ -775,14 +775,14 @@
     "e8cf3258-6464-4de0-8769-40027573fc5f": {
       "name": "DeSteeg Brewing Co/Blind Faith Brewing",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:15:54.940Z",
+      "fetched_at": "2026-07-05T08:26:32.513Z",
       "beer_count": 0,
       "sours": []
     },
     "6225d756-4684-46ba-8ef4-de19e6fb0d8c": {
       "name": "Platt Park Brewing Co.",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:16:38.933Z",
+      "fetched_at": "2026-07-05T08:23:56.912Z",
       "beer_count": 17,
       "sours": [
         {
@@ -794,7 +794,7 @@
     "eb3bca03-12e0-49b2-ae4f-42616521289c": {
       "name": "Launch Pad Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:20:28.751Z",
+      "fetched_at": "2026-07-05T08:24:14.254Z",
       "beer_count": 34,
       "sours": [
         {
@@ -806,14 +806,14 @@
     "82a77cad-f8b2-42ed-9427-ba12789ff73f": {
       "name": "Bent Barley Brewing Co",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:23:54.271Z",
+      "fetched_at": "2026-07-05T08:26:05.660Z",
       "beer_count": 0,
       "sours": []
     },
     "91673432-855c-469a-a703-18f8451b6365": {
       "name": "Two22 Brew",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:18:38.849Z",
+      "fetched_at": "2026-07-05T08:25:40.320Z",
       "beer_count": 35,
       "sours": [
         {
@@ -829,21 +829,21 @@
     "4ffda196-dd59-44a5-9eeb-5f7fd4b58f5a": {
       "name": "105 West Brewing Co",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:23:09.617Z",
+      "fetched_at": "2026-07-05T08:28:12.665Z",
       "beer_count": 0,
       "sours": []
     },
     "ecde2a37-e88b-4637-933e-ebd02cbff2b8": {
       "name": "Paradox Beer Co",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:16:08.549Z",
+      "fetched_at": "2026-07-05T08:22:33.234Z",
       "beer_count": 0,
       "sours": []
     },
     "9e3d79b0-5411-425d-9ead-e86abeb58c98": {
       "name": "Draught House Pub and Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-04T18:17:08.110Z",
+      "fetched_at": "2026-07-05T08:28:16.650Z",
       "beer_count": 49,
       "sours": [
         {
@@ -855,14 +855,14 @@
     "7fa5779e-88df-42ab-895b-412b635498ae": {
       "name": "Acopon Brewing Co",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:20:34.054Z",
+      "fetched_at": "2026-07-05T08:27:47.589Z",
       "beer_count": 10,
       "sours": []
     },
     "25dd3b18-3204-4539-b58b-95478fbcb531": {
       "name": "Dorcol Distilling and Brewing CO",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:19:35.468Z",
+      "fetched_at": "2026-07-05T08:33:41.860Z",
       "beer_count": 0,
       "sours": []
     },
@@ -876,14 +876,14 @@
     "8d5259ff-4a8e-486f-8d9a-371b4f2ce224": {
       "name": "Gordon Street Tavern",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:15:34.321Z",
+      "fetched_at": "2026-07-05T08:26:08.050Z",
       "beer_count": 26,
       "sours": []
     },
     "d9e12659-831c-433a-9229-23f71e25c592": {
       "name": "Pegasus City Brewery",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:15:52.570Z",
+      "fetched_at": "2026-07-05T08:22:08.607Z",
       "beer_count": 58,
       "sours": [
         {
@@ -903,28 +903,28 @@
     "97ae87b9-74f3-40c8-8773-967c92450fa5": {
       "name": "True Vine Brewing Company",
       "source": "digitalpour",
-      "fetched_at": "2026-07-05T05:13:18.358Z",
+      "fetched_at": "2026-07-05T08:31:43.475Z",
       "beer_count": 0,
       "sours": []
     },
     "4c18e0e2-d6c6-430f-a3aa-3ffecd52e29d": {
       "name": "Oil Horse Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:13:08.424Z",
+      "fetched_at": "2026-07-05T08:23:34.200Z",
       "beer_count": 0,
       "sours": []
     },
     "6dfe19cd-23eb-43f3-a062-5e68bab19f50": {
       "name": "HopSaint Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-04T18:19:38.454Z",
+      "fetched_at": "2026-07-05T08:25:22.665Z",
       "beer_count": 18,
       "sours": []
     },
     "03411879-9d3e-4e2b-82a5-d5d01935074f": {
       "name": "Arrow Lodge Brewing",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:13:20.040Z",
+      "fetched_at": "2026-07-05T08:28:47.351Z",
       "beer_count": 24,
       "sours": [
         {
@@ -940,7 +940,7 @@
     "3055793c-9330-4fe1-958b-fef6d2a0e057": {
       "name": "8one8 Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:19:58.458Z",
+      "fetched_at": "2026-07-05T08:22:41.931Z",
       "beer_count": 37,
       "sours": [
         {
@@ -956,7 +956,7 @@
     "4f9d7195-bc11-44ce-bf57-e95f243a7675": {
       "name": "Brewheim Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:10:56.507Z",
+      "fetched_at": "2026-07-05T08:25:37.877Z",
       "beer_count": 14,
       "sours": [
         {
@@ -968,7 +968,7 @@
     "c75293cb-e18c-4c7f-ac21-a08418766428": {
       "name": "Hand-Brewed Beer",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:21:48.143Z",
+      "fetched_at": "2026-07-05T08:25:49.577Z",
       "beer_count": 33,
       "sours": []
     },
@@ -991,7 +991,7 @@
     "96ac0045-d677-4fe5-8dba-ba3fca9f2fe1": {
       "name": "Chapman Crafted Beer",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:14:23.456Z",
+      "fetched_at": "2026-07-05T08:28:06.820Z",
       "beer_count": 20,
       "sours": [
         {
@@ -1015,7 +1015,7 @@
     "05d9957f-92a7-4616-baeb-9f85fa170f22": {
       "name": "Bear Roots Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:15:09.552Z",
+      "fetched_at": "2026-07-05T08:20:40.856Z",
       "beer_count": 0,
       "sours": []
     },
@@ -1034,14 +1034,14 @@
     "174e828f-10aa-43b9-ba31-3c3f45001288": {
       "name": "Artifex Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:14:33.724Z",
+      "fetched_at": "2026-07-05T08:21:17.863Z",
       "beer_count": 17,
       "sours": []
     },
     "97ca045f-aa1a-429e-bd93-7461954b20fc": {
       "name": "Barebottle Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:20:16.281Z",
+      "fetched_at": "2026-07-05T08:29:01.009Z",
       "beer_count": 0,
       "sours": []
     },
@@ -1055,7 +1055,7 @@
     "79a8cdd5-d995-4575-ba5f-6253077bb4ba": {
       "name": "Half Moon Bay Brewing Co",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:20:47.551Z",
+      "fetched_at": "2026-07-05T08:20:20.291Z",
       "beer_count": 12,
       "sours": []
     },
@@ -1078,28 +1078,28 @@
     "e1253c80-0543-4024-bb35-3092589244d7": {
       "name": "Highway 1 Brewing Company",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:15:49.934Z",
+      "fetched_at": "2026-07-05T08:25:51.349Z",
       "beer_count": 0,
       "sours": []
     },
     "0712721c-20c3-4ac4-88d5-8a5b4b56e527": {
       "name": "Taplands Brewery",
       "source": "digitalpour",
-      "fetched_at": "2026-07-05T05:26:33.488Z",
+      "fetched_at": "2026-07-05T08:22:57.667Z",
       "beer_count": 0,
       "sours": []
     },
     "62418a35-3a11-48f5-8b17-69f7cf65de0e": {
       "name": "Cooperage Brewing Co.",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:18:54.098Z",
+      "fetched_at": "2026-07-05T08:34:41.543Z",
       "beer_count": 0,
       "sours": []
     },
     "8c2b58e7-e1fc-495d-adda-5be4c18fb4e1": {
       "name": "Feral Public House",
       "source": "digitalpour",
-      "fetched_at": "2026-07-05T05:23:00.411Z",
+      "fetched_at": "2026-07-05T08:23:13.598Z",
       "beer_count": 0,
       "sours": []
     },
@@ -1113,14 +1113,14 @@
     "b5295ee6-9e4c-406b-a84e-6aaf544ad1c8": {
       "name": "Heathen Brewing",
       "source": "digitalpour",
-      "fetched_at": "2026-07-05T05:18:42.765Z",
+      "fetched_at": "2026-07-05T08:28:16.871Z",
       "beer_count": 0,
       "sours": []
     },
     "a743ab27-0175-4ef3-b65f-1d5e67af200a": {
       "name": "Burke-Gilman Brewing",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:17:54.609Z",
+      "fetched_at": "2026-07-05T08:33:43.663Z",
       "beer_count": 0,
       "sours": []
     },
@@ -1203,14 +1203,14 @@
     "ab360d6f-246e-455f-b706-de39ec5ac9ec": {
       "name": "Black Raven Brewing Co",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:14:21.109Z",
+      "fetched_at": "2026-07-05T08:34:17.396Z",
       "beer_count": 0,
       "sours": []
     },
     "86b5a710-4d68-4937-8350-3af75ca30e15": {
       "name": "Postdoc Brewing - Kenmore",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:12:22.768Z",
+      "fetched_at": "2026-07-05T08:20:18.478Z",
       "beer_count": 39,
       "sours": [
         {
@@ -1230,7 +1230,7 @@
     "c8149934-3bc5-4c76-9f21-8b3cbbf31c40": {
       "name": "Black Raven Brewing Co Woodinville",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:17:30.073Z",
+      "fetched_at": "2026-07-05T08:25:27.260Z",
       "beer_count": 0,
       "sours": []
     },
@@ -1244,28 +1244,28 @@
     "017c8df5-27bd-4812-b42a-6d5e3e555ecf": {
       "name": "Haywire Brewing Company",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:11:54.593Z",
+      "fetched_at": "2026-07-05T08:25:13.046Z",
       "beer_count": 0,
       "sours": []
     },
     "ab04508d-14bc-41cb-bf1d-b09d86838fb3": {
       "name": "Wet Coast Brewing Co.",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:12:21.275Z",
+      "fetched_at": "2026-07-05T08:29:21.009Z",
       "beer_count": 12,
       "sours": []
     },
     "be72c629-781c-4103-a6bb-afce18774c4e": {
       "name": "Spada Farmhouse Brewery",
       "source": "taplist",
-      "fetched_at": "2026-07-05T05:27:59.536Z",
+      "fetched_at": "2026-07-05T08:37:17.488Z",
       "beer_count": 0,
       "sours": []
     },
     "457de2b4-b8fd-4821-8f97-38dd0e27bc37": {
       "name": "Hidden Springs Ale Works",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:17:37.732Z",
+      "fetched_at": "2026-07-05T08:32:10.943Z",
       "beer_count": 18,
       "sours": [
         {
@@ -1297,28 +1297,28 @@
     "e031e745-1aab-47a5-8f44-728abdf4bc76": {
       "name": "Cueni Brewing Co.",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:13:18.042Z",
+      "fetched_at": "2026-07-05T08:22:55.549Z",
       "beer_count": 75,
       "sours": []
     },
     "3f8790cd-03b9-4172-99c9-f88940c731a0": {
       "name": "Swamp Head Brewery",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:12:15.673Z",
+      "fetched_at": "2026-07-05T08:33:05.483Z",
       "beer_count": 0,
       "sours": []
     },
     "34011fb5-ccda-4f99-b21a-62953b9b6128": {
       "name": "Sailfish Brewing Company, llc",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:11:31.995Z",
+      "fetched_at": "2026-07-05T08:33:28.473Z",
       "beer_count": 0,
       "sours": []
     },
     "98c74480-648c-4e48-9740-bfef75a0310e": {
       "name": "Charles Towne Fermentory",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:16:54.131Z",
+      "fetched_at": "2026-07-05T08:23:04.414Z",
       "beer_count": 47,
       "sours": [
         {
@@ -1334,14 +1334,14 @@
     "24e29ba9-71d6-4125-9921-96512e6944d5": {
       "name": "Indigo Reef Brewing Company",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:26:19.912Z",
+      "fetched_at": "2026-07-05T08:23:21.014Z",
       "beer_count": 73,
       "sours": []
     },
     "5654c809-0b29-49f0-855f-7ea45be8d8c0": {
       "name": "First Magnitude Brewing Company",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:14:33.845Z",
+      "fetched_at": "2026-07-05T08:34:03.975Z",
       "beer_count": 56,
       "sours": [
         {
@@ -1361,14 +1361,14 @@
     "38973645-52f6-4b59-9f8b-8b88730e3ff9": {
       "name": "Captain Lawrence Brewing Co",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:21:26.258Z",
+      "fetched_at": "2026-07-05T08:20:16.482Z",
       "beer_count": 42,
       "sours": []
     },
     "339caa7a-481f-4315-bba1-bca6b74d8b89": {
       "name": "Evil Genius Beer Co",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:16:46.520Z",
+      "fetched_at": "2026-07-05T08:31:50.235Z",
       "beer_count": 51,
       "sours": [
         {
@@ -1392,14 +1392,14 @@
     "b28c0edf-d271-4d60-997a-aa52aab7170f": {
       "name": "Dry City Brew Works",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:15:30.405Z",
+      "fetched_at": "2026-07-05T08:35:15.963Z",
       "beer_count": 0,
       "sours": []
     },
     "05549159-6724-478d-a976-4925533a40f2": {
       "name": "Art History Brewing",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:14:19.638Z",
+      "fetched_at": "2026-07-05T08:25:20.473Z",
       "beer_count": 21,
       "sours": [
         {
@@ -1411,21 +1411,21 @@
     "e31a1d5a-42e7-4d84-a9a0-12b7849c8c8a": {
       "name": "Duesterbeck's Brewing Company",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:19:11.733Z",
+      "fetched_at": "2026-07-05T08:21:08.471Z",
       "beer_count": 28,
       "sours": []
     },
     "8a058b3f-9a57-469d-9f1f-c31c3ae064a5": {
       "name": "Woods Boss Brewing Company",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:25:14.171Z",
+      "fetched_at": "2026-07-05T08:24:35.104Z",
       "beer_count": 0,
       "sours": []
     },
     "5b5235aa-79f1-41e4-97a1-8f9fdfee1657": {
       "name": "Black Shirt Brewing Co",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:28:24.809Z",
+      "fetched_at": "2026-07-05T08:32:18.247Z",
       "beer_count": 82,
       "sours": [
         {
@@ -1437,14 +1437,14 @@
     "5c8f16b0-45fb-42ce-bb6b-ffcc4582eb42": {
       "name": "Joyride Brewing Co",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:13:57.195Z",
+      "fetched_at": "2026-07-05T08:26:15.429Z",
       "beer_count": 45,
       "sours": []
     },
     "31c082a9-357c-47d6-b65c-56e28b9423a0": {
       "name": "WestFax Brewing Co.",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:25:23.826Z",
+      "fetched_at": "2026-07-05T08:23:13.447Z",
       "beer_count": 30,
       "sours": [
         {
@@ -1456,28 +1456,28 @@
     "20b38dd1-4c83-4b4f-83c5-299fd1258ffe": {
       "name": "Downhill Brewing - Greenwood Village",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:19:01.477Z",
+      "fetched_at": "2026-07-05T08:22:16.065Z",
       "beer_count": 1,
       "sours": []
     },
     "b257714f-ad0b-4898-a9bc-3c6e29dc70a1": {
       "name": "Odd13 Brewing Inc",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:27:07.571Z",
+      "fetched_at": "2026-07-05T08:34:39.818Z",
       "beer_count": 1,
       "sours": []
     },
     "817d2caa-c087-4b68-abea-6b7b797d17f8": {
       "name": "Downhill Brewing",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:27:14.953Z",
+      "fetched_at": "2026-07-05T08:23:55.227Z",
       "beer_count": 1,
       "sours": []
     },
     "d07100f1-ab4b-413e-bc07-045ee4d61fe6": {
       "name": "Avant Garde Aleworks",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:23:07.968Z",
+      "fetched_at": "2026-07-05T08:27:18.259Z",
       "beer_count": 42,
       "sours": [
         {
@@ -1489,35 +1489,35 @@
     "cc7d935c-c318-4a60-9da6-e683a3ce7fb9": {
       "name": "Bluebonnet Beer Co",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:14:41.455Z",
+      "fetched_at": "2026-07-05T08:20:27.555Z",
       "beer_count": 16,
       "sours": []
     },
     "579678d2-7826-419b-9fe0-b3d8cfdcf574": {
       "name": "Roadmap Brewing Co",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:10:54.824Z",
+      "fetched_at": "2026-07-05T08:37:15.733Z",
       "beer_count": 0,
       "sours": []
     },
     "a4e94650-bbd6-45f5-ba67-b59f9ac661d8": {
       "name": "Rebel Toad Brewing Co",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:22:13.830Z",
+      "fetched_at": "2026-07-05T08:37:38.303Z",
       "beer_count": 0,
       "sours": []
     },
     "84b769ca-926a-4fc5-a1dc-f7cdce4eea06": {
       "name": "COOP Ale Works",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:23:00.091Z",
+      "fetched_at": "2026-07-05T08:30:02.621Z",
       "beer_count": 0,
       "sours": []
     },
     "84278f35-1caf-4c58-8446-4f6af8a17661": {
       "name": "Stonecloud Brewing Co.",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:20:26.343Z",
+      "fetched_at": "2026-07-05T08:25:34.076Z",
       "beer_count": 22,
       "sours": [
         {
@@ -1529,7 +1529,7 @@
     "0338af09-60df-4e16-9fd6-89d3033c9cc2": {
       "name": "Deft Brewing",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:19:19.642Z",
+      "fetched_at": "2026-07-05T08:31:08.660Z",
       "beer_count": 16,
       "sours": []
     },
@@ -1548,21 +1548,21 @@
     "3486d742-3bd5-449a-b66e-d3a881c3c103": {
       "name": "Wayfinder Beer",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:18:19.430Z",
+      "fetched_at": "2026-07-05T08:31:29.481Z",
       "beer_count": 0,
       "sours": []
     },
     "e2eef525-02a8-47d0-951c-05fead8bcb7d": {
       "name": "Watts Brewing Company",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:28:32.334Z",
+      "fetched_at": "2026-07-05T08:25:47.773Z",
       "beer_count": 10,
       "sours": []
     },
     "78ab1ee9-b1b7-437a-8175-4cd608de8451": {
       "name": "Eluvium Brewing Co.",
       "source": "beermenus",
-      "fetched_at": "2026-07-05T05:19:12.206Z",
+      "fetched_at": "2026-07-05T08:35:18.306Z",
       "beer_count": 17,
       "sours": [
         {
@@ -1574,7 +1574,7 @@
     "828ee507-7142-4c7c-9f0b-82964d4195d0": {
       "name": "Akademia Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:15:32.896Z",
+      "fetched_at": "2026-07-05T08:22:37.326Z",
       "beer_count": 21,
       "sours": [
         {
@@ -1586,7 +1586,7 @@
     "2f8dee5a-fc6e-49f3-84de-20ca5580acd4": {
       "name": "Birdsong Brewing Co.",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:16:40.889Z",
+      "fetched_at": "2026-07-05T08:22:35.076Z",
       "beer_count": 20,
       "sours": [
         {
@@ -1622,7 +1622,7 @@
     "52cf27d7-5cce-4438-b0fe-f4bc1fc79b29": {
       "name": "King Canary Brewing Company",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:18:50.223Z",
+      "fetched_at": "2026-07-05T08:24:44.158Z",
       "beer_count": 5,
       "sours": []
     },
@@ -1661,7 +1661,7 @@
     "ce82c6cb-f7ab-416a-882f-2ef0b20fb779": {
       "name": "Seminar Brewing",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:24:25.724Z",
+      "fetched_at": "2026-07-05T08:22:39.827Z",
       "beer_count": 15,
       "sours": [
         {
@@ -1673,28 +1673,28 @@
     "1ce06580-ed70-4d32-bc01-5bd23e5aa388": {
       "name": "Foulmouthed Brewing",
       "source": "arryved",
-      "fetched_at": "2026-07-05T05:17:14.993Z",
+      "fetched_at": "2026-07-05T08:21:01.693Z",
       "beer_count": 0,
       "sours": []
     },
     "568fcb4a-f5cd-4554-84b1-8ce90052e21d": {
       "name": "Tuckerman Brewing Co",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:12:26.108Z",
+      "fetched_at": "2026-07-05T08:22:48.197Z",
       "beer_count": 27,
       "sours": []
     },
     "x-tree-house-charlton": {
       "name": "Tree House Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-04T22:19:18.993Z",
+      "fetched_at": "2026-07-05T08:29:23.190Z",
       "beer_count": 76,
       "sours": []
     },
     "x-tree-house-tewksbury": {
       "name": "Tree House Brewing Company - Tewksbury",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:13:49.707Z",
+      "fetched_at": "2026-07-05T08:26:17.044Z",
       "beer_count": 67,
       "sours": [
         {
@@ -1706,7 +1706,7 @@
     "1931756b-8cf2-4dc4-9ee6-b406cdf5f5aa": {
       "name": "Oxbow Blending & Bottling",
       "source": "craftpeak",
-      "fetched_at": "2026-07-05T05:17:58.580Z",
+      "fetched_at": "2026-07-05T08:27:10.888Z",
       "beer_count": 51,
       "sours": [
         {
@@ -1782,14 +1782,14 @@
     "e37d3cfa-dc4a-46fe-ae52-e6b4d25f173a": {
       "name": "Oxbow Brewing Co",
       "source": "craftpeak",
-      "fetched_at": "2026-07-05T05:20:02.632Z",
+      "fetched_at": "2026-07-05T08:21:38.191Z",
       "beer_count": 3,
       "sours": []
     },
     "47e1f46b-e172-4f32-882b-c7bdf619fffb": {
       "name": "Long Live Beerworks",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:18:52.500Z",
+      "fetched_at": "2026-07-05T08:36:14.644Z",
       "beer_count": 36,
       "sours": [
         {
@@ -1801,7 +1801,7 @@
     "5937f6df-a6e0-48cf-9234-bfd66b3c4c8e": {
       "name": "Wicked Weed Funkatorium",
       "source": "craftpeak",
-      "fetched_at": "2026-07-05T05:20:49.284Z",
+      "fetched_at": "2026-07-05T08:21:10.609Z",
       "beer_count": 32,
       "sours": [
         {
@@ -1877,7 +1877,7 @@
     "2849f939-f34f-498f-beba-c243b678765b": {
       "name": "Wicked Weed Brewing",
       "source": "craftpeak",
-      "fetched_at": "2026-07-05T05:25:15.874Z",
+      "fetched_at": "2026-07-05T08:33:09.114Z",
       "beer_count": 24,
       "sours": [
         {
@@ -1897,7 +1897,7 @@
     "fb1c5883-f652-4375-b887-a424584d0d9d": {
       "name": "Amherst Brewing Co / Hangar Pub and Grill",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:26:11.999Z",
+      "fetched_at": "2026-07-05T08:33:07.627Z",
       "beer_count": 37,
       "sours": [
         {
@@ -1917,35 +1917,35 @@
     "22ef447a-0379-4be5-ab93-72d95e4a778a": {
       "name": "Blowing Rock Brewing Company",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:28:03.874Z",
+      "fetched_at": "2026-07-05T08:29:19.402Z",
       "beer_count": 11,
       "sours": []
     },
     "c9815e98-046a-4e4e-bbd2-80d265b62747": {
       "name": "Resident Culture Brewing Company LLC",
       "source": "craftpeak",
-      "fetched_at": "2026-07-05T05:20:45.752Z",
+      "fetched_at": "2026-07-05T08:29:17.862Z",
       "beer_count": 0,
       "sours": []
     },
     "dcc25aca-8440-4542-a8b4-120d13f83527": {
       "name": "Lawless Brewing",
       "source": "untappd",
-      "fetched_at": "2026-07-05T05:12:24.522Z",
+      "fetched_at": "2026-07-05T08:34:19.171Z",
       "beer_count": 6,
       "sours": []
     },
     "x-fireforge-greenville": {
       "name": "Fireforge",
       "source": "craftpeak",
-      "fetched_at": "2026-07-05T05:27:44.709Z",
+      "fetched_at": "2026-07-05T08:28:04.534Z",
       "beer_count": 0,
       "sours": []
     },
     "995b3da6-99ed-4cf4-9562-05286f4430f8": {
       "name": "Wicked Weed Funk House",
       "source": "craftpeak",
-      "fetched_at": "2026-07-05T05:16:35.870Z",
+      "fetched_at": "2026-07-05T08:29:43.275Z",
       "beer_count": 54,
       "sours": [
         {
