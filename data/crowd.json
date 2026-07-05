@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-05T18:17:57.219Z",
+  "generated_at": "2026-07-05T22:15:22.838Z",
   "docs": [
     {
       "_id": "SH1affEl3jOBhKdJXYL2",
@@ -623,6 +623,19 @@
       "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
       "author": "Scott",
       "created_at": "2026-07-04T15:33:05.183Z"
+    },
+    {
+      "_id": "jVAeGAam29vNNUpgdklE",
+      "kind": "report",
+      "brewery_id": "1931756b-8cf2-4dc4-9ee6-b406cdf5f5aa",
+      "brewery_name": "Oxbow Blending & Bottling",
+      "beer_name": "Blue Razz",
+      "beer_key": "1931756b-8cf2-4dc4-9ee6-b406cdf5f5aa::blue-razz",
+      "rating": 5,
+      "review": "Blueberry and Rasberry sour. Very flavorful.",
+      "uid": "xra7XErN0nUUptjfmzD93jEqYEH3",
+      "author": "Search4SourBeer",
+      "created_at": "2026-07-05T20:40:18.815Z"
     }
   ]
 }
