@@ -53,5 +53,14 @@
     "lat": 28.5383,
     "lng": -81.3792,
     "website_url": "https://www.tacticalbeer.com/"
+  },
+  {
+    "id": "x-loaded-question-portsmouth",
+    "name": "Loaded Question",
+    "city": "Portsmouth",
+    "state": "New Hampshire",
+    "lat": 43.077,
+    "lng": -70.7577,
+    "website_url": "loadedquestionbrewing.com"
   }
 ]
