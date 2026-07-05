@@ -1017,5 +1017,13 @@
     "untappd_venue_id": 8813622,
     "untappd_venue_url": "https://untappd.com/v/taps-off-main/8813622",
     "found_on": "http://www.calfkillerbeer.com/about-us/tap/"
+  },
+  {
+    "obdb_id": "2a85f041-c3d9-4062-831a-9bf2eb9a9127",
+    "name": "North Park Beer Co.",
+    "source": "untappd",
+    "untappd_venue_id": 12740815,
+    "untappd_venue_url": "https://untappd.com/v/north-park-beer-co-pizza-shop/12740815",
+    "found_on": "http://www.northparkbeerco.com"
   }
 ]
