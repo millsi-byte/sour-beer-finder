@@ -1009,5 +1009,13 @@
     "untappd_venue_id": 1932952,
     "untappd_venue_url": "https://untappd.com/v/santa-monica-brew-works/1932952",
     "found_on": "http://www.santamonicabrewworks.com"
+  },
+  {
+    "obdb_id": "c3aa08ce-050b-440d-a8c1-0b45cbceedd5",
+    "name": "Calfkiller Brewing Co",
+    "source": "untappd",
+    "untappd_venue_id": 8813622,
+    "untappd_venue_url": "https://untappd.com/v/taps-off-main/8813622",
+    "found_on": "http://www.calfkillerbeer.com/about-us/tap/"
   }
 ]
