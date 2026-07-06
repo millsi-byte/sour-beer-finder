@@ -1084,5 +1084,49 @@
     "untappd_venue_id": 10500475,
     "untappd_venue_url": "https://untappd.com/v/tideland-brewing/10500475",
     "found_on": "https://tidelandbrewing.com/"
+  },
+  {
+    "obdb_id": "462e4ff7-0374-443f-b44f-fd09b77a9523",
+    "name": "Kings County Brewers Collective",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://kcbcbeer.com/location/taproom/",
+      "http://www.kcbcbeer.com/location/taproom",
+      "http://www.kcbcbeer.com/location/taproom/"
+    ],
+    "found_on": "http://www.kcbcbeer.com"
+  },
+  {
+    "obdb_id": "4c461172-154f-4375-ba95-0c7356311e24",
+    "name": "Half Full Brewery",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://halffullbrewery.com/location/brew-pub/",
+      "https://halffullbrewery.com/location/third-place/"
+    ],
+    "found_on": "http://www.halffullbrewery.com"
+  },
+  {
+    "obdb_id": "5979ba35-787d-4c50-9e32-bdf544d34087",
+    "name": "Equilibrium Brewery",
+    "source": "untappd",
+    "untappd_venue_id": 9671165,
+    "untappd_venue_url": "https://untappd.com/v/equilibrium-taproom/9671165",
+    "found_on": "http://www.eqbrew.com"
+  },
+  {
+    "obdb_id": "e73ab2c9-9e8e-40f7-ac90-d3de503f2052",
+    "name": "Fairfield Craft Ales",
+    "source": "untappd",
+    "untappd_location_id": 10606,
+    "found_on": "http://www.fairfieldcraftales.com/menuevents/"
+  },
+  {
+    "obdb_id": "bbf8905d-9def-4a8f-b24b-91d3e6cdccd9",
+    "name": "Neshaminy Creek Brewing Co",
+    "source": "untappd",
+    "untappd_venue_id": 141997,
+    "untappd_venue_url": "https://untappd.com/v/neshaminy-creek-brewing-company/141997",
+    "found_on": "http://www.neshaminycreekbrewing.com"
   }
 ]
