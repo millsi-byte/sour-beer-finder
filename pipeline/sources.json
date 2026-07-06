@@ -1128,5 +1128,25 @@
     "untappd_venue_id": 141997,
     "untappd_venue_url": "https://untappd.com/v/neshaminy-creek-brewing-company/141997",
     "found_on": "http://www.neshaminycreekbrewing.com"
+  },
+  {
+    "obdb_id": "4ace443f-a4fb-47ec-89f5-5d75138420f7",
+    "name": "Gilman Brewing Company",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://gilmanbrew.com/location/berkeley/",
+      "http://www.gilmanbrew.com/location/berkeley/",
+      "https://gilmanbrew.com/location/santa-cruz/",
+      "http://www.gilmanbrew.com/location/santa-cruz/"
+    ],
+    "found_on": "http://www.gilmanbrew.com"
+  },
+  {
+    "obdb_id": "25abf0bf-0e86-4d42-85fd-d238cec244a6",
+    "name": "Sonoma Springs Brewing Co",
+    "source": "untappd",
+    "untappd_venue_id": 2548009,
+    "untappd_venue_url": "https://untappd.com/v/sonoma-springs-brewing-company/2548009",
+    "found_on": "https://www.sonomaspringsbrewing.com/store"
   }
 ]
