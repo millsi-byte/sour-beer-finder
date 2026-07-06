@@ -1025,5 +1025,64 @@
     "untappd_venue_id": 12740815,
     "untappd_venue_url": "https://untappd.com/v/north-park-beer-co-pizza-shop/12740815",
     "found_on": "http://www.northparkbeerco.com"
+  },
+  {
+    "obdb_id": "34add3a8-8902-41eb-9105-7e4d107284a4",
+    "name": "Ivanhoe Park Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 7488599,
+    "untappd_venue_url": "https://untappd.com/v/ivanhoe-park-brewing-company/7488599",
+    "found_on": "http://www.IvanhoeParkBrewing.com"
+  },
+  {
+    "obdb_id": "77fc61b5-b1e7-4ee3-a28c-823a3de62365",
+    "name": "Dirty Oar Beer Company",
+    "source": "untappd",
+    "untappd_venue_id": 6064068,
+    "untappd_venue_url": "https://untappd.com/v/dirty-oar-beer-company/6064068",
+    "found_on": "http://dirtyoarbeercompany.com/"
+  },
+  {
+    "obdb_id": "d4e376b6-3aad-46ae-ae8d-471791ae03f8",
+    "name": "Angry Chair Brewing, LLC.",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "http://www.angrychairbrewing.com/location/taproom/",
+      "https://angrychairbrewing.com/location/taproom/",
+      "http://www.angrychairbrewing.com/location/taproom"
+    ],
+    "found_on": "http://www.angrychairbrewing.com"
+  },
+  {
+    "obdb_id": "6e65e1de-6602-4580-a801-140ca2430354",
+    "name": "Engine 15 Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 35506,
+    "untappd_venue_url": "https://untappd.com/v/engine-15-brewing-co/35506",
+    "found_on": "http://www.engine15.com"
+  },
+  {
+    "obdb_id": "5b627789-ff7e-4890-a7cf-24572bf547a2",
+    "name": "Aardwolf Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 597975,
+    "untappd_venue_url": "https://untappd.com/v/aardwolf-brewing-company/597975",
+    "found_on": "https://www.aardwolfbrewing.com/events"
+  },
+  {
+    "obdb_id": "82cb77d5-b49e-43c4-b604-2ba532006d06",
+    "name": "Waterfront Brewery LLC",
+    "source": "untappd",
+    "untappd_venue_id": 3525163,
+    "untappd_venue_url": "https://untappd.com/v/waterfront-brewery/3525163",
+    "found_on": "http://www.thewaterfrontbrewery.com"
+  },
+  {
+    "obdb_id": "28c6f58f-5b53-4116-a839-e10d68651aed",
+    "name": "Tideland Brewing",
+    "source": "untappd",
+    "untappd_venue_id": 10500475,
+    "untappd_venue_url": "https://untappd.com/v/tideland-brewing/10500475",
+    "found_on": "https://tidelandbrewing.com/"
   }
 ]
