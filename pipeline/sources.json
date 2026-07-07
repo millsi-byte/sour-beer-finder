@@ -1156,5 +1156,17 @@
     "untappd_venue_id": 6802338,
     "untappd_venue_url": "https://untappd.com/v/common-bond-brewers/6802338",
     "found_on": "http://www.commonbondbrewers.com/beer/"
+  },
+  {
+    "obdb_id": "4a2c515d-7384-4406-8751-31133687eac1",
+    "name": "Ex Novo Brewing Co",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://exnovobrew.com/location/corrales-brewery-taproom/",
+      "http://www.exnovobrew.com/location/corrales-brewery-taproom/",
+      "http://www.exnovobrew.com/location/the-corral/",
+      "https://exnovobrew.com/location/albuquerque-taproom-and-restaurant/"
+    ],
+    "found_on": "http://www.exnovobrew.com"
   }
 ]
