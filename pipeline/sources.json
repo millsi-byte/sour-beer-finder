@@ -1148,5 +1148,13 @@
     "untappd_venue_id": 2548009,
     "untappd_venue_url": "https://untappd.com/v/sonoma-springs-brewing-company/2548009",
     "found_on": "https://www.sonomaspringsbrewing.com/store"
+  },
+  {
+    "obdb_id": "2b4c2853-9c07-49c6-a9bc-4953a248a6e3",
+    "name": "Common Bond Brewers",
+    "source": "untappd",
+    "untappd_venue_id": 6802338,
+    "untappd_venue_url": "https://untappd.com/v/common-bond-brewers/6802338",
+    "found_on": "http://www.commonbondbrewers.com/beer/"
   }
 ]
