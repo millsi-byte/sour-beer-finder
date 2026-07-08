@@ -1231,5 +1231,60 @@
     "untappd_venue_id": 1378862,
     "untappd_venue_url": "https://untappd.com/v/lakefront-brewery/1378862",
     "found_on": "http://www.lakefrontbrewery.com"
+  },
+  {
+    "obdb_id": "b93ef9fe-5adc-4dae-a5e8-49c94cd7cfd0",
+    "name": "Cloudburst Brewing",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://cloudburstbrew.com/location/2116-western-ave/",
+      "http://www.cloudburstbrew.com/location/2116-western-ave",
+      "https://cloudburstbrew.com/location/5456-shilshole-ave-nw/",
+      "http://www.cloudburstbrew.com/location/5456-shilshole-ave-nw/"
+    ],
+    "found_on": "http://www.cloudburstbrew.com"
+  },
+  {
+    "obdb_id": "5ea34660-4d18-4e33-9d78-aecdd3a4ba10",
+    "name": "Holy Mountain Brewing Co",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://holymountainbrewing.com/location/interbay-taproom/",
+      "http://holymountainbrewing.com/location/interbay-taproom",
+      "http://holymountainbrewing.com/location/phinney-taproom/",
+      "http://holymountainbrewing.com/location/interbay-taproom/"
+    ],
+    "found_on": "http://holymountainbrewing.com"
+  },
+  {
+    "obdb_id": "146c521f-d3c9-4a86-82a8-7bbf951aedea",
+    "name": "Fair Isle Brewing",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://fairislebrewing.com/location/taproom/",
+      "http://www.fairislebrewing.com/location/taproom/",
+      "https://fairislebrewing.com/location/taproom"
+    ],
+    "found_on": "http://www.fairislebrewing.com"
+  },
+  {
+    "obdb_id": "5382a775-e629-49a1-8774-712525404364",
+    "name": "Cloudburst Brewing on Shilshole",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://cloudburstbrew.com/location/2116-western-ave/",
+      "http://www.cloudburstbrew.com/location/2116-western-ave",
+      "https://cloudburstbrew.com/location/5456-shilshole-ave-nw/",
+      "http://www.cloudburstbrew.com/location/5456-shilshole-ave-nw/"
+    ],
+    "found_on": "http://www.cloudburstbrew.com"
+  },
+  {
+    "obdb_id": "d4e5d8fc-646b-4ff7-8f5a-3310971684b8",
+    "name": "Lagunitas Seattle Taproom and Beer Sanctuary",
+    "source": "untappd",
+    "untappd_venue_id": 12830,
+    "untappd_venue_url": "https://untappd.com/v/lagunitas-brewing-company-petaluma/12830",
+    "found_on": "https://lagunitas.com/taproom/petaluma/"
   }
 ]
