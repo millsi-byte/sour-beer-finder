@@ -1168,5 +1168,68 @@
       "https://exnovobrew.com/location/albuquerque-taproom-and-restaurant/"
     ],
     "found_on": "http://www.exnovobrew.com"
+  },
+  {
+    "obdb_id": "ecc59506-755c-4197-bdd7-5322484cddc6",
+    "name": "Forbidden Root Restaurant & Brewery",
+    "source": "untappd",
+    "untappd_venue_id": 9578586,
+    "untappd_venue_url": "https://untappd.com/v/forbidden-root/9578586",
+    "found_on": "http://www.forbiddenroot.com"
+  },
+  {
+    "obdb_id": "bacebf35-8146-4ec3-abe8-545c53d935a7",
+    "name": "Old Irving Brewing Co.",
+    "source": "untappd",
+    "untappd_venue_id": 5407765,
+    "untappd_venue_url": "https://untappd.com/v/old-irving-brewing-co/5407765",
+    "found_on": "http://www.oldirvingbrewing.com"
+  },
+  {
+    "obdb_id": "0e74966f-2dd7-422f-92b1-e04e71ea842d",
+    "name": "Hopewell Brewing Co",
+    "source": "untappd",
+    "untappd_location_id": 50160,
+    "found_on": "https://www.hopewellbrewing.com/beer"
+  },
+  {
+    "obdb_id": "5b49ceea-89f9-4f40-967a-d1379daf8f80",
+    "name": "Hopvine Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 1101661,
+    "untappd_venue_url": "https://untappd.com/v/hopvine-brewing-company/1101661",
+    "found_on": "http://www.hopvinebrewingcompany.com"
+  },
+  {
+    "obdb_id": "118dd02b-488c-48a7-bfd0-7b49ee168f96",
+    "name": "Arrowhead Ales Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 4598987,
+    "untappd_venue_url": "https://untappd.com/v/arrowhead-ales/4598987",
+    "found_on": "http://www.arrowheadales.com"
+  },
+  {
+    "obdb_id": "bbc48ed5-74ab-4114-aa44-8212468b3074",
+    "name": "South Bend Brew Werks",
+    "source": "untappd",
+    "untappd_venue_id": 1980098,
+    "untappd_venue_url": "https://untappd.com/v/south-bend-brew-werks/1980098",
+    "found_on": "http://www.southbendbrewwerks.com"
+  },
+  {
+    "obdb_id": "f2d6ec98-b9b1-448c-948a-93bd0e8a3528",
+    "name": "MobCraft Beer",
+    "source": "untappd",
+    "untappd_venue_id": 4181080,
+    "untappd_venue_url": "https://untappd.com/v/mobcraft-beer/4181080",
+    "found_on": "http://www.mobcraftbeer.com"
+  },
+  {
+    "obdb_id": "fad85278-37f6-437b-b9bc-825f20882475",
+    "name": "Lakefront Brewery Inc",
+    "source": "untappd",
+    "untappd_venue_id": 1378862,
+    "untappd_venue_url": "https://untappd.com/v/lakefront-brewery/1378862",
+    "found_on": "http://www.lakefrontbrewery.com"
   }
 ]
