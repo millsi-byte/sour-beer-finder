@@ -1286,5 +1286,37 @@
     "untappd_venue_id": 12830,
     "untappd_venue_url": "https://untappd.com/v/lagunitas-brewing-company-petaluma/12830",
     "found_on": "https://lagunitas.com/taproom/petaluma/"
+  },
+  {
+    "obdb_id": "d41989d3-e3a4-47c0-a0eb-cdcfe61a1066",
+    "name": "Cerebral Brewing",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://cerebralbrewing.com/location/congress-park/",
+      "https://cerebralbrewing.com/location/aurora-arts/",
+      "http://www.cerebralbrewing.com/location/congress-park/",
+      "https://cerebralbrewing.com/location/west-highlands/"
+    ],
+    "found_on": "http://www.cerebralbrewing.com"
+  },
+  {
+    "obdb_id": "63fd2c11-5530-4de9-8fe2-8fbf65e3a49f",
+    "name": "Odell Brewing Co",
+    "source": "untappd",
+    "untappd_venue_id": 16769,
+    "untappd_venue_url": "https://untappd.com/v/odell-brewing-co/16769",
+    "found_on": "http://www.odellbrewing.com"
+  },
+  {
+    "obdb_id": "13b0242e-a231-4cb7-af2c-e1707cd96961",
+    "name": "HighSide Brewery",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://highsidebrewing.com/location/breckenridge/",
+      "https://highsidebrewing.com/location/fairplay/",
+      "https://highsidebrewing.com/location/frisco/",
+      "http://www.highsidebrewing.com/location/frisco/"
+    ],
+    "found_on": "http://www.highsidebrewing.com"
   }
 ]
