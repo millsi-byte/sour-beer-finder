@@ -1352,5 +1352,67 @@
       "https://schillingbeer.com/location/mill-st-kitchen/"
     ],
     "found_on": "http://www.schillingbeer.com"
+  },
+  {
+    "obdb_id": "57da9428-05ab-44e9-8f30-253292f1b1ea",
+    "name": "Spindletap Brewery",
+    "source": "untappd",
+    "untappd_venue_id": 3846827,
+    "untappd_venue_url": "https://untappd.com/v/spindletap-brewery/3846827",
+    "found_on": "https://www.spindletap.com/feed/"
+  },
+  {
+    "obdb_id": "76934d0b-fc8e-4050-8138-2da6a3059081",
+    "name": "On Rotation Brewery",
+    "source": "untappd",
+    "untappd_venue_id": 2372017,
+    "untappd_venue_url": "https://untappd.com/v/on-rotation-brewery-and-kitchen/2372017",
+    "found_on": "http://www.on-rotation.com"
+  },
+  {
+    "obdb_id": "49af830b-8e3c-456a-8557-504c1ccea48b",
+    "name": "Hop And Sting Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 1236199,
+    "untappd_venue_url": "https://untappd.com/v/hop-and-sting-brewing-company/1236199",
+    "found_on": "http://www.hopandsting.com"
+  },
+  {
+    "obdb_id": "703a9282-97f8-4305-8d39-b06b9814d34c",
+    "name": "Parish Brewing Company",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://parishbeer.com/location/taproom/",
+      "http://www.parishbeer.com/location/taproom/",
+      "http://www.parishbeer.com/location/taproom"
+    ],
+    "found_on": "http://www.parishbeer.com"
+  },
+  {
+    "obdb_id": "13c71c4c-2ff7-4833-abaf-745311b9cd51",
+    "name": "Prairie Artisan Ales",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://prairieales.com/location/taproom/",
+      "http://www.prairieales.com/location/taproom",
+      "http://www.prairieales.com/location/taproom/"
+    ],
+    "found_on": "http://www.prairieales.com"
+  },
+  {
+    "obdb_id": "f4954559-b115-469a-824e-afa6e37cd9a3",
+    "name": "Twisted Spike Brewing Company",
+    "source": "untappd",
+    "untappd_venue_id": 5679264,
+    "untappd_venue_url": "https://untappd.com/v/twisted-spike-brewing-company/5679264",
+    "found_on": "http://twistedspike.com"
+  },
+  {
+    "obdb_id": "3929eda4-926c-46cd-ab20-cb5c9e6f7caf",
+    "name": "Angry Scotsman Brewing",
+    "source": "untappd",
+    "untappd_venue_id": 7256820,
+    "untappd_venue_url": "https://untappd.com/v/angry-scotsman-brewing/7256820",
+    "found_on": "http://www.angryscotbrew.com"
   }
 ]
