@@ -1318,5 +1318,39 @@
       "http://www.highsidebrewing.com/location/frisco/"
     ],
     "found_on": "http://www.highsidebrewing.com"
+  },
+  {
+    "obdb_id": "52639e4f-8a95-4c65-b241-a3cc1b3afb3c",
+    "name": "Rising Tide Brewing Co",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "http://www.risingtidebrewing.com/location/tasting-room/",
+      "https://risingtidebrewing.com/location/tasting-room/"
+    ],
+    "found_on": "http://www.risingtidebrewing.com"
+  },
+  {
+    "obdb_id": "9ca594a0-97b0-4bd5-a4fe-5b8ee789289f",
+    "name": "Bissell Brothers Brewing",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://bissellbrothers.com/location/taproom/",
+      "http://www.bissellbrothers.com/location/bissell-brothers-the-garden/",
+      "https://bissellbrothers.com/location/bissell-brothers-kitchen/",
+      "http://www.bissellbrothers.com/location/taproom/"
+    ],
+    "found_on": "http://www.bissellbrothers.com"
+  },
+  {
+    "obdb_id": "1f876d25-9192-45b7-a71f-3c184d4608e0",
+    "name": "Schilling Beer Co",
+    "source": "craftpeak",
+    "craftpeak_locations": [
+      "https://schillingbeer.com/location/tasting-room/",
+      "http://www.schillingbeer.com/location/tasting-room/",
+      "http://www.schillingbeer.com/location/brewpub-kitchen/",
+      "https://schillingbeer.com/location/mill-st-kitchen/"
+    ],
+    "found_on": "http://www.schillingbeer.com"
   }
 ]
