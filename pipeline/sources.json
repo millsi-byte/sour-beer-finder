@@ -1414,5 +1414,19 @@
     "untappd_venue_id": 7256820,
     "untappd_venue_url": "https://untappd.com/v/angry-scotsman-brewing/7256820",
     "found_on": "http://www.angryscotbrew.com"
+  },
+  {
+    "obdb_id": "51618504-46a9-4a44-9d67-80ce0873d1c2",
+    "name": "Southern Brewing Company",
+    "source": "untappd",
+    "untappd_location_id": 8900,
+    "found_on": "http://www.sobrewco.com/taproom-offerings"
+  },
+  {
+    "obdb_id": "051c41cf-a0a9-4f3a-bf12-84f3b68960be",
+    "name": "Gate City Brewing Company",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BZoEvUAM",
+    "found_on": "http://www.gatecitybrewingco.com"
   }
 ]
