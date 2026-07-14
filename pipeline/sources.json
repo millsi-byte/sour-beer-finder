@@ -1436,5 +1436,13 @@
     "untappd_venue_id": 248936,
     "untappd_venue_url": "https://untappd.com/v/stone-brewing-world-bistro-and-gardens-liberty-station/248936",
     "found_on": "http://www.stonelibertystation.com"
+  },
+  {
+    "obdb_id": "dddd1391-58ad-4a74-bd0d-93997ccaf17d",
+    "name": "Appalachian Brewing Co - Lititz",
+    "source": "untappd",
+    "untappd_venue_id": 4338,
+    "untappd_venue_url": "https://untappd.com/v/appalachian-brewing-company/4338",
+    "found_on": "http://www.abcbrew.com"
   }
 ]
