@@ -1444,5 +1444,13 @@
     "untappd_venue_id": 4338,
     "untappd_venue_url": "https://untappd.com/v/appalachian-brewing-company/4338",
     "found_on": "http://www.abcbrew.com"
+  },
+  {
+    "obdb_id": "5f6a874b-33de-4387-928e-b095e03a58f8",
+    "name": "Wachusett Brewing Co",
+    "source": "untappd",
+    "untappd_venue_id": 71104,
+    "untappd_venue_url": "https://untappd.com/v/smiths-billiards/71104",
+    "found_on": "http://www.wachusettbrew.com"
   }
 ]
