@@ -1452,5 +1452,12 @@
     "untappd_venue_id": 71104,
     "untappd_venue_url": "https://untappd.com/v/smiths-billiards/71104",
     "found_on": "http://www.wachusettbrew.com"
+  },
+  {
+    "obdb_id": "92cb06ac-91b1-4376-8e24-5ba606c08af3",
+    "name": "Living the Dream Sterling Taproom",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BCBQ_U0r",
+    "found_on": "http://www.livingthedreambrewing.com"
   }
 ]
