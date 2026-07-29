@@ -1459,5 +1459,12 @@
     "source": "arryved",
     "arryved_url": "https://commerce.arryved.com/location/BCBQ_U0r",
     "found_on": "http://www.livingthedreambrewing.com"
+  },
+  {
+    "obdb_id": "332c432f-b52b-4d3d-a5c9-8b3d4a31976f",
+    "name": "Barley POP! Brewing",
+    "source": "untappd",
+    "untappd_location_id": 51632,
+    "found_on": "https://www.barleypopbeer.com/on-tap"
   }
 ]
