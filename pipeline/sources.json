@@ -1466,5 +1466,14 @@
     "source": "untappd",
     "untappd_location_id": 51632,
     "found_on": "https://www.barleypopbeer.com/on-tap"
+  },
+  {
+    "obdb_id": "620e6a25-dd43-4c59-9598-226c62829135",
+    "name": "Deschutes Brewery & Public House",
+    "source": "untappd",
+    "untappd_location_id": 4942,
+    "untappd_venue_id": 135731,
+    "untappd_venue_url": "https://untappd.com/v/deschutes-brewery-tasting-room/135731",
+    "found_on": "http://www.deschutesbrewery.com/pages/bend-tasting-room-beer-garden"
   }
 ]
