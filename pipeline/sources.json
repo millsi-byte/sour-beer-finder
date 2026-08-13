@@ -1475,5 +1475,12 @@
     "untappd_venue_id": 135731,
     "untappd_venue_url": "https://untappd.com/v/deschutes-brewery-tasting-room/135731",
     "found_on": "http://www.deschutesbrewery.com/pages/bend-tasting-room-beer-garden"
+  },
+  {
+    "obdb_id": "88c88a7e-8760-4d5f-9884-778aeba32e76",
+    "name": "Littleton Brewing Company",
+    "source": "untappd",
+    "untappd_location_id": 48629,
+    "found_on": "https://www.littletonbrewco.com/beer"
   }
 ]
