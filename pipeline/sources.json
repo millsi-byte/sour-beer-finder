@@ -1482,5 +1482,12 @@
     "source": "untappd",
     "untappd_location_id": 48629,
     "found_on": "https://www.littletonbrewco.com/beer"
+  },
+  {
+    "obdb_id": "ff5c7ee4-b66a-4e37-920e-191eeb187eb0",
+    "name": "Wild Parrot Brewing Company",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BZCUwqgR",
+    "found_on": "https://www.wildparrotbrewing.com/"
   }
 ]
