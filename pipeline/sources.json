@@ -1489,5 +1489,12 @@
     "source": "arryved",
     "arryved_url": "https://commerce.arryved.com/location/BZCUwqgR",
     "found_on": "https://www.wildparrotbrewing.com/"
+  },
+  {
+    "obdb_id": "d30adc33-3715-41b2-950c-63c2e906629f",
+    "name": "Mexitaly Brick Oven Brewhouse",
+    "source": "beermenus",
+    "beermenus_slug": "16456-mexitaly-brickoven-brewhouse",
+    "found_on": "http://www.mexitaly.com"
   }
 ]
