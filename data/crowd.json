@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T21:43:49.505Z",
+  "generated_at": "2026-08-20T02:31:33.915Z",
   "docs": [
     {
       "_id": "SH1affEl3jOBhKdJXYL2",
@@ -636,6 +636,19 @@
       "uid": "xra7XErN0nUUptjfmzD93jEqYEH3",
       "author": "Search4SourBeer",
       "created_at": "2026-07-05T20:40:18.815Z"
+    },
+    {
+      "_id": "QoxH3Nonmwjy1V9JCBrl",
+      "kind": "report",
+      "brewery_id": "x-spyglass-nashua",
+      "brewery_name": "Spyglass Brewing Company",
+      "beer_name": "Chromatic",
+      "beer_key": "x-spyglass-nashua::chromatic",
+      "rating": 4,
+      "review": "Tart and sweet and sour and beautiful.",
+      "uid": "Of1t2UQLIkTEoXs8hzWyc8G0eeF2",
+      "author": "Scott",
+      "created_at": "2026-08-19T22:34:03.429Z"
     }
   ]
 }
