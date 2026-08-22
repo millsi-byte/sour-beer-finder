@@ -1496,5 +1496,12 @@
     "source": "beermenus",
     "beermenus_slug": "16456-mexitaly-brickoven-brewhouse",
     "found_on": "http://www.mexitaly.com"
+  },
+  {
+    "obdb_id": "50ee41cf-11e5-46df-959e-0bd25adfc780",
+    "name": "Helmsman Alehouse - Newport Beach Brewing Co",
+    "source": "untappd",
+    "untappd_location_id": 25893,
+    "found_on": "https://helmsmanalehouse.com/beer/"
   }
 ]
