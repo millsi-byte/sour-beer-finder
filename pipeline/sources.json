@@ -1503,5 +1503,12 @@
     "source": "untappd",
     "untappd_location_id": 25893,
     "found_on": "https://helmsmanalehouse.com/beer/"
+  },
+  {
+    "obdb_id": "c0e603fa-36fa-48e5-80fa-1008ba0af69e",
+    "name": "Lucky Pigeon Brewing",
+    "source": "arryved",
+    "arryved_url": "https://commerce.arryved.com/location/BBFOootE",
+    "found_on": "https://www.luckypigeonbrewing.com"
   }
 ]
