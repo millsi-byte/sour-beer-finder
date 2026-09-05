@@ -1,0 +1,26 @@
+{
+  "updated_at": "2026-09-05T19:33:31+00:00",
+  "phase": "idle",
+  "current": null,
+  "queue": [],
+  "area_history": {
+    "Portland, ME": "2026-09-04T13:38:11+00:00",
+    "Boston, MA": "2026-09-03T13:41:55+00:00",
+    "Greenville, SC": "2026-09-05T12:49:59+00:00",
+    "Los Angeles, CA": "2026-09-05T12:53:16+00:00",
+    "Asheville, NC": "2026-08-30T14:30:37+00:00",
+    "San Diego, CA": "2026-08-30T14:34:10+00:00",
+    "Orlando, FL": "2026-08-31T17:09:21+00:00",
+    "New York, NY": "2026-08-31T17:13:20+00:00",
+    "San Francisco, CA": "2026-08-31T17:17:14+00:00",
+    "Tampa, FL": "2026-09-01T14:13:56+00:00",
+    "Philadelphia, PA": "2026-09-01T14:18:28+00:00",
+    "Portland, OR": "2026-09-01T14:23:22+00:00",
+    "Miami, FL": "2026-09-02T13:46:50+00:00",
+    "Chicago, IL": "2026-08-26T10:06:49+00:00",
+    "Seattle, WA": "2026-09-02T13:51:48+00:00",
+    "Denver, CO": "2026-09-03T13:45:15+00:00",
+    "Austin, TX": "2026-09-04T13:41:59+00:00"
+  },
+  "run_url": "https://github.com/millsi-byte/sour-beer-finder/actions/runs/33985947033"
+}
