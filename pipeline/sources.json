@@ -1510,5 +1510,12 @@
     "source": "arryved",
     "arryved_url": "https://commerce.arryved.com/location/BBFOootE",
     "found_on": "https://www.luckypigeonbrewing.com"
+  },
+  {
+    "obdb_id": "bd90a960-3620-4563-98d1-4b77f5c69a62",
+    "name": "Odd Breed Wild Ales",
+    "source": "untappd",
+    "untappd_location_id": 34852,
+    "found_on": "http://www.oddbreed.com"
   }
 ]
