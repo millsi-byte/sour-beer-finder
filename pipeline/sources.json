@@ -1517,5 +1517,12 @@
     "source": "untappd",
     "untappd_location_id": 34852,
     "found_on": "http://www.oddbreed.com"
+  },
+  {
+    "obdb_id": "04fdb76b-b189-4234-a26e-caa9a43d55f0",
+    "name": "Big Truck Farm Brewery",
+    "source": "untappd",
+    "untappd_location_id": 33367,
+    "found_on": "http://www.bigtruckfarms.com/pages/menus"
   }
 ]
