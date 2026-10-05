@@ -1524,5 +1524,13 @@
     "source": "untappd",
     "untappd_location_id": 33367,
     "found_on": "http://www.bigtruckfarms.com/pages/menus"
+  },
+  {
+    "obdb_id": "386b5687-0049-4a9d-a36a-bc8e9c37469e",
+    "name": "Uncommon Path Brewing",
+    "source": "untappd",
+    "untappd_venue_id": 12272330,
+    "untappd_venue_url": "https://untappd.com/v/uncommon-path-brewing/12272330",
+    "found_on": "https://www.uncommonpathbrewing.com"
   }
 ]
