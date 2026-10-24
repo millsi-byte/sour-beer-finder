@@ -29,6 +29,14 @@
     "website_url": "https://spyglassbrewing.com"
   },
   {
+    "id": "x-epigram-tyngsboro",
+    "name": "Epigram",
+    "city": "Tyngsboro",
+    "state": "Massachusetts",
+    "lat": 42.6768,
+    "lng": -71.4245
+  },
+  {
     "id": "x-fireforge-greenville",
     "name": "Fireforge",
     "city": "Greenville",
